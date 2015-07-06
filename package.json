@@ -1,0 +1,19 @@
+{
+  "name": "tetris",
+  "version": "1.0.0",
+  "description": "Coffeescript tetris game using React + Flux",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PhilVargas/tetris.git"
+  },
+  "author": "Phil Vargas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PhilVargas/tetris/issues"
+  },
+  "homepage": "https://github.com/PhilVargas/tetris"
+}
