@@ -1,6 +1,9 @@
 React = require 'react'
-$ = require 'jquery'
-Board = require './board'
+window.$ = require 'jquery'
+Board = require 'components/board'
+BoardStore = require 'stores/board'
+BoardAction = require 'actions/board'
 
 $(document).on 'ready', ->
-  React.render React.createElement(Board, {}), document.getElementById 'board-container'
+  BoardAction.init()
+  React.render React.createElement(Board, BoardStore.getAll()), document.getElementById 'board-container'

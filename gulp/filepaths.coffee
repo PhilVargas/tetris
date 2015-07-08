@@ -1,7 +1,7 @@
 path = require('path')
 
-BASE_DIR = './src'
-VENDOR_ROOT = 'vendor/assets/javascripts'
+BASE_DIR = 'src'
+VENDOR_ROOT = 'node_modules'
 
 displayError = (error) ->
   errorMessage = "[#{error.plugin}] #{error.message.replace('\n', '')}"
@@ -16,7 +16,7 @@ module.exports =
   build: BASE_DIR
   displayError: displayError
   entries: ['index.coffee']
-  includes: []
+  includes: ['./']
   jsRoot: BASE_DIR
   jsVendor: VENDOR_ROOT
   root: BASE_DIR
