@@ -50,6 +50,7 @@ class BoardData
     @cells = @generateCells()
     @rotation = 0
     @isGameOver = false
+    @color = PieceMap[@currentPieceType].color
 
   generateCells: ->
     cells =[]
@@ -76,13 +77,13 @@ class BoardData
 
   isCollisionFree: (nextPosition, rotation = @rotation) =>
     isCollisionFree = true
-    for a in PieceMap[@currentPieceType][rotation] when !(0 <= nextPosition.xIndex + a.x < 10) || nextPosition.yIndex + a.y >= 22 || @isFrozenCell(x: nextPosition.xIndex + a.x, y: nextPosition.yIndex + a.y)
+    for a in PieceMap[@currentPieceType].shapes[rotation] when !(0 <= nextPosition.xIndex + a.x < 10) || nextPosition.yIndex + a.y >= 22 || @isFrozenCell(x: nextPosition.xIndex + a.x, y: nextPosition.yIndex + a.y)
       isCollisionFree = false
     isCollisionFree
 
   getPieceIndeces: (position = {x: @xIndex, y: @yIndex})->
     indeces = []
-    for a in PieceMap[@currentPieceType][@rotation]
+    for a in PieceMap[@currentPieceType].shapes[@rotation]
       indeces.push {x: position.x + a.x, y: position.y + a.y}
     indeces
 
@@ -96,7 +97,7 @@ class BoardData
     cellIds = @getCellIdsFromIndeces()
     for cell in @cells when cell.id in cellIds
       cell.isFrozen = true
-      cell.color = 'red'
+      cell.color = @color
 
   didPlayerLose: ->
     isGameOver = false
@@ -158,7 +159,8 @@ Dispatcher.register (payload) ->
         else
           while boardData.isAnyRowFrozen()
             boardData.clearFrozenRow(boardData.getRows())
-          boardData.updateAttribs(yIndex: 0, xIndex: 5, currentPieceType: boardData.randomPiece())
+          nextPiece = boardData.randomPiece()
+          boardData.updateAttribs(yIndex: 0, xIndex: 5, currentPieceType: nextPiece, color: PieceMap[nextPiece].color)
       BoardStore.triggerChange()
     when 'board:rotatePiece'
       rotation = Math.abs((4 + payload.value + boardData.rotation) % 4)

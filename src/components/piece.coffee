@@ -1,6 +1,8 @@
 React = require 'react'
 PieceMap = require 'helpers/piece-map'
 
+assign = require 'object-assign'
+
 Piece = React.createClass
   displayName: 'Piece'
 
@@ -24,7 +26,7 @@ Piece = React.createClass
     cellWidth: 20
 
   getCoords: (cellNumber = 0) ->
-    offset = PieceMap[@props.pieceType][@props.rotation][cellNumber]
+    offset = PieceMap[@props.pieceType].shapes[@props.rotation][cellNumber]
     left: (( @props.xIndex + offset.x )*@props.cellWidth) + @props.initialX
     top: (( @props.yIndex + offset.y )*@props.cellHeight) + @props.initialY
 
@@ -33,10 +35,10 @@ Piece = React.createClass
 
   render: ->
     <div className='piece-container'>
-      <div style={ @getCoords(0) } className="piece-cell"></div>
-      <div style={ @getCoords(1) } className="piece-cell"></div>
-      <div style={ @getCoords(2) } className="piece-cell"></div>
-      <div style={ @getCoords(3) } className="piece-cell"></div>
+      <div style={ assign {}, @getCoords(0), backgroundColor: PieceMap[@props.pieceType].color } className="piece-cell"></div>
+      <div style={ assign {}, @getCoords(1), backgroundColor: PieceMap[@props.pieceType].color } className="piece-cell"></div>
+      <div style={ assign {}, @getCoords(2), backgroundColor: PieceMap[@props.pieceType].color } className="piece-cell"></div>
+      <div style={ assign {}, @getCoords(3), backgroundColor: PieceMap[@props.pieceType].color } className="piece-cell"></div>
     </div>
 
   # 37, 65 left
