@@ -101,9 +101,39 @@ class BoardData
   didPlayerLose: ->
     isGameOver = false
     frozenCellIds = (cell.id for cell in @frozenCells())
-    console.log frozenCellIds
     isGameOver = true for id in frozenCellIds when id in [0...20]
     isGameOver
+
+  getRows: ->
+    rows = []
+    for i in [0...@height]
+      rows.push @cells[@width*i...@width*(i+1)]
+    rows
+
+  isAnyRowFrozen: ->
+    isAnyRowFrozen = false
+    isAnyRowFrozen = true for row in @getRows() when @isRowFrozen(row)
+    isAnyRowFrozen
+
+  isRowFrozen: (row) ->
+    isRowFrozen = true
+    isRowFrozen = false for cell in row when not cell.isFrozen
+    isRowFrozen
+
+  clearFrozenRow: (rows) ->
+    frozenIndex = null
+    for row, i in rows when @isRowFrozen(row)
+      frozenIndex = i
+      break
+    if frozenIndex > 0
+      prevRow = rows[frozenIndex - 1]
+      row = rows[frozenIndex]
+      for cell, j in row
+        [row[j].isFrozen, row[j].color,prevRow[j].isFrozen, prevRow[j].color] = [prevRow[j].isFrozen, prevRow[j].color, row[j].isFrozen, row[j].color]
+      @clearFrozenRow(rows)
+    for cell in rows[0]
+      cell.isFrozen = false
+      cell.color = 'white'
 
 Dispatcher.register (payload) ->
   switch payload.eventName
@@ -126,6 +156,8 @@ Dispatcher.register (payload) ->
         if boardData.didPlayerLose()
           boardData.updateAttribs(isGameOver: true)
         else
+          while boardData.isAnyRowFrozen()
+            boardData.clearFrozenRow(boardData.getRows())
           boardData.updateAttribs(yIndex: 0, xIndex: 5, currentPieceType: boardData.randomPiece())
       BoardStore.triggerChange()
     when 'board:rotatePiece'
