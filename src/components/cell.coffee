@@ -1,4 +1,5 @@
 React = require 'react'
+cx = require 'classnames'
 
 Cell = React.createClass
   displayName: 'Cell'
