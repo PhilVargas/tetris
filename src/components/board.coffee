@@ -20,6 +20,7 @@ Board = React.createClass
     currentPieceType: React.PropTypes.string.isRequired
     cells: React.PropTypes.array.isRequired
     rotation: React.PropTypes.number.isRequired
+    isGameOver: React.PropTypes.bool.isRequired
 
   getInitialState: ->
     turnCount: @props.turnCount
@@ -28,6 +29,7 @@ Board = React.createClass
     currentPieceType: @props.currentPieceType
     cells: @props.cells
     rotation: @props.rotation
+    isGameOver: @props.isGameOver
 
   generatePiece: ->
     <Piece
@@ -38,6 +40,7 @@ Board = React.createClass
       pieceType={ @state.currentPieceType }
       setIndeces={ Action.setPieceIndeces }
       rotateClockwise={ Action.rotateClockwise }
+      dropPiece={ Action.dropPiece }
       rotateCounterClockwise={ Action.rotateCounterClockwise }
       rotation={ @state.rotation }
     />
@@ -49,11 +52,11 @@ Board = React.createClass
 
   startGame: ->
     nextTurn = =>
-      if @state.turnCount < 20
+      if @state.isGameOver
+        alert('Game Over!')
+      else
         Action.nextTurn()
         setTimeout(nextTurn, 750)
-      else
-        alert('Game Over!')
     setTimeout(nextTurn, 750)
 
   boardChanged: ->

@@ -26,4 +26,8 @@ BoardAction =
       eventName: 'board:rotatePiece'
       value: -1
 
+  dropPiece: ->
+    Dispatcher.dispatch
+      eventName: 'board:dropPiece'
+
 module.exports = BoardAction
