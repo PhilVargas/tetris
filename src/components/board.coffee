@@ -16,10 +16,18 @@ Board = React.createClass
     initialX: React.PropTypes.number.isRequired
     initialY: React.PropTypes.number.isRequired
     hiddenRows: React.PropTypes.number.isRequired
+    turnCount: React.PropTypes.number.isRequired
+    currentPieceType: React.PropTypes.string.isRequired
+    cells: React.PropTypes.array.isRequired
+    rotation: React.PropTypes.number.isRequired
 
   getInitialState: ->
+    turnCount: @props.turnCount
     xIndex: @props.xIndex
     yIndex: @props.yIndex
+    currentPieceType: @props.currentPieceType
+    cells: @props.cells
+    rotation: @props.rotation
 
   generatePiece: ->
     <Piece
@@ -27,13 +35,26 @@ Board = React.createClass
       xIndex={ @state.xIndex }
       initialX={ @props.initialX }
       initialY={ @props.initialY }
-      pieceType='line'
+      pieceType={ @state.currentPieceType }
       setIndeces={ Action.setPieceIndeces }
+      rotateClockwise={ Action.rotateClockwise }
+      rotateCounterClockwise={ Action.rotateCounterClockwise }
+      rotation={ @state.rotation }
     />
 
   # Render functions #
   componentDidMount: ->
     Store.bindChange @boardChanged
+    @startGame()
+
+  startGame: ->
+    nextTurn = =>
+      if @state.turnCount < 20
+        Action.nextTurn()
+        setTimeout(nextTurn, 750)
+      else
+        alert('Game Over!')
+    setTimeout(nextTurn, 750)
 
   boardChanged: ->
     @setState Store.getAll()
@@ -48,7 +69,7 @@ Board = React.createClass
     </div>
 
   generateRows: ->
-    for i in [0..22]
+    for i in [0...22]
       <div
         style={ { top: @props.initialY + @props.cellHeight*i, left: @props.initialX } }
         key={ i }
@@ -58,7 +79,9 @@ Board = React.createClass
       </div>
 
   generateCells: (yCoord) ->
-    for xCoord in [0..10]
-      <Cell key={ xCoord } xIndex={ xCoord } yIndex={ yCoord } />
+
+    for xCoord in [0...10]
+      cell = @state.cells[yCoord*10+xCoord]
+      <Cell key={ cell.id } xIndex={ cell.xIndex } yIndex={ cell.yIndex } isFrozen={ cell.isFrozen } color={ cell.color } />
 
 module.exports = Board

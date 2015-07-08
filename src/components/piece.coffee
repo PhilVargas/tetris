@@ -1,4 +1,5 @@
 React = require 'react'
+PieceMap = require 'helpers/piece-map'
 
 Piece = React.createClass
   displayName: 'Piece'
@@ -12,19 +13,22 @@ Piece = React.createClass
     cellHeight: React.PropTypes.number.isRequired
     cellWidth: React.PropTypes.number.isRequired
     setIndeces: React.PropTypes.func.isRequired
+    rotateClockwise: React.PropTypes.func.isRequired
+    rotateCounterClockwise: React.PropTypes.func.isRequired
+    setIndeces: React.PropTypes.func.isRequired
+    rotation: React.PropTypes.number.isRequired
 
   getDefaultProps: ->
     cellHeight: 20
     cellWidth: 20
 
   getCoords: (cellNumber = 0) ->
-    offset = @pieceMap['line'][cellNumber]
+    offset = PieceMap[@props.pieceType][@props.rotation][cellNumber]
     left: (( @props.xIndex + offset.x )*@props.cellWidth) + @props.initialX
     top: (( @props.yIndex + offset.y )*@props.cellHeight) + @props.initialY
 
   componentDidMount: ->
-    $(document).on 'keyup', (e) =>
-      @handleKeyUp(e)
+    $(document).on 'keyup', @handleKeyUp
 
   render: ->
     <div className='piece-container'>
@@ -38,26 +42,11 @@ Piece = React.createClass
   # 39 right
   # 40 down
   handleKeyUp: (e) ->
-    switch
-      when e.which == 37 && @isCollisionFree(xIndex: @props.xIndex - 1, yIndex: @props.yIndex)
-        @props.setIndeces(xIndex: @props.xIndex - 1, yIndex: @props.yIndex)
-      when e.which == 39 && @isCollisionFree(xIndex: @props.xIndex + 1, yIndex: @props.yIndex)
-        @props.setIndeces(xIndex: @props.xIndex + 1, yIndex: @props.yIndex)
-      when e.which == 40 && @isCollisionFree(xIndex: @props.xIndex, yIndex: @props.yIndex + 1)
-        @props.setIndeces(yIndex: @props.yIndex + 1, xIndex: @props.xIndex)
-
-  isCollisionFree: (nextPosition) ->
-    isCollisionFree = true
-    for a in @pieceMap[@props.pieceType] when !(0 <= nextPosition.xIndex + a.x <= 10) || 22 < nextPosition.yIndex + a.y
-      isCollisionFree = false
-    isCollisionFree
-
-  pieceMap:
-    line: [
-      { x: 0, y: 0 }
-      { x: 0, y: 1 }
-      { x: 0, y: 2 }
-      { x: 0, y: 3 }
-    ]
+    switch e.which
+      when 37,65 then @props.setIndeces(xIndex: @props.xIndex - 1, yIndex: @props.yIndex)
+      when 39,68 then @props.setIndeces(xIndex: @props.xIndex + 1, yIndex: @props.yIndex)
+      when 40,83 then @props.setIndeces(yIndex: @props.yIndex + 1, xIndex: @props.xIndex)
+      when 69 then @props.rotateClockwise()
+      when 81 then @props.rotateCounterClockwise()
 
 module.exports = Piece
