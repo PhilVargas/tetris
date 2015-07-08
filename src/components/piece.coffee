@@ -20,6 +20,7 @@ Piece = React.createClass
     rotateCounterClockwise: React.PropTypes.func.isRequired
     setIndeces: React.PropTypes.func.isRequired
     rotation: React.PropTypes.number.isRequired
+    isPaused: React.PropTypes.bool.isRequired
 
   getDefaultProps: ->
     cellHeight: 20
@@ -47,6 +48,7 @@ Piece = React.createClass
   # 69 q
   # 81 e
   handleKeyUp: (e) ->
+    return if @props.isPaused
     switch e.which
       when 37,65 then @props.setIndeces(xIndex: @props.xIndex - 1, yIndex: @props.yIndex)
       when 39,68 then @props.setIndeces(xIndex: @props.xIndex + 1, yIndex: @props.yIndex)

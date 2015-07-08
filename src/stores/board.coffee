@@ -24,6 +24,7 @@ BoardStore =
     cells: boardData.cells
     rotation: boardData.rotation
     isGameOver: boardData.isGameOver
+    isPaused: boardData.isPaused
 
   triggerChange: ->
     @trigger('change')
@@ -50,6 +51,7 @@ class BoardData
     @cells = @generateCells()
     @rotation = 0
     @isGameOver = false
+    @isPaused = false
     @color = PieceMap[@currentPieceType].color
 
   generateCells: ->
@@ -148,7 +150,11 @@ Dispatcher.register (payload) ->
       while boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)
       BoardStore.triggerChange()
+    when 'board:togglePause'
+      boardData.updateAttribs(isPaused: !boardData.isPaused)
+      BoardStore.triggerChange()
     when 'board:nextTurn'
+      return if boardData.isPaused
       boardData.updateAttribs(turnCount: boardData.turnCount + 1)
       if boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)

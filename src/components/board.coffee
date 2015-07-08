@@ -3,6 +3,7 @@ Cell = require 'components/cell'
 Piece = require 'components/piece'
 Store = require 'stores/board'
 Action = require 'actions/board'
+$ = require('jquery')
 cx = require 'classnames'
 
 Board = React.createClass
@@ -21,6 +22,7 @@ Board = React.createClass
     cells: React.PropTypes.array.isRequired
     rotation: React.PropTypes.number.isRequired
     isGameOver: React.PropTypes.bool.isRequired
+    isPaused: React.PropTypes.bool.isRequired
 
   getInitialState: ->
     turnCount: @props.turnCount
@@ -30,6 +32,7 @@ Board = React.createClass
     cells: @props.cells
     rotation: @props.rotation
     isGameOver: @props.isGameOver
+    isPaused: @props.isPaused
 
   generatePiece: ->
     <Piece
@@ -43,11 +46,14 @@ Board = React.createClass
       dropPiece={ Action.dropPiece }
       rotateCounterClockwise={ Action.rotateCounterClockwise }
       rotation={ @state.rotation }
+      isPaused={ @state.isPaused }
     />
 
   # Render functions #
   componentDidMount: ->
     Store.bindChange @boardChanged
+    $(document).on 'keyup', (e) ->
+      Action.togglePause() if e.which == 32
     @startGame()
 
   startGame: ->

@@ -30,4 +30,8 @@ BoardAction =
     Dispatcher.dispatch
       eventName: 'board:dropPiece'
 
+  togglePause: ->
+    Dispatcher.dispatch
+      eventName: 'board:togglePause'
+
 module.exports = BoardAction
