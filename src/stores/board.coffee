@@ -23,6 +23,7 @@ BoardStore =
     currentPieceType: boardData.currentPieceType
     cells: boardData.cells
     rotation: boardData.rotation
+    isGameOver: boardData.isGameOver
 
   triggerChange: ->
     @trigger('change')
@@ -48,6 +49,7 @@ class BoardData
     @currentPieceType = @randomPiece()
     @cells = @generateCells()
     @rotation = 0
+    @isGameOver = false
 
   generateCells: ->
     cells =[]
@@ -92,11 +94,16 @@ class BoardData
 
   freezeCells: ->
     cellIds = @getCellIdsFromIndeces()
-    # for cell in @cells when cell.xIndex in x && cell.yIndex in y
     for cell in @cells when cell.id in cellIds
       cell.isFrozen = true
       cell.color = 'red'
 
+  didPlayerLose: ->
+    isGameOver = false
+    frozenCellIds = (cell.id for cell in @frozenCells())
+    console.log frozenCellIds
+    isGameOver = true for id in frozenCellIds when id in [0...20]
+    isGameOver
 
 Dispatcher.register (payload) ->
   switch payload.eventName
@@ -106,17 +113,23 @@ Dispatcher.register (payload) ->
       if boardData.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
         boardData.updateAttribs(xIndex: payload.value.xIndex, yIndex: payload.value.yIndex)
         BoardStore.triggerChange()
+    when 'board:dropPiece'
+      while boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
+        boardData.updateAttribs(yIndex: boardData.yIndex + 1)
+      BoardStore.triggerChange()
     when 'board:nextTurn'
+      boardData.updateAttribs(turnCount: boardData.turnCount + 1)
       if boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)
       else
         boardData.freezeCells()
-        boardData.updateAttribs(yIndex: 0, xIndex: 5, currentPieceType: boardData.randomPiece())
-      boardData.updateAttribs(turnCount: boardData.turnCount + 1)
+        if boardData.didPlayerLose()
+          boardData.updateAttribs(isGameOver: true)
+        else
+          boardData.updateAttribs(yIndex: 0, xIndex: 5, currentPieceType: boardData.randomPiece())
       BoardStore.triggerChange()
     when 'board:rotatePiece'
       rotation = Math.abs((4 + payload.value + boardData.rotation) % 4)
-      console.log rotation
       if boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex}, rotation)
         boardData.updateAttribs(rotation: rotation)
         BoardStore.triggerChange()
