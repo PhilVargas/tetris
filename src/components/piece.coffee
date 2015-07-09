@@ -12,8 +12,7 @@ Piece = React.createClass
     xIndex: React.PropTypes.number.isRequired
     yIndex: React.PropTypes.number.isRequired
     pieceType: React.PropTypes.string.isRequired
-    cellHeight: React.PropTypes.number.isRequired
-    cellWidth: React.PropTypes.number.isRequired
+    cellEdgeLength: React.PropTypes.number.isRequired
     setIndeces: React.PropTypes.func.isRequired
     dropPiece: React.PropTypes.func.isRequired
     rotateClockwise: React.PropTypes.func.isRequired
@@ -23,13 +22,12 @@ Piece = React.createClass
     isPaused: React.PropTypes.bool.isRequired
 
   getDefaultProps: ->
-    cellHeight: 20
-    cellWidth: 20
+    cellEdgeLength: 20
 
   getCoords: (cellNumber = 0) ->
     offset = PieceMap[@props.pieceType].shapes[@props.rotation][cellNumber]
-    left: (( @props.xIndex + offset.x )*@props.cellWidth) + @props.initialX
-    top: (( @props.yIndex + offset.y )*@props.cellHeight) + @props.initialY
+    left: (( @props.xIndex + offset.x )*@props.cellEdgeLength) + @props.initialX
+    top: (( @props.yIndex + offset.y )*@props.cellEdgeLength) + @props.initialY
 
   componentDidMount: ->
     $(document).on 'keyup', @handleKeyUp

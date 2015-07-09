@@ -11,19 +11,17 @@ Ghost = React.createClass
     yIndex: React.PropTypes.number.isRequired
     rotation: React.PropTypes.number.isRequired
     pieceType: React.PropTypes.string.isRequired
-    cellHeight: React.PropTypes.number.isRequired
-    cellWidth: React.PropTypes.number.isRequired
+    cellEdgeLength: React.PropTypes.number.isRequired
     initialX: React.PropTypes.number.isRequired
     initialY: React.PropTypes.number.isRequired
 
   getDefaultProps: ->
-    cellHeight: 20
-    cellWidth: 20
+    cellEdgeLength: 20
 
   getCoords: (cellNumber = 0) ->
     offset = PieceMap[@props.pieceType].shapes[@props.rotation][cellNumber]
-    left: (( @props.xIndex + offset.x )*@props.cellWidth) + @props.initialX
-    top: (( @props.yIndex + offset.y )*@props.cellHeight) + @props.initialY
+    left: (( @props.xIndex + offset.x )*@props.cellEdgeLength) + @props.initialX
+    top: (( @props.yIndex + offset.y )*@props.cellEdgeLength) + @props.initialY
 
   render: ->
     <div className='ghost-container'>

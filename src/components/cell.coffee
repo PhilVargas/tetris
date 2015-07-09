@@ -7,14 +7,12 @@ Cell = React.createClass
   propTypes:
     xIndex: React.PropTypes.number.isRequired
     yIndex: React.PropTypes.number.isRequired
-    height: React.PropTypes.number.isRequired
-    width: React.PropTypes.number.isRequired
+    edgeLength: React.PropTypes.number.isRequired
     color: React.PropTypes.string.isRequired
     isFrozen: React.PropTypes.bool.isRequired
 
   getDefaultProps: ->
-    height: 20
-    width: 20
+    edgeLength: 20
     color: 'white'
 
   render: ->
