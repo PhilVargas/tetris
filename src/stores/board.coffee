@@ -1,6 +1,7 @@
 Dispatcher = require 'dispatcher'
 MicroEvent = require 'microevent-github'
 PieceMap = require 'helpers/piece-map'
+Settings = require 'helpers/settings'
 
 assign = require 'object-assign'
 
@@ -12,13 +13,7 @@ BoardStore =
   getAll: ->
     xIndex: boardData.xIndex
     yIndex: boardData.yIndex
-    initialX: boardData.initialX
-    initialY: boardData.initialY
-    width: boardData.width
-    height: boardData.height
-    cellWidth: boardData.cellWidth
-    cellHeight: boardData.cellHeight
-    hiddenRows: boardData.hiddenRows
+    ghostYIndex: boardData.ghostYIndex
     turnCount: boardData.turnCount
     currentPieceType: boardData.currentPieceType
     cells: boardData.cells
@@ -37,15 +32,11 @@ BoardStore =
 
 class BoardData
   constructor: ->
-    @xIndex = 5
-    @yIndex = 0
-    @initialX = 200
-    @initialY = 0
-    @width = 10
-    @height = 22
-    @cellWidth = 20
-    @cellHeight = 20
-    @hiddenRows = 2
+    @xIndex = Settings.initialX
+    @yIndex = Settings.initialY
+    @ghostYIndex = 0
+    @width = Settings.boardWidth
+    @height = Settings.boardHeight
     @turnCount = 0
     @currentPieceType = @randomPiece()
     @cells = @generateCells()
@@ -138,14 +129,23 @@ class BoardData
       cell.isFrozen = false
       cell.color = 'white'
 
+  drawGhost: ->
+    yIndex = @yIndex
+    while boardData.isCollisionFree({xIndex: @xIndex, yIndex: yIndex + 1})
+      @updateAttribs(ghostYIndex: yIndex + 1)
+      yIndex++
+
 Dispatcher.register (payload) ->
   switch payload.eventName
     when 'board:init'
       boardData = new BoardData()
+      boardData.drawGhost()
+      BoardStore.triggerChange()
     when 'board:setPieceIndeces'
       if boardData.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
         boardData.updateAttribs(xIndex: payload.value.xIndex, yIndex: payload.value.yIndex)
-        BoardStore.triggerChange()
+      boardData.drawGhost()
+      BoardStore.triggerChange()
     when 'board:dropPiece'
       while boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)
@@ -167,11 +167,13 @@ Dispatcher.register (payload) ->
             boardData.clearFrozenRow(boardData.getRows())
           nextPiece = boardData.randomPiece()
           boardData.updateAttribs(yIndex: 0, xIndex: 5, currentPieceType: nextPiece, color: PieceMap[nextPiece].color)
+          boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:rotatePiece'
       rotation = Math.abs((4 + payload.value + boardData.rotation) % 4)
       if boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex}, rotation)
         boardData.updateAttribs(rotation: rotation)
+        boardData.drawGhost()
         BoardStore.triggerChange()
 
 MicroEvent.mixin( BoardStore )

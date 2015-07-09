@@ -11,9 +11,18 @@
   max-width: 20px;
   height: 20px;
   border: 1px solid black;
-  background-color: blue;
+  z-index: 3;
+  position: fixed;
+}
+
+.ghost-cell {
+  width: 100%;
+  max-width: 20px;
+  height: 20px;
+  border: 1px solid black;
   z-index: 2;
   position: fixed;
+  opacity: .5;
 }
 
 .cell-container {

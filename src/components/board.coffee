@@ -1,8 +1,10 @@
 React = require 'react'
 Cell = require 'components/cell'
 Piece = require 'components/piece'
+Ghost = require 'components/ghost'
 Store = require 'stores/board'
 Action = require 'actions/board'
+Settings = require 'helpers/settings'
 $ = require('jquery')
 cx = require 'classnames'
 
@@ -10,10 +12,9 @@ Board = React.createClass
   displayName: 'Board'
 
   propTypes:
-    cellWidth: React.PropTypes.number.isRequired
-    cellHeight: React.PropTypes.number.isRequired
     width: React.PropTypes.number.isRequired
     height: React.PropTypes.number.isRequired
+    cellEdgeLength: React.PropTypes.number.isRequired
     initialX: React.PropTypes.number.isRequired
     initialY: React.PropTypes.number.isRequired
     hiddenRows: React.PropTypes.number.isRequired
@@ -24,10 +25,19 @@ Board = React.createClass
     isGameOver: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
 
+  getDefaultProps: ->
+    cellEdgeLength: Settings.cellEdgeLength
+    initialX: Settings.boardXOffset
+    initialY: Settings.boardYOffest
+    hiddenRows: Settings.hiddenRows
+    width: Settings.boardWidth
+    height: Settings.boardHeight
+
   getInitialState: ->
     turnCount: @props.turnCount
     xIndex: @props.xIndex
     yIndex: @props.yIndex
+    ghostYIndex: @props.ghostYIndex
     currentPieceType: @props.currentPieceType
     cells: @props.cells
     rotation: @props.rotation
@@ -49,6 +59,16 @@ Board = React.createClass
       isPaused={ @state.isPaused }
     />
 
+  generateGhost: ->
+    <Ghost
+      yIndex={ @state.ghostYIndex }
+      xIndex={ @state.xIndex }
+      initialX={ @props.initialX }
+      initialY={ @props.initialY }
+      pieceType={ @state.currentPieceType }
+      rotation={ @state.rotation }
+    />
+
   # Render functions #
   componentDidMount: ->
     Store.bindChange @boardChanged
@@ -58,12 +78,13 @@ Board = React.createClass
 
   startGame: ->
     nextTurn = =>
+      delay = Math.max(Settings.minTurnDelay, Settings.initialTurnDelay - @state.turnCount)
       if @state.isGameOver
         alert('Game Over!')
       else
         Action.nextTurn()
-        setTimeout(nextTurn, 750)
-    setTimeout(nextTurn, 750)
+        setTimeout(nextTurn, delay)
+    setTimeout(nextTurn, Settings.initialTurnDelay)
 
   boardChanged: ->
     @setState Store.getAll()
@@ -75,12 +96,13 @@ Board = React.createClass
     <div className="board">
       { @generateRows() }
       <div id="piece-container">{ @generatePiece() }</div>
+      <div id="ghost-container">{ @generateGhost() }</div>
     </div>
 
   generateRows: ->
     for i in [0...22]
       <div
-        style={ { top: @props.initialY + @props.cellHeight*i, left: @props.initialX } }
+        style={ { top: @props.initialY + @props.cellEdgeLength*i, left: @props.initialX } }
         key={ i }
         className={ cx "row collapse cell-container", { invisible: i < @props.hiddenRows } }
       >
