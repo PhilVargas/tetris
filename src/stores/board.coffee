@@ -16,6 +16,9 @@ BoardStore =
     ghostYIndex: boardData.ghostYIndex
     turnCount: boardData.turnCount
     currentPieceType: boardData.currentPieceType
+    nextPieceType: boardData.nextPieceType
+    queuePieceType: boardData.queuePieceType
+    canQueuePiece: boardData.canQueuePiece
     cells: boardData.cells
     rotation: boardData.rotation
     isGameOver: boardData.isGameOver
@@ -39,6 +42,9 @@ class BoardData
     @height = Settings.boardHeight
     @turnCount = 0
     @currentPieceType = @randomPiece()
+    @nextPieceType = @randomPiece()
+    @queuePieceType = ''
+    @canQueuePiece = true
     @cells = @generateCells()
     @rotation = 0
     @isGameOver = false
@@ -167,7 +173,7 @@ Dispatcher.register (payload) ->
           while boardData.isAnyRowFrozen()
             boardData.clearFrozenRow(boardData.getRows())
           nextPiece = boardData.randomPiece()
-          boardData.updateAttribs(yIndex: 0, xIndex: 5, currentPieceType: nextPiece, color: PieceMap[nextPiece].color)
+          boardData.updateAttribs(yIndex: 0, xIndex: 5, rotation: 0, currentPieceType: boardData.nextPieceType, color: PieceMap[boardData.nextPieceType].color, nextPieceType: nextPiece, canQueuePiece: true)
           boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:rotatePiece'
@@ -176,6 +182,16 @@ Dispatcher.register (payload) ->
         boardData.updateAttribs(rotation: rotation)
         boardData.drawGhost()
         BoardStore.triggerChange()
+    when 'board:queuePiece'
+      if boardData.canQueuePiece
+        if boardData.queuePieceType
+          boardData.updateAttribs(yIndex: 0, xIndex: 5, rotation:0, currentPieceType: boardData.queuePieceType, color: PieceMap[boardData.queuePieceType].color, queuePieceType: boardData.currentPieceType)
+        else
+          boardData.updateAttribs(yIndex: 0, xIndex: 5, rotation:0, currentPieceType: boardData.nextPieceType, color: PieceMap[boardData.nextPieceType].color, queuePieceType: boardData.currentPieceType, nextPieceType: boardData.randomPiece())
+      boardData.drawGhost()
+      boardData.updateAttribs(canQueuePiece: false)
+      BoardStore.triggerChange()
+
 
 MicroEvent.mixin( BoardStore )
 module.exports = BoardStore

@@ -1,6 +1,7 @@
 PieceMap =
   I:
     color: 'turquoise'
+    displayPieceCoords: {top: -30, left: 0}
     shapes: [
       [
         { x: 0, y: 0 }
@@ -29,6 +30,7 @@ PieceMap =
     ]
   O:
     color: 'yellow'
+    displayPieceCoords: {top: -10, left: 10}
     shapes: [
       [
         { x: 0, y: 0 }
@@ -57,6 +59,7 @@ PieceMap =
     ]
   Z:
     color: 'red'
+    displayPieceCoords: {top: 10, left: 0}
     shapes: [
       [
         { x: 0, y: 0 }
@@ -85,6 +88,7 @@ PieceMap =
     ]
   S:
     color: 'lime'
+    displayPieceCoords: {top: 10, left: 0}
     shapes: [
       [
         { x: 0, y: 0 }
@@ -113,6 +117,7 @@ PieceMap =
     ]
   L:
     color: 'orange'
+    displayPieceCoords: {top: 10, left: 0}
     shapes: [
       [
         { x: 0, y: 0 }
@@ -141,6 +146,7 @@ PieceMap =
     ]
   J:
     color: 'blue'
+    displayPieceCoords: {top: 10, left: 0}
     shapes: [
       [
         { x: 0, y: 0 }
@@ -169,6 +175,7 @@ PieceMap =
     ]
   T:
     color: 'purple'
+    displayPieceCoords: {top: 10, left: 0}
     shapes: [
       [
         { x: 0, y: 0 }

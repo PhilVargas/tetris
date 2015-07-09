@@ -2,6 +2,7 @@ React = require 'react'
 Cell = require 'components/cell'
 Piece = require 'components/piece'
 Ghost = require 'components/ghost'
+DisplayPiece = require 'components/display-piece'
 Store = require 'stores/board'
 Action = require 'actions/board'
 Settings = require 'helpers/settings'
@@ -20,6 +21,8 @@ Board = React.createClass
     hiddenRows: React.PropTypes.number.isRequired
     turnCount: React.PropTypes.number.isRequired
     currentPieceType: React.PropTypes.string.isRequired
+    nextPieceType: React.PropTypes.string.isRequired
+    queuePieceType: React.PropTypes.string.isRequired
     cells: React.PropTypes.array.isRequired
     rotation: React.PropTypes.number.isRequired
     isGameOver: React.PropTypes.bool.isRequired
@@ -39,6 +42,8 @@ Board = React.createClass
     yIndex: @props.yIndex
     ghostYIndex: @props.ghostYIndex
     currentPieceType: @props.currentPieceType
+    queuePieceType: @props.queuePieceType
+    nextPieceType: @props.nextPieceType
     cells: @props.cells
     rotation: @props.rotation
     isGameOver: @props.isGameOver
@@ -54,6 +59,7 @@ Board = React.createClass
       setIndeces={ Action.setPieceIndeces }
       rotateClockwise={ Action.rotateClockwise }
       dropPiece={ Action.dropPiece }
+      queuePiece={ Action.queuePiece }
       rotateCounterClockwise={ Action.rotateCounterClockwise }
       rotation={ @state.rotation }
       isPaused={ @state.isPaused }
@@ -67,6 +73,23 @@ Board = React.createClass
       initialY={ @props.initialY }
       pieceType={ @state.currentPieceType }
       rotation={ @state.rotation }
+    />
+
+  generateNextPiece: ->
+    <DisplayPiece
+      pieceType={ @state.nextPieceType }
+      cellClass='next-cell'
+      id="next-piece-container"
+      pieceTitle='Next Piece'
+    />
+
+  generateQueuePiece: ->
+    <DisplayPiece
+      pieceType={ @state.queuePieceType }
+      cellClass='queue-cell'
+      id='queue-piece-container'
+      pieceTitle='Queued Piece'
+      isDisabled={ !@state.canQueuePiece }
     />
 
   # Render functions #
@@ -95,8 +118,10 @@ Board = React.createClass
   render: ->
     <div className="board">
       { @generateRows() }
-      <div id="piece-container">{ @generatePiece() }</div>
-      <div id="ghost-container">{ @generateGhost() }</div>
+      { @generatePiece() }
+      { @generateGhost() }
+      { @generateNextPiece() }
+      { @generateQueuePiece() }
     </div>
 
   generateRows: ->

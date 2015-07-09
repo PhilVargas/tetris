@@ -34,4 +34,7 @@ BoardAction =
     Dispatcher.dispatch
       eventName: 'board:togglePause'
 
+  queuePiece: ->
+    Dispatcher.dispatch
+      eventName: 'board:queuePiece'
 module.exports = BoardAction

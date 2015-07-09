@@ -15,6 +15,7 @@ Piece = React.createClass
     cellEdgeLength: React.PropTypes.number.isRequired
     setIndeces: React.PropTypes.func.isRequired
     dropPiece: React.PropTypes.func.isRequired
+    queuePiece: React.PropTypes.func.isRequired
     rotateClockwise: React.PropTypes.func.isRequired
     rotateCounterClockwise: React.PropTypes.func.isRequired
     setIndeces: React.PropTypes.func.isRequired
