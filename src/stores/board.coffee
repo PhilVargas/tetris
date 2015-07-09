@@ -131,6 +131,7 @@ class BoardData
 
   drawGhost: ->
     yIndex = @yIndex
+    @updateAttribs(ghostYIndex: yIndex) unless boardData.isCollisionFree({xIndex: @xIndex, yIndex: yIndex + 1})
     while boardData.isCollisionFree({xIndex: @xIndex, yIndex: yIndex + 1})
       @updateAttribs(ghostYIndex: yIndex + 1)
       yIndex++
