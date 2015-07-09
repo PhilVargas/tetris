@@ -31,7 +31,9 @@ Piece = React.createClass
     top: (( @props.yIndex + offset.y )*@props.cellEdgeLength) + @props.initialY
 
   componentDidMount: ->
-    $(document).on 'keyup', @handleKeyUp
+    $(document).on
+      keydown: @handleKeyDown
+      keyup: @handleKeyUp
 
   render: ->
     <div className='piece-container'>
@@ -44,16 +46,23 @@ Piece = React.createClass
   # 37, 65 left
   # 39, 68 right
   # 40, 83 down
-  # 69 q
-  # 81 e
-  handleKeyUp: (e) ->
+  handleKeyDown: (e) ->
     return if @props.isPaused
     switch e.which
       when 37,65 then @props.setIndeces(xIndex: @props.xIndex - 1, yIndex: @props.yIndex)
       when 39,68 then @props.setIndeces(xIndex: @props.xIndex + 1, yIndex: @props.yIndex)
       when 40,83 then @props.setIndeces(yIndex: @props.yIndex + 1, xIndex: @props.xIndex)
+
+  # 38 87, up w
+  # 69 q
+  # 81 e
+  # 13 enter
+  handleKeyUp: (e) ->
+    return if @props.isPaused
+    switch e.which
       when 38,87 then @props.dropPiece()
       when 69 then @props.rotateClockwise()
       when 81 then @props.rotateCounterClockwise()
+      when 13 then @props.queuePiece()
 
 module.exports = Piece
