@@ -23,6 +23,7 @@ BoardStore =
     rotation: boardData.rotation
     isGameOver: boardData.isGameOver
     isPaused: boardData.isPaused
+    score: boardData.score
 
   triggerChange: ->
     @trigger('change')
@@ -50,6 +51,7 @@ class BoardData
     @isGameOver = false
     @isPaused = false
     @color = PieceMap[@currentPieceType].color
+    @score = 0
 
   generateCells: ->
     cells =[]
@@ -155,7 +157,7 @@ Dispatcher.register (payload) ->
       BoardStore.triggerChange()
     when 'board:dropPiece'
       while boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
-        boardData.updateAttribs(yIndex: boardData.yIndex + 1)
+        boardData.updateAttribs(yIndex: boardData.yIndex + 1, score: boardData.score + 1)
       BoardStore.triggerChange()
     when 'board:togglePause'
       boardData.updateAttribs(isPaused: !boardData.isPaused)
@@ -170,10 +172,13 @@ Dispatcher.register (payload) ->
         if boardData.didPlayerLose()
           boardData.updateAttribs(isGameOver: true)
         else
+          scoreMultiplier = 0
           while boardData.isAnyRowFrozen()
+            scoreMultiplier++
             boardData.clearFrozenRow(boardData.getRows())
+          score = [0,40,100,300,1200][scoreMultiplier] * ( 1 )
           nextPiece = boardData.randomPiece()
-          boardData.updateAttribs(yIndex: 0, xIndex: 5, rotation: 0, currentPieceType: boardData.nextPieceType, color: PieceMap[boardData.nextPieceType].color, nextPieceType: nextPiece, canQueuePiece: true)
+          boardData.updateAttribs(score: boardData.score + score, yIndex: 0, xIndex: 5, rotation: 0, currentPieceType: boardData.nextPieceType, color: PieceMap[boardData.nextPieceType].color, nextPieceType: nextPiece, canQueuePiece: true)
           boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:rotatePiece'

@@ -25,6 +25,7 @@ Board = React.createClass
     queuePieceType: React.PropTypes.string.isRequired
     cells: React.PropTypes.array.isRequired
     rotation: React.PropTypes.number.isRequired
+    score: React.PropTypes.number.isRequired
     isGameOver: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
 
@@ -48,6 +49,7 @@ Board = React.createClass
     rotation: @props.rotation
     isGameOver: @props.isGameOver
     isPaused: @props.isPaused
+    score: @props.score
 
   generatePiece: ->
     <Piece
@@ -117,6 +119,7 @@ Board = React.createClass
 
   render: ->
     <div className="board">
+      { @state.score }
       { @generateRows() }
       { @generatePiece() }
       { @generateGhost() }
