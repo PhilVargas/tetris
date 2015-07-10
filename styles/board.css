@@ -2,6 +2,9 @@
   margin: 0 auto;
   width: 960px;
 }
+#audio-container {
+  /* display: none; */
+}
 .cell {
   width: 100%;
   max-width: 20px;
