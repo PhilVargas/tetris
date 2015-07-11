@@ -8,7 +8,6 @@ AudioStore = require 'stores/audio'
 AudioAction = require 'actions/audio'
 
 $(document).on 'ready', ->
-  console.log AudioStore.getAll()
   BoardAction.init()
   React.render React.createElement(Board, BoardStore.getAll()), document.getElementById 'board-anchor'
   React.render React.createElement(ThemeSong, isMuted: AudioStore.get('isMuted'), isPaused: BoardStore.get('isPaused')), document.getElementById 'audio-anchor'

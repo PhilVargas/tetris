@@ -24,6 +24,7 @@ BoardStore =
     isGameOver: boardData.isGameOver
     isPaused: boardData.isPaused
     score: boardData.score
+    linesCleared: boardData.linesCleared
 
   triggerChange: ->
     @trigger('change')
@@ -38,6 +39,7 @@ class BoardData
   constructor: ->
     @xIndex = Settings.initialX
     @yIndex = Settings.initialY
+    @linesCleared = 0
     @ghostYIndex = 0
     @width = Settings.boardWidth
     @height = Settings.boardHeight
@@ -172,13 +174,22 @@ Dispatcher.register (payload) ->
         if boardData.didPlayerLose()
           boardData.updateAttribs(isGameOver: true)
         else
-          scoreMultiplier = 0
+          linesCleared = 0
           while boardData.isAnyRowFrozen()
-            scoreMultiplier++
+            linesCleared++
             boardData.clearFrozenRow(boardData.getRows())
-          score = [0,40,100,300,1200][scoreMultiplier] * ( 1 )
+          score = [0,40,100,300,1200][linesCleared] * ( 1 )
           nextPiece = boardData.randomPiece()
-          boardData.updateAttribs(score: boardData.score + score, yIndex: 0, xIndex: 5, rotation: 0, currentPieceType: boardData.nextPieceType, color: PieceMap[boardData.nextPieceType].color, nextPieceType: nextPiece, canQueuePiece: true)
+          boardData.updateAttribs(
+            linesCleared: boardData.linesCleared + linesCleared
+            score: boardData.score + score
+            yIndex: 0
+            xIndex: 5
+            rotation: 0
+            currentPieceType: boardData.nextPieceType
+            color: PieceMap[boardData.nextPieceType].color
+            nextPieceType: nextPiece, canQueuePiece: true
+          )
           boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:rotatePiece'

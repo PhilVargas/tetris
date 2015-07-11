@@ -119,7 +119,14 @@ Board = React.createClass
 
   render: ->
     <div className="board">
-      { @state.score }
+      <div>
+        { "score: #{@state.score}" }
+      </div>
+      <div>Move with ASD</div>
+      <div>Drop with W</div>
+      <div>Rotate with E & Q</div>
+      <div>Space to pause</div>
+      <div>Enter to queue a piece</div>
       { @generateRows() }
       { @generatePiece() }
       { @generateGhost() }
