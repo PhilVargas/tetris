@@ -5,6 +5,7 @@
 #audio-container {
   /* display: none; */
 }
+
 .cell {
   width: 100%;
   max-width: 20px;
@@ -45,7 +46,7 @@
   position: absolute;
 }
 
-#next-piece-container, #queue-piece-container, .pieces-container, .pieces-title {
+.pieces-container, .pieces-title {
   position: relative;
 }
 
@@ -59,15 +60,6 @@
   background: gray;
   opacity: .25;
 
-}
-#next-piece-container {
-  top: 40px;
-  left: 500px;
-}
-
-#queue-piece-container {
-  top: 100px;
-  left: 500px;
 }
 
 .cell-container {

@@ -119,19 +119,29 @@ Board = React.createClass
 
   render: ->
     <div className="board">
-      <div>
-        { "score: #{@state.score}" }
+      <div className="row">
+        <div className="columns large-4">
+          <div>{ "score: #{@state.score}" }</div>
+          <div>Move with ASD</div>
+          <div>Drop with W</div>
+          <div>Rotate with E & Q</div>
+          <div>Space to pause</div>
+          <div>Enter to queue a piece</div>
+        </div>
+        <div className="columns large-4">
+          <div classNames="row">
+            { @generateNextPiece() }
+          </div>
+          <div classNames="row">
+            { @generateQueuePiece() }
+          </div>
+        </div>
       </div>
-      <div>Move with ASD</div>
-      <div>Drop with W</div>
-      <div>Rotate with E & Q</div>
-      <div>Space to pause</div>
-      <div>Enter to queue a piece</div>
-      { @generateRows() }
-      { @generatePiece() }
-      { @generateGhost() }
-      { @generateNextPiece() }
-      { @generateQueuePiece() }
+      <div id='pieces'>
+        { @generateRows() }
+        { @generatePiece() }
+        { @generateGhost() }
+      </div>
     </div>
 
   generateRows: ->
