@@ -27,7 +27,7 @@ Piece = React.createClass
 
   getCoords: (cellNumber = 0) ->
     offset = PieceMap[@props.pieceType].shapes[@props.rotation][cellNumber]
-    left: (( @props.xIndex + offset.x )*@props.cellEdgeLength) + @props.initialX
+    left: (( @props.xIndex + offset.x)*@props.cellEdgeLength) + @props.initialX
     top: (( @props.yIndex + offset.y )*@props.cellEdgeLength) + @props.initialY
 
   componentDidMount: ->

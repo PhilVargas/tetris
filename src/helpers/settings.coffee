@@ -5,9 +5,9 @@ Settings =
   boardHeight: 22
   boardWidth: 10
   hiddenRows: 2
-  initialX: 5
+  initialX: 4
   initialY: 1
-  boardXOffset: 500
+  boardXOffset: 15
   boardYOffest: 0
 
 module.exports = Settings

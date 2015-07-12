@@ -120,7 +120,7 @@ Board = React.createClass
   render: ->
     <div className="board">
       <div className="row">
-        <div className="columns large-4">
+        <div className="columns large-3">
           <div>{ "score: #{@state.score}" }</div>
           <div>Move with ASD</div>
           <div>Drop with W</div>
@@ -128,7 +128,12 @@ Board = React.createClass
           <div>Space to pause</div>
           <div>Enter to queue a piece</div>
         </div>
-        <div className="columns large-4">
+        <div id='pieces' className='columns large-4'>
+          { @generateRows() }
+          { @generatePiece() }
+          { @generateGhost() }
+        </div>
+        <div className="columns large-4 end">
           <div classNames="row">
             { @generateNextPiece() }
           </div>
@@ -137,17 +142,12 @@ Board = React.createClass
           </div>
         </div>
       </div>
-      <div id='pieces'>
-        { @generateRows() }
-        { @generatePiece() }
-        { @generateGhost() }
-      </div>
     </div>
+        # style={ { top: @props.initialY + @props.cellEdgeLength*i, left: @props.initialX } }
 
   generateRows: ->
     for i in [0...22]
       <div
-        style={ { top: @props.initialY + @props.cellEdgeLength*i, left: @props.initialX } }
         key={ i }
         className={ cx "row collapse cell-container", { invisible: i < @props.hiddenRows } }
       >

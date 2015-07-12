@@ -6,6 +6,10 @@
   /* display: none; */
 }
 
+#pieces {
+
+}
+
 .cell {
   width: 100%;
   max-width: 20px;
@@ -20,7 +24,7 @@
   height: 20px;
   border: 1px solid black;
   z-index: 3;
-  position: fixed;
+  position: absolute;
 }
 
 .ghost-cell {
@@ -29,7 +33,7 @@
   height: 20px;
   border: 1px solid black;
   z-index: 2;
-  position: fixed;
+  position: absolute;
   opacity: .5;
 }
 
@@ -64,5 +68,5 @@
 
 .cell-container {
   max-height: 20px;
-  position: fixed;
+  position: relative;
 }
