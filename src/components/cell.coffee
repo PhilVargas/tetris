@@ -1,4 +1,5 @@
 React = require 'react'
+Settings = require 'helpers/settings'
 cx = require 'classnames'
 
 Cell = React.createClass
@@ -12,7 +13,7 @@ Cell = React.createClass
     isFrozen: React.PropTypes.bool.isRequired
 
   getDefaultProps: ->
-    edgeLength: 20
+    edgeLength: Settings.cellEdgeLength
     color: 'white'
 
   render: ->

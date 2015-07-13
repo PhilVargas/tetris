@@ -143,10 +143,9 @@ Board = React.createClass
         </div>
       </div>
     </div>
-        # style={ { top: @props.initialY + @props.cellEdgeLength*i, left: @props.initialX } }
 
   generateRows: ->
-    for i in [0...22]
+    for i in [0...Settings.boardHeight]
       <div
         key={ i }
         className={ cx "row collapse cell-container", { invisible: i < @props.hiddenRows } }
@@ -155,9 +154,8 @@ Board = React.createClass
       </div>
 
   generateCells: (yCoord) ->
-
-    for xCoord in [0...10]
-      cell = @state.cells[yCoord*10+xCoord]
+    for xCoord in [0...Settings.boardWidth]
+      cell = @state.cells[yCoord*Settings.boardWidth+xCoord]
       <Cell key={ cell.id } xIndex={ cell.xIndex } yIndex={ cell.yIndex } isFrozen={ cell.isFrozen } color={ cell.color } />
 
 module.exports = Board

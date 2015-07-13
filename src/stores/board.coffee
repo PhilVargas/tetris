@@ -43,6 +43,7 @@ class BoardData
     @ghostYIndex = 0
     @width = Settings.boardWidth
     @height = Settings.boardHeight
+    @hiddenRows = Settings.hiddenRows
     @turnCount = 0
     @currentPieceType = @randomPiece()
     @nextPieceType = @randomPiece()
@@ -78,9 +79,14 @@ class BoardData
   updateAttribs: (attribs) ->
     assign(this, attribs)
 
+  hasCollision: (nextPosition, cell) ->
+    !(0 <= nextPosition.xIndex + cell.x < @width) ||
+      nextPosition.yIndex + cell.y >= @height ||
+      @isFrozenCell(x: nextPosition.xIndex + cell.x, y: nextPosition.yIndex + cell.y)
+
   isCollisionFree: (nextPosition, rotation = @rotation) =>
     isCollisionFree = true
-    for a in PieceMap[@currentPieceType].shapes[rotation] when !(0 <= nextPosition.xIndex + a.x < 10) || nextPosition.yIndex + a.y >= 22 || @isFrozenCell(x: nextPosition.xIndex + a.x, y: nextPosition.yIndex + a.y)
+    for cell in PieceMap[@currentPieceType].shapes[rotation] when @hasCollision(nextPosition, cell)
       isCollisionFree = false
     isCollisionFree
 
@@ -93,7 +99,7 @@ class BoardData
   getCellIdsFromIndeces: ->
     piece = @getPieceIndeces()
     cellIds = for cell in piece
-      cell.x + (10*cell.y)
+      cell.x + (@width*cell.y)
     cellIds
 
   freezeCells: ->
@@ -105,7 +111,7 @@ class BoardData
   didPlayerLose: ->
     isGameOver = false
     frozenCellIds = (cell.id for cell in @frozenCells())
-    isGameOver = true for id in frozenCellIds when id in [0...20]
+    isGameOver = true for id in frozenCellIds when id in [0...(@width * @hiddenRows)]
     isGameOver
 
   getRows: ->
@@ -183,8 +189,8 @@ Dispatcher.register (payload) ->
           boardData.updateAttribs(
             linesCleared: boardData.linesCleared + linesCleared
             score: boardData.score + score
-            yIndex: 0
-            xIndex: 5
+            yIndex: Settings.initialY
+            xIndex: Settings.initialX
             rotation: 0
             currentPieceType: boardData.nextPieceType
             color: PieceMap[boardData.nextPieceType].color
@@ -201,9 +207,22 @@ Dispatcher.register (payload) ->
     when 'board:queuePiece'
       if boardData.canQueuePiece
         if boardData.queuePieceType
-          boardData.updateAttribs(yIndex: 0, xIndex: 5, rotation:0, currentPieceType: boardData.queuePieceType, color: PieceMap[boardData.queuePieceType].color, queuePieceType: boardData.currentPieceType)
+          boardData.updateAttribs
+            yIndex: Settings.initialY
+            xIndex: Settings.initialX
+            rotation:0
+            currentPieceType: boardData.queuePieceType
+            color: PieceMap[boardData.queuePieceType].color
+            queuePieceType: boardData.currentPieceType
         else
-          boardData.updateAttribs(yIndex: 0, xIndex: 5, rotation:0, currentPieceType: boardData.nextPieceType, color: PieceMap[boardData.nextPieceType].color, queuePieceType: boardData.currentPieceType, nextPieceType: boardData.randomPiece())
+          boardData.updateAttribs
+            yIndex: Settings.initialY
+            xIndex: Settings.initialX
+            rotation:0
+            currentPieceType: boardData.nextPieceType
+            color: PieceMap[boardData.nextPieceType].color
+            queuePieceType: boardData.currentPieceType
+            nextPieceType: boardData.randomPiece()
       boardData.drawGhost()
       boardData.updateAttribs(canQueuePiece: false)
       BoardStore.triggerChange()
