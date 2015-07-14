@@ -1,13 +1,13 @@
 PieceMap =
   I:
     color: 'turquoise'
-    displayPieceCoords: {top: -30, left: 0}
+    displayPieceCoords: {top: -10, left: 0}
     shapes: [
       [
         { x: 0, y: 0 }
         { x: 0, y: 1 }
         { x: 0, y: 2 }
-        { x: 0, y: 3 }
+        { x: 0, y: -1 }
       ]
       [
         { x: -2, y: 2 }
@@ -19,7 +19,7 @@ PieceMap =
         { x: -1, y: 0 }
         { x: -1, y: 1 }
         { x: -1, y: 2 }
-        { x: -1, y: 3 }
+        { x: -1, y: -1 }
       ]
       [
         { x: -2, y: 1 }
@@ -30,31 +30,31 @@ PieceMap =
     ]
   O:
     color: 'yellow'
-    displayPieceCoords: {top: -10, left: 10}
+    displayPieceCoords: {top: 10, left: 10}
     shapes: [
       [
         { x: 0, y: 0 }
         { x: -1, y: 0 }
-        { x: -1, y: 1 }
-        { x: 0, y: 1 }
+        { x: -1, y: -1 }
+        { x: 0, y: -1 }
       ]
       [
         { x: 0, y: 0 }
         { x: -1, y: 0 }
-        { x: -1, y: 1 }
-        { x: 0, y: 1 }
+        { x: -1, y: -1 }
+        { x: 0, y: -1 }
       ]
       [
         { x: 0, y: 0 }
         { x: -1, y: 0 }
-        { x: -1, y: 1 }
-        { x: 0, y: 1 }
+        { x: -1, y: -1 }
+        { x: 0, y: -1 }
       ]
       [
         { x: 0, y: 0 }
         { x: -1, y: 0 }
-        { x: -1, y: 1 }
-        { x: 0, y: 1 }
+        { x: -1, y: -1 }
+        { x: 0, y: -1 }
       ]
     ]
   Z:
