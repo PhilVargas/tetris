@@ -1,4 +1,5 @@
 .board {
+  padding-top: 60px;
   margin: 0 auto;
   width: 960px;
 }
@@ -56,8 +57,17 @@
   position: relative;
 }
 
+#queue-piece-container {
+  padding-top: 15px;
+}
+
+.pieces-title {
+  text-align: center;
+}
+
 .pieces-container {
   border: 1px solid black;
+  margin: 0 auto;
   height: 100px;
   width: 100px;
 }
@@ -71,4 +81,18 @@
 .cell-container {
   max-height: 20px;
   position: relative;
+}
+
+.queue-legend {
+  font-size: 15px;
+}
+
+#pieces .board-pieces-container {
+  text-align: center;
+}
+
+#pieces .inner-board-pieces-container {
+  margin: 0 auto;
+  padding: 0;
+  float: none;
 }

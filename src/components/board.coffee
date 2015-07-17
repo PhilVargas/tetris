@@ -115,7 +115,7 @@ Board = React.createClass
       cellClass='next-cell'
       id="next-piece-container"
       pieceTitle='Next Piece'
-      containerClass='columns large-10 large-centered'
+      containerClass='columns large-11 large-centered'
     />
 
   generateQueuePiece: ->
@@ -125,21 +125,45 @@ Board = React.createClass
       id='queue-piece-container'
       pieceTitle='Queued Piece'
       isDisabled={ !@state.canQueuePiece }
-      containerClass='columns large-10 large-centered'
+      containerClass='columns large-11 large-centered'
     />
 
   render: ->
     <div className="board">
       <div className="row">
-        <div className="large-8 columns large-centered">
+        <div className="large-12 columns large-centered">
           <div className="row">
-            <div className="columns large-4">
-              <div className='row' >{ "score: #{@state.score}" }</div>
-              <div className='row' >Move with <pre className='code'>ASD</pre></div>
-              <div className='row' >Drop with <pre className='code' >W</pre></div>
-              <div className='row' >Rotate with <pre className='code'>E</pre> & <pre className='code'>Q</pre></div>
-              <div className='row' ><pre className='code'>Space</pre> to pause</div>
-              <div className='row' ><pre className='code'>Enter</pre> to queue a piece</div>
+            <div className="columns large-3 panel radius">
+              <div className='row' >
+                <div className="columns">
+                  { "score: #{@state.score}" }
+                </div>
+              </div>
+              <div className='row'>
+                <div className="columns">
+                  Move with <pre className='code'>ASD</pre>
+                </div>
+              </div>
+              <div className='row'>
+                <div className="columns">
+                  Drop with <pre className='code' >W</pre>
+                </div>
+              </div>
+              <div className='row'>
+                <div className="columns">
+                  Rotate with <pre className='code'>E</pre> & <pre className='code'>Q</pre>
+                </div>
+              </div>
+              <div className='row'>
+                <div className="columns">
+                <pre className='code'>Space</pre> to pause
+                </div>
+              </div>
+              <div className='row'>
+                <div className="columns queue-legend">
+                  <pre className='code'>Enter</pre> to queue a piece
+                </div>
+              </div>
               <div className="row switch radius tiny">
                 <div className="columns large-4">Music</div>
                 <input id="mute-button" type="checkbox" checked={ !@state.isMuted  } onChange={ @handleAudioChange } />
@@ -147,11 +171,15 @@ Board = React.createClass
               </div>
             </div>
             <div id='pieces' className='columns large-5'>
-              { @generateRows() }
-              { @generatePiece() }
-              { @generateGhost() }
+              <div className='row board-pieces-container'>
+                <div className='columns inner-board-pieces-container' style={ { width: Settings.cellEdgeLength * Settings.boardWidth } }>
+                { @generateRows() }
+                { @generatePiece() }
+                { @generateGhost() }
+                </div>
+              </div>
             </div>
-            <div className="columns large-3 end">
+            <div className="columns large-2 end callout panel radius">
               <div className="row">
                 { @generateNextPiece() }
               </div>

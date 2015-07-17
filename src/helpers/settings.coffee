@@ -7,7 +7,7 @@ Settings =
   hiddenRows: 1
   initialX: 5
   initialY: 1
-  boardXOffset: 15
+  boardXOffset: 0
   boardYOffest: 0
 
 module.exports = Settings
