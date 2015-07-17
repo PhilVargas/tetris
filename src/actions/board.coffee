@@ -37,4 +37,13 @@ BoardAction =
   queuePiece: ->
     Dispatcher.dispatch
       eventName: 'board:queuePiece'
+
+  toggleQueue: ->
+    Dispatcher.dispatch
+      eventName: 'board:toggleQueue'
+
+  toggleGhost: ->
+    Dispatcher.dispatch
+      eventName: 'board:toggleGhost'
+
 module.exports = BoardAction

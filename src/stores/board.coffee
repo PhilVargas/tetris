@@ -25,6 +25,8 @@ BoardStore =
     isPaused: boardData.isPaused
     score: boardData.score
     linesCleared: boardData.linesCleared
+    isGhostVisible: boardData.isGhostVisible
+    shouldAllowQueue: boardData.shouldAllowQueue
 
   triggerChange: ->
     @trigger('change')
@@ -55,6 +57,8 @@ class BoardData
     @isPaused = false
     @color = PieceMap[@currentPieceType].color
     @score = 0
+    @isGhostVisible = true
+    @shouldAllowQueue = true
 
   generateCells: ->
     cells =[]
@@ -205,7 +209,7 @@ Dispatcher.register (payload) ->
         boardData.drawGhost()
         BoardStore.triggerChange()
     when 'board:queuePiece'
-      if boardData.canQueuePiece
+      if boardData.canQueuePiece && boardData.shouldAllowQueue
         if boardData.queuePieceType
           boardData.updateAttribs
             yIndex: Settings.initialY
@@ -225,6 +229,12 @@ Dispatcher.register (payload) ->
             nextPieceType: boardData.randomPiece()
       boardData.drawGhost()
       boardData.updateAttribs(canQueuePiece: false)
+      BoardStore.triggerChange()
+    when 'board:toggleQueue'
+      boardData.updateAttribs(shouldAllowQueue: !boardData.shouldAllowQueue)
+      BoardStore.triggerChange()
+    when 'board:toggleGhost'
+      boardData.updateAttribs(isGhostVisible: !boardData.isGhostVisible)
       BoardStore.triggerChange()
 
 

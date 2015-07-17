@@ -31,6 +31,8 @@ Board = React.createClass
     isGameOver: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
     isMuted: React.PropTypes.bool.isRequired
+    isGhostVisible: React.PropTypes.bool.isRequired
+    shouldAllowQueue: React.PropTypes.bool.isRequired
 
   getDefaultProps: ->
     cellEdgeLength: Settings.cellEdgeLength
@@ -54,6 +56,8 @@ Board = React.createClass
     isPaused: @props.isPaused
     isMuted: @props.isMuted
     score: @props.score
+    isGhostVisible: @props.isGhostVisible
+    shouldAllowQueue: @props.shouldAllowQueue
 
   # Render functions #
   componentDidMount: ->
@@ -107,6 +111,7 @@ Board = React.createClass
       initialY={ @props.initialY }
       pieceType={ @state.currentPieceType }
       rotation={ @state.rotation }
+      isVisible={ @state.isGhostVisible }
     />
 
   generateNextPiece: ->
@@ -124,7 +129,7 @@ Board = React.createClass
       cellClass='queue-cell'
       id='queue-piece-container'
       pieceTitle='Queued Piece'
-      isDisabled={ !@state.canQueuePiece }
+      isDisabled={ !@state.canQueuePiece || !@state.shouldAllowQueue }
       containerClass='columns large-11 large-centered'
     />
 
@@ -133,41 +138,64 @@ Board = React.createClass
       <div className="row">
         <div className="large-12 columns large-centered">
           <div className="row">
-            <div className="columns large-3 panel radius">
+            <div className="columns large-3">
               <div className='row' >
-                <div className="columns">
-                  { "score: #{@state.score}" }
+                <div className="columns panel radius">
+                  <div className='row' >
+                    <div className="columns">
+                      { "score: #{@state.score}" }
+                    </div>
+                  </div>
+                  <div className='row'>
+                    <div className="columns">
+                      Move with <pre className='code'>ASD</pre>
+                    </div>
+                  </div>
+                  <div className='row'>
+                    <div className="columns">
+                      Drop with <pre className='code' >W</pre>
+                    </div>
+                  </div>
+                  <div className='row'>
+                    <div className="columns">
+                      Rotate with <pre className='code'>E</pre> & <pre className='code'>Q</pre>
+                    </div>
+                  </div>
+                  <div className='row'>
+                    <div className="columns">
+                    <pre className='code'>Space</pre> to pause
+                    </div>
+                  </div>
+                  <div className='row'>
+                    <div className="columns queue-legend">
+                      <pre className='code'>Enter</pre> to queue a piece
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className='row'>
-                <div className="columns">
-                  Move with <pre className='code'>ASD</pre>
+              <div className='row' >
+                <div className="columns panel radius">
+                  <div className='row' >
+                    <div className="columns">
+                      Settings
+                    </div>
+                  </div>
+                  <div className="row switch radius tiny">
+                    <div className="columns large-4">Music</div>
+                    <input id="mute-button" type="checkbox" checked={ !@state.isMuted  } onChange={ @handleAudioChange } />
+                    <label onClick={ @handleAudioChange }></label>
+                  </div>
+                  <div className="row switch radius tiny">
+                    <div className="columns large-4">Ghost</div>
+                    <input id="ghost-button" type="checkbox" checked={ @state.isGhostVisible  } onChange={ @handleGhostChange } />
+                    <label onClick={ @handleGhostChange }></label>
+                  </div>
+                  <div className="row switch radius tiny">
+                    <div className="columns large-4">Queue</div>
+                    <input id="ghost-button" type="checkbox" checked={ @state.shouldAllowQueue  } onChange={ @handleQueueChange } />
+                    <label onClick={ @handleQueueChange }></label>
+                  </div>
                 </div>
-              </div>
-              <div className='row'>
-                <div className="columns">
-                  Drop with <pre className='code' >W</pre>
-                </div>
-              </div>
-              <div className='row'>
-                <div className="columns">
-                  Rotate with <pre className='code'>E</pre> & <pre className='code'>Q</pre>
-                </div>
-              </div>
-              <div className='row'>
-                <div className="columns">
-                <pre className='code'>Space</pre> to pause
-                </div>
-              </div>
-              <div className='row'>
-                <div className="columns queue-legend">
-                  <pre className='code'>Enter</pre> to queue a piece
-                </div>
-              </div>
-              <div className="row switch radius tiny">
-                <div className="columns large-4">Music</div>
-                <input id="mute-button" type="checkbox" checked={ !@state.isMuted  } onChange={ @handleAudioChange } />
-                <label className='columns large-4 end' onClick={ @handleAudioChange }></label>
               </div>
             </div>
             <div id='pieces' className='columns large-5'>
@@ -191,6 +219,12 @@ Board = React.createClass
         </div>
       </div>
     </div>
+
+  handleQueueChange: ->
+    Action.toggleQueue()
+
+  handleGhostChange: ->
+    Action.toggleGhost()
 
   handleAudioChange: ->
     AudioAction.toggleMute()

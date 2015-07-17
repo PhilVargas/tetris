@@ -2,6 +2,7 @@ React = require 'react'
 PieceMap = require 'helpers/piece-map'
 
 assign = require 'object-assign'
+cx = require 'classnames'
 
 Ghost = React.createClass
   displayName: 'Ghost'
@@ -14,6 +15,7 @@ Ghost = React.createClass
     cellEdgeLength: React.PropTypes.number.isRequired
     initialX: React.PropTypes.number.isRequired
     initialY: React.PropTypes.number.isRequired
+    isVisible: React.PropTypes.bool.isRequired
 
   getDefaultProps: ->
     cellEdgeLength: 20
@@ -23,8 +25,12 @@ Ghost = React.createClass
     left: (( @props.xIndex + offset.x )*@props.cellEdgeLength) + @props.initialX
     top: (( @props.yIndex + offset.y )*@props.cellEdgeLength) + @props.initialY
 
+  containerClass: ->
+    cx 'ghost-container',
+      hidden: !@props.isVisible
+
   render: ->
-    <div className='ghost-container'>
+    <div className={ @containerClass() }>
       <div style={ assign {}, @getCoords(0), backgroundColor: PieceMap[@props.pieceType].color } className="ghost-cell"></div>
       <div style={ assign {}, @getCoords(1), backgroundColor: PieceMap[@props.pieceType].color } className="ghost-cell"></div>
       <div style={ assign {}, @getCoords(2), backgroundColor: PieceMap[@props.pieceType].color } className="ghost-cell"></div>
