@@ -27,6 +27,7 @@ BoardStore =
     linesCleared: boardData.linesCleared
     isGhostVisible: boardData.isGhostVisible
     shouldAllowQueue: boardData.shouldAllowQueue
+    linesCleared: boardData.linesCleared
 
   triggerChange: ->
     @trigger('change')
@@ -36,6 +37,15 @@ BoardStore =
 
   bindChange: (callback) ->
     @bind('change', callback)
+
+  calculateScoreThisTurn: (linesClearedThisTurn)->
+    boardData.calculateScoreThisTurn(linesClearedThisTurn)
+
+  level: ->
+    boardData.level()
+
+  turnDelay: ->
+    Math.max(Settings.minTurnDelay, Settings.initialTurnDelay - (10*@level()))
 
 class BoardData
   constructor: ->
@@ -156,6 +166,20 @@ class BoardData
       @updateAttribs(ghostYIndex: yIndex + 1)
       yIndex++
 
+  level: ->
+    Math.min(10, @linesCleared // 10)
+
+  calculateScoreThisTurn: (linesClearedThisTurn)->
+    [0,40,100,300,1200][linesClearedThisTurn] * ( 1 + @level() )
+
+  scoreRows: ->
+    linesClearedThisTurn = 0
+    while @isAnyRowFrozen()
+      linesClearedThisTurn++
+      @clearFrozenRow(@getRows())
+    scoreThisTurn = @calculateScoreThisTurn(linesClearedThisTurn)
+    {scoreThisTurn, linesClearedThisTurn}
+
 Dispatcher.register (payload) ->
   switch payload.eventName
     when 'board:init'
@@ -184,27 +208,24 @@ Dispatcher.register (payload) ->
         if boardData.didPlayerLose()
           boardData.updateAttribs(isGameOver: true)
         else
-          linesCleared = 0
-          while boardData.isAnyRowFrozen()
-            linesCleared++
-            boardData.clearFrozenRow(boardData.getRows())
-          score = [0,40,100,300,1200][linesCleared] * ( 1 )
+          { scoreThisTurn, linesClearedThisTurn } = boardData.scoreRows()
           nextPiece = boardData.randomPiece()
           boardData.updateAttribs(
-            linesCleared: boardData.linesCleared + linesCleared
-            score: boardData.score + score
+            linesCleared: boardData.linesCleared + linesClearedThisTurn
+            score: boardData.score + scoreThisTurn
             yIndex: Settings.initialY
             xIndex: Settings.initialX
             rotation: 0
             currentPieceType: boardData.nextPieceType
             color: PieceMap[boardData.nextPieceType].color
-            nextPieceType: nextPiece, canQueuePiece: true
+            nextPieceType: nextPiece
+            canQueuePiece: true
           )
           boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:rotatePiece'
       rotation = Math.abs((4 + payload.value + boardData.rotation) % 4)
-      if boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex}, rotation)
+      if boardData.isCollisionFree({ xIndex: boardData.xIndex, yIndex: boardData.yIndex }, rotation)
         boardData.updateAttribs(rotation: rotation)
         boardData.drawGhost()
         BoardStore.triggerChange()

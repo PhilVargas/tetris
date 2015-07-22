@@ -33,6 +33,7 @@ Board = React.createClass
     isMuted: React.PropTypes.bool.isRequired
     isGhostVisible: React.PropTypes.bool.isRequired
     shouldAllowQueue: React.PropTypes.bool.isRequired
+    linesCleared: React.PropTypes.number.isRequired
 
   getDefaultProps: ->
     cellEdgeLength: Settings.cellEdgeLength
@@ -58,6 +59,7 @@ Board = React.createClass
     score: @props.score
     isGhostVisible: @props.isGhostVisible
     shouldAllowQueue: @props.shouldAllowQueue
+    linesCleared: @props.linesCleared
 
   # Render functions #
   componentDidMount: ->
@@ -69,7 +71,7 @@ Board = React.createClass
 
   startGame: ->
     nextTurn = =>
-      delay = Math.max(Settings.minTurnDelay, Settings.initialTurnDelay - @state.turnCount)
+      delay = Store.turnDelay()
       if @state.isGameOver
         alert('Game Over!')
       else
@@ -86,6 +88,7 @@ Board = React.createClass
   componentWillUnmount: ->
     Store.unbindChange @boardChanged
     AudioStore.unbindChange @boardChanged
+    $(document).off 'keyup'
 
   generatePiece: ->
     <Piece
@@ -139,11 +142,21 @@ Board = React.createClass
         <div className="large-11 columns large-centered">
           <div className="row">
             <div className="columns large-3">
-              <div className='row'>
+              <div id='legend' className='row'>
                 <div className="columns panel radius">
                   <div className='row' >
                     <div className="columns">
                       { "score: #{@state.score}" }
+                    </div>
+                  </div>
+                  <div className='row' >
+                    <div className="columns">
+                      { "level: #{Store.level()}" }
+                    </div>
+                  </div>
+                  <div className='row' >
+                    <div className="columns">
+                      { "lines cleared: #{@state.linesCleared}" }
                     </div>
                   </div>
                   <div className='row'>
@@ -158,7 +171,7 @@ Board = React.createClass
                   </div>
                   <div className='row'>
                     <div className="columns">
-                      Rotate with <pre className='code'>E</pre> & <pre className='code'>Q</pre>
+                      Rotate with <pre className='code'>Q</pre> & <pre className='code'>E</pre>
                     </div>
                   </div>
                   <div className='row'>
@@ -173,7 +186,7 @@ Board = React.createClass
                   </div>
                 </div>
               </div>
-              <div className='row' >
+              <div id='settings' className='row' >
                 <div className="columns panel radius">
                   <div className='row' >
                     <div className="columns">
