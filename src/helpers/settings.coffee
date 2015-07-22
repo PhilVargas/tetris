@@ -9,5 +9,7 @@ Settings =
   initialY: 1
   boardXOffset: 0
   boardYOffest: 0
+  innerBoardBorderWidth: 5
+  defaultCellBackgroundColor: 'lightgrey'
 
 module.exports = Settings

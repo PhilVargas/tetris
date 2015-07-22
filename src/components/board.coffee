@@ -136,10 +136,10 @@ Board = React.createClass
   render: ->
     <div className="board">
       <div className="row">
-        <div className="large-12 columns large-centered">
+        <div className="large-11 columns large-centered">
           <div className="row">
             <div className="columns large-3">
-              <div className='row' >
+              <div className='row'>
                 <div className="columns panel radius">
                   <div className='row' >
                     <div className="columns">
@@ -198,16 +198,16 @@ Board = React.createClass
                 </div>
               </div>
             </div>
-            <div id='pieces' className='columns large-5'>
+            <div id='pieces' className='columns large-6'>
               <div className='row board-pieces-container'>
-                <div className='columns inner-board-pieces-container' style={ { width: Settings.cellEdgeLength * Settings.boardWidth } }>
+                <div className='columns inner-board-pieces-container' style={ @innerBoardStyles }>
                 { @generateRows() }
                 { @generatePiece() }
                 { @generateGhost() }
                 </div>
               </div>
             </div>
-            <div className="columns large-2 end callout panel radius">
+            <div className="columns large-3 end callout panel radius">
               <div className="row">
                 { @generateNextPiece() }
               </div>
@@ -219,6 +219,10 @@ Board = React.createClass
         </div>
       </div>
     </div>
+
+  innerBoardStyles:
+    width: Settings.cellEdgeLength * Settings.boardWidth + 2*Settings.innerBoardBorderWidth
+    border: "#{Settings.innerBoardBorderWidth}px solid black"
 
   handleQueueChange: ->
     Action.toggleQueue()
@@ -233,7 +237,7 @@ Board = React.createClass
     for i in [0...Settings.boardHeight]
       <div
         key={ i }
-        className={ cx "row collapse cell-container", { invisible: i < @props.hiddenRows } }
+        className={ cx "row collapse cell-container", { 'hidden-row': i < @props.hiddenRows } }
       >
         { @generateCells(i) }
       </div>

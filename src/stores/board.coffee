@@ -65,7 +65,7 @@ class BoardData
     count = 0
     for y in [0...@height]
       for x in [0...@width]
-        cells.push { id: count, yIndex: y, xIndex: x, isFrozen: false, color: 'white' }
+        cells.push { id: count, yIndex: y, xIndex: x, isFrozen: false, color: Settings.defaultCellBackgroundColor }
         count++
     cells
 
@@ -147,7 +147,7 @@ class BoardData
       @clearFrozenRow(rows)
     for cell in rows[0]
       cell.isFrozen = false
-      cell.color = 'white'
+      cell.color = Settings.defaultCellBackgroundColor
 
   drawGhost: ->
     yIndex = @yIndex

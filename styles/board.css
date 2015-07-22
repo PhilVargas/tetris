@@ -1,3 +1,8 @@
+body {
+  background-image: url("https://raw.githubusercontent.com/PhilVargas/tetris/master/vendor/assets/images/tetris-background.jpg")!important;
+  background-size: 100%!important;
+}
+
 .board {
   padding-top: 60px;
   margin: 0 auto;
@@ -19,6 +24,11 @@
   height: 20px;
   border: 1px solid black;
   display: inline-block;
+}
+
+.hidden-row .cell {
+  border: none;
+  border-bottom: 1px solid black;
 }
 
 .piece-cell {
@@ -99,4 +109,5 @@
   margin: 0 auto;
   padding: 0;
   float: none;
+  border-top: none;
 }
