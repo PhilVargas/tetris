@@ -27,7 +27,7 @@ Ghost = React.createClass
 
   containerClass: ->
     cx 'ghost-container',
-      hidden: !@props.isVisible
+      hide: !@props.isVisible
 
   render: ->
     <div className={ @containerClass() }>

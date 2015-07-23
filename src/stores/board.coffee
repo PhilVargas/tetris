@@ -11,6 +11,7 @@ BoardStore =
     boardData[attr]
 
   getAll: ->
+    hasGameBegun: boardData.hasGameBegun
     xIndex: boardData.xIndex
     yIndex: boardData.yIndex
     ghostYIndex: boardData.ghostYIndex
@@ -71,6 +72,7 @@ class BoardData
     @scoreThisTurn = 0
     @isGhostVisible = true
     @shouldAllowQueue = true
+    @hasGameBegun = false
 
   generateCells: ->
     cells =[]
@@ -188,6 +190,9 @@ Dispatcher.register (payload) ->
       boardData = new BoardData()
       boardData.drawGhost()
       BoardStore.triggerChange()
+    when 'board:startGame'
+      boardData.updateAttribs(hasGameBegun: true)
+      BoardStore.triggerChange()
     when 'board:setPieceIndeces'
       if boardData.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
         boardData.updateAttribs(xIndex: payload.value.xIndex, yIndex: payload.value.yIndex)
@@ -198,7 +203,7 @@ Dispatcher.register (payload) ->
       while boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
         scoreThisTurn++
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)
-      boardData.updateAttribs(score: boardData.score + scoreThisTurn, scoreThisTurn: scoreThisTurn)
+      boardData.updateAttribs(score: boardData.score + scoreThisTurn, scoreThisTurn: scoreThisTurn) if scoreThisTurn
       BoardStore.triggerChange()
     when 'board:togglePause'
       boardData.updateAttribs(isPaused: !boardData.isPaused)
@@ -226,7 +231,7 @@ Dispatcher.register (payload) ->
             nextPieceType: nextPiece
             canQueuePiece: true
           )
-          boardData.updateAttribs(scoreThisTurn: scoreThisTurn) unless scoreThisTurn == 0
+          boardData.updateAttribs(scoreThisTurn: scoreThisTurn) if scoreThisTurn
           boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:rotatePiece'
