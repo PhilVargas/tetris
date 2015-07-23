@@ -5,6 +5,7 @@ Ghost = require 'components/ghost'
 Legend = require 'components/legend'
 SettingsPanel = require 'components/settings'
 DisplayPiece = require 'components/display-piece'
+Overlay = require 'components/board-overlay'
 Store = require 'stores/board'
 Action = require 'actions/board'
 AudioStore = require 'stores/audio'
@@ -37,6 +38,7 @@ Board = React.createClass
     isGhostVisible: React.PropTypes.bool.isRequired
     shouldAllowQueue: React.PropTypes.bool.isRequired
     linesCleared: React.PropTypes.number.isRequired
+    hasGameBegun: React.PropTypes.bool.isRequired
 
   getDefaultProps: ->
     cellEdgeLength: Settings.cellEdgeLength
@@ -48,6 +50,7 @@ Board = React.createClass
 
   getInitialState: ->
     turnCount: @props.turnCount
+    hasGameBegun: @props.hasGameBegun
     xIndex: @props.xIndex
     yIndex: @props.yIndex
     ghostYIndex: @props.ghostYIndex
@@ -69,11 +72,12 @@ Board = React.createClass
   componentDidMount: ->
     Store.bindChange @boardChanged
     AudioStore.bindChange @audioChanged
-    $(document).on 'keyup', (e) ->
-      Action.togglePause() if e.which == 32
-    @startGame()
 
   startGame: ->
+    unless @state.hasGameBegun
+      Action.startGame()
+      $(document).on 'keyup', (e) ->
+        Action.togglePause() if e.which == 32
     nextTurn = =>
       delay = Store.turnDelay()
       if @state.isGameOver
@@ -108,6 +112,7 @@ Board = React.createClass
       rotateCounterClockwise={ Action.rotateCounterClockwise }
       rotation={ @state.rotation }
       isPaused={ @state.isPaused }
+      isVisible={ @state.hasGameBegun }
     />
 
   generateGhost: ->
@@ -118,7 +123,7 @@ Board = React.createClass
       initialY={ @props.initialY }
       pieceType={ @state.currentPieceType }
       rotation={ @state.rotation }
-      isVisible={ @state.isGhostVisible }
+      isVisible={ @state.isGhostVisible && @state.hasGameBegun}
     />
 
   generateNextPiece: ->
@@ -152,9 +157,12 @@ Board = React.createClass
             <div id='pieces' className='columns large-6'>
               <div className='row board-pieces-container'>
                 <div className='columns inner-board-pieces-container' style={ @innerBoardStyles }>
-                { @generateRows() }
+                <div id='board-rows'>
+                  { @generateRows() }
+                </div>
                 { @generatePiece() }
                 { @generateGhost() }
+                <Overlay {...@overlayProps()} />
                 </div>
               </div>
             </div>
@@ -170,6 +178,11 @@ Board = React.createClass
         </div>
       </div>
     </div>
+
+  overlayProps: ->
+    isPaused: @state.isPaused
+    hasGameBegun: @state.hasGameBegun
+    startGame: @startGame
 
   legendProps: ->
     level: Store.level()

@@ -11,6 +11,7 @@ BoardStore =
     boardData[attr]
 
   getAll: ->
+    hasGameBegun: boardData.hasGameBegun
     xIndex: boardData.xIndex
     yIndex: boardData.yIndex
     ghostYIndex: boardData.ghostYIndex
@@ -71,6 +72,7 @@ class BoardData
     @scoreThisTurn = 0
     @isGhostVisible = true
     @shouldAllowQueue = true
+    @hasGameBegun = false
 
   generateCells: ->
     cells =[]
@@ -187,6 +189,9 @@ Dispatcher.register (payload) ->
     when 'board:init'
       boardData = new BoardData()
       boardData.drawGhost()
+      BoardStore.triggerChange()
+    when 'board:startGame'
+      boardData.updateAttribs(hasGameBegun: true)
       BoardStore.triggerChange()
     when 'board:setPieceIndeces'
       if boardData.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
