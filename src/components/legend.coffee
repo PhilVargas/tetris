@@ -21,7 +21,7 @@ Legend = React.createClass
             { " #{@props.score}" }
           </div>
           <div className="columns large-4">
-            <ReactCSSTransitionGroup transitionLeave={ false } transitionName="example">
+            <ReactCSSTransitionGroup transitionLeave={ false } transitionName="incremented-score">
               <span key={ @props.score } className='incremented-score'>{ "+#{@props.scoreThisTurn}" }</span>
             </ReactCSSTransitionGroup>
           </div>

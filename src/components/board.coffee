@@ -30,6 +30,7 @@ Board = React.createClass
     cells: React.PropTypes.array.isRequired
     rotation: React.PropTypes.number.isRequired
     score: React.PropTypes.number.isRequired
+    scoreThisTurn: React.PropTypes.number.isRequired
     isGameOver: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
     isMuted: React.PropTypes.bool.isRequired
@@ -59,6 +60,7 @@ Board = React.createClass
     isPaused: @props.isPaused
     isMuted: @props.isMuted
     score: @props.score
+    scoreThisTurn: @props.scoreThisTurn
     isGhostVisible: @props.isGhostVisible
     shouldAllowQueue: @props.shouldAllowQueue
     linesCleared: @props.linesCleared
