@@ -2,6 +2,8 @@ React = require 'react'
 Cell = require 'components/cell'
 Piece = require 'components/piece'
 Ghost = require 'components/ghost'
+Legend = require 'components/legend'
+SettingsPanel = require 'components/settings'
 DisplayPiece = require 'components/display-piece'
 Store = require 'stores/board'
 Action = require 'actions/board'
@@ -142,74 +144,8 @@ Board = React.createClass
         <div className="large-11 columns large-centered">
           <div className="row">
             <div className="columns large-3">
-              <div id='legend' className='row'>
-                <div className="columns panel radius">
-                  <div className='row' >
-                    <div className="columns">
-                      { "score: #{@state.score}" }
-                    </div>
-                  </div>
-                  <div className='row' >
-                    <div className="columns">
-                      { "level: #{Store.level()}" }
-                    </div>
-                  </div>
-                  <div className='row' >
-                    <div className="columns">
-                      { "lines cleared: #{@state.linesCleared}" }
-                    </div>
-                  </div>
-                  <div className='row'>
-                    <div className="columns">
-                      Move with <pre className='code'>ASD</pre>
-                    </div>
-                  </div>
-                  <div className='row'>
-                    <div className="columns">
-                      Drop with <pre className='code' >W</pre>
-                    </div>
-                  </div>
-                  <div className='row'>
-                    <div className="columns">
-                      Rotate with <pre className='code'>Q</pre> & <pre className='code'>E</pre>
-                    </div>
-                  </div>
-                  <div className='row'>
-                    <div className="columns">
-                    <pre className='code'>Space</pre> to pause
-                    </div>
-                  </div>
-                  <div className='row'>
-                    <div className="columns queue-legend">
-                      <pre className='code'>Enter</pre> to queue a piece
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div id='settings' className='row' >
-                <div className="columns panel radius">
-                  <div className='row' >
-                    <div className="columns">
-                      Settings
-                    </div>
-                  </div>
-                  <div className="row switch radius tiny">
-                    <div className="columns large-4">Music</div>
-                    <input id="mute-button" type="checkbox" checked={ !@state.isMuted  } onChange={ @handleAudioChange } />
-                    <label onClick={ @handleAudioChange }></label>
-                  </div>
-                  <div className="row switch radius tiny">
-                    <div className="columns large-4">Ghost</div>
-                    <input id="ghost-button" type="checkbox" checked={ @state.isGhostVisible  } onChange={ @handleGhostChange } />
-                    <label onClick={ @handleGhostChange }></label>
-                  </div>
-                  <div className="row switch radius tiny">
-                    <div className="columns large-4">Queue</div>
-                    <input id="ghost-button" type="checkbox" checked={ @state.shouldAllowQueue  } onChange={ @handleQueueChange } />
-                    <label onClick={ @handleQueueChange }></label>
-                  </div>
-                </div>
-              </div>
+              <Legend {...@legendProps()} />
+              <SettingsPanel {...@settingsProps()} />
             </div>
             <div id='pieces' className='columns large-6'>
               <div className='row board-pieces-container'>
@@ -233,18 +169,23 @@ Board = React.createClass
       </div>
     </div>
 
+  legendProps: ->
+    level: Store.level()
+    linesCleared: @state.linesCleared
+    score: @state.score
+    scoreThisTurn: @state.scoreThisTurn
+
   innerBoardStyles:
     width: Settings.cellEdgeLength * Settings.boardWidth + 2*Settings.innerBoardBorderWidth
     border: "#{Settings.innerBoardBorderWidth}px solid black"
 
-  handleQueueChange: ->
-    Action.toggleQueue()
-
-  handleGhostChange: ->
-    Action.toggleGhost()
-
-  handleAudioChange: ->
-    AudioAction.toggleMute()
+  settingsProps: ->
+    toggleQueue: Action.toggleQueue
+    toggleGhost: Action.toggleGhost
+    toggleMute: AudioAction.toggleMute
+    shouldAllowQueue: @state.shouldAllowQueue
+    isMuted: @state.isMuted
+    isGhostVisible: @state.isGhostVisible
 
   generateRows: ->
     for i in [0...Settings.boardHeight]
