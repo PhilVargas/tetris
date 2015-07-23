@@ -24,6 +24,7 @@ BoardStore =
     isGameOver: boardData.isGameOver
     isPaused: boardData.isPaused
     score: boardData.score
+    scoreThisTurn: boardData.scoreThisTurn
     linesCleared: boardData.linesCleared
     isGhostVisible: boardData.isGhostVisible
     shouldAllowQueue: boardData.shouldAllowQueue
@@ -67,6 +68,7 @@ class BoardData
     @isPaused = false
     @color = PieceMap[@currentPieceType].color
     @score = 0
+    @scoreThisTurn = 0
     @isGhostVisible = true
     @shouldAllowQueue = true
 
@@ -192,8 +194,11 @@ Dispatcher.register (payload) ->
       boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:dropPiece'
+      scoreThisTurn = 0
       while boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
-        boardData.updateAttribs(yIndex: boardData.yIndex + 1, score: boardData.score + 1)
+        scoreThisTurn++
+        boardData.updateAttribs(yIndex: boardData.yIndex + 1)
+      boardData.updateAttribs(score: boardData.score + scoreThisTurn, scoreThisTurn: scoreThisTurn)
       BoardStore.triggerChange()
     when 'board:togglePause'
       boardData.updateAttribs(isPaused: !boardData.isPaused)
@@ -221,6 +226,7 @@ Dispatcher.register (payload) ->
             nextPieceType: nextPiece
             canQueuePiece: true
           )
+          boardData.updateAttribs(scoreThisTurn: scoreThisTurn) unless scoreThisTurn == 0
           boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:rotatePiece'
