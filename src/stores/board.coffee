@@ -198,7 +198,7 @@ Dispatcher.register (payload) ->
       while boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
         scoreThisTurn++
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)
-      boardData.updateAttribs(score: boardData.score + scoreThisTurn, scoreThisTurn: scoreThisTurn)
+      boardData.updateAttribs(score: boardData.score + scoreThisTurn, scoreThisTurn: scoreThisTurn) if scoreThisTurn
       BoardStore.triggerChange()
     when 'board:togglePause'
       boardData.updateAttribs(isPaused: !boardData.isPaused)
@@ -226,7 +226,7 @@ Dispatcher.register (payload) ->
             nextPieceType: nextPiece
             canQueuePiece: true
           )
-          boardData.updateAttribs(scoreThisTurn: scoreThisTurn) unless scoreThisTurn == 0
+          boardData.updateAttribs(scoreThisTurn: scoreThisTurn) if scoreThisTurn
           boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:rotatePiece'

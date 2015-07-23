@@ -14,10 +14,10 @@ Legend = React.createClass
     <div id='legend' className='row'>
       <div className="columns panel radius">
         <div className='row collapse' >
-          <div className="columns large-4">
+          <div className="columns large-3">
             score:
           </div>
-          <div className=" score-container columns large-3">
+          <div className=" score-container columns large-4">
             { " #{@props.score}" }
           </div>
           <div className="columns large-4">
