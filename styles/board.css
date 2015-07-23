@@ -50,10 +50,6 @@ body {
   opacity: .5;
 }
 
-.ghost-container.hidden .ghost-cell {
-  display: none;
-}
-
 .next-cell, .queue-cell {
   width: 100%;
   max-width: 20px;

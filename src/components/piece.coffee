@@ -1,6 +1,7 @@
 React = require 'react'
 PieceMap = require 'helpers/piece-map'
 
+cx = require 'classnames'
 assign = require 'object-assign'
 
 Piece = React.createClass
@@ -21,6 +22,7 @@ Piece = React.createClass
     setIndeces: React.PropTypes.func.isRequired
     rotation: React.PropTypes.number.isRequired
     isPaused: React.PropTypes.bool.isRequired
+    isVisible: React.PropTypes.bool.isRequired
 
   getDefaultProps: ->
     cellEdgeLength: 20
@@ -35,8 +37,12 @@ Piece = React.createClass
       keydown: @handleKeyDown
       keyup: @handleKeyUp
 
+  containerClass: ->
+    cx 'piece-container',
+      hide: !@props.isVisible
+
   render: ->
-    <div className='piece-container'>
+    <div className={ @containerClass() }>
       <div style={ assign {}, @getCoords(0), backgroundColor: PieceMap[@props.pieceType].color } className="piece-cell"></div>
       <div style={ assign {}, @getCoords(1), backgroundColor: PieceMap[@props.pieceType].color } className="piece-cell"></div>
       <div style={ assign {}, @getCoords(2), backgroundColor: PieceMap[@props.pieceType].color } className="piece-cell"></div>
