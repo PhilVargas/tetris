@@ -132,6 +132,7 @@ Board = React.createClass
       cellClass='next-cell'
       id="next-piece-container"
       pieceTitle='Next Piece'
+      isDisabled={ !@state.hasGameBegun }
       containerClass='columns large-11 large-centered'
     />
 

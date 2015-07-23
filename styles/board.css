@@ -82,6 +82,10 @@ body {
   width: 100px;
 }
 
+.pieces-container.disabled .next-cell {
+  display: none;
+}
+
 .pieces-container.disabled {
   background: gray;
   opacity: .25;
