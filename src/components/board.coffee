@@ -112,7 +112,7 @@ Board = React.createClass
       rotateCounterClockwise={ Action.rotateCounterClockwise }
       rotation={ @state.rotation }
       isPaused={ @state.isPaused }
-      isVisible={ @state.hasGameBegun }
+      hasGameBegun={ @state.hasGameBegun }
     />
 
   generateGhost: ->

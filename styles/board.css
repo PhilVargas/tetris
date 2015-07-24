@@ -112,7 +112,7 @@ body {
   border-top: none;
 }
 
-.score-container {
+.score-container, .level-container {
   text-align: right;
 }
 
