@@ -32,17 +32,13 @@
   #board-overlay.active {
     display: inherit; }
 
-#start-button {
+#pause-display-container, #start-button, #game-over-container {
   position: relative;
   top: 50%;
   transform: translateY(-50%); }
-
-#pause-display-container {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%); }
-  #pause-display-container .icon-pause {
-    color: white;
+  #pause-display-container .display-text, #start-button .display-text, #game-over-container .display-text {
+    color: white; }
+  #pause-display-container .icon-pause, #start-button .icon-pause, #game-over-container .icon-pause {
     width: 40px;
     height: 40px;
     background-color: inherit; }

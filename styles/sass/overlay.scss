@@ -13,19 +13,16 @@
   }
 }
 
-#start-button {
+#pause-display-container, #start-button, #game-over-container {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-}
 
-#pause-display-container {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+  .display-text {
+    color: white;
+  }
 
   .icon-pause{
-    color: white;
     width: 40px;
     height: 40px;
     background-color: inherit;

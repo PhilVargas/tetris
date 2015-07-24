@@ -74,6 +74,23 @@ class BoardData
     @shouldAllowQueue = true
     @hasGameBegun = false
 
+  initialGameState: ->
+    currentPieceType = @randomPiece()
+    linesCleared: 0
+    ghostYindex: 0
+    turnCount: 0
+    currentPieceType: currentPieceType
+    nextPieceType: @randomPiece()
+    queuePieceType: ''
+    rotation: 0
+    isGameOver: false
+    isPaused: false
+    cells: @generateCells()
+    color: PieceMap[currentPieceType].color
+    score: 0
+    scoreThisTurn: 0
+
+
   generateCells: ->
     cells =[]
     count = 0
@@ -192,6 +209,10 @@ Dispatcher.register (payload) ->
       BoardStore.triggerChange()
     when 'board:startGame'
       boardData.updateAttribs(hasGameBegun: true)
+      BoardStore.triggerChange()
+    when 'board:restartGame'
+      boardData.updateAttribs(boardData.initialGameState())
+      boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:setPieceIndeces'
       if boardData.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})

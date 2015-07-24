@@ -9,6 +9,10 @@ BoardAction =
     Dispatcher.dispatch
       eventName: 'board:startGame'
 
+  restartGame: ->
+    Dispatcher.dispatch
+      eventName: 'board:restartGame'
+
   setPieceIndeces: (indeces)->
     Dispatcher.dispatch
       eventName: 'board:setPieceIndeces'

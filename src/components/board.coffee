@@ -78,14 +78,17 @@ Board = React.createClass
       Action.startGame()
       $(document).on 'keyup', (e) ->
         Action.togglePause() if e.which == 32
-    nextTurn = =>
-      delay = Store.turnDelay()
-      if @state.isGameOver
-        alert('Game Over!')
-      else
-        Action.nextTurn()
-        setTimeout(nextTurn, delay)
-    setTimeout(nextTurn, Settings.initialTurnDelay)
+    setTimeout(@nextTick, Settings.initialTurnDelay)
+
+  nextTick: ->
+    delay = Store.turnDelay()
+    unless @state.isGameOver
+      Action.nextTurn()
+      setTimeout(@nextTick, delay)
+
+  restartGame: ->
+    Action.restartGame()
+    setTimeout(@nextTick, Settings.initialTurnDelay)
 
   boardChanged: ->
     @setState Store.getAll()
@@ -184,6 +187,9 @@ Board = React.createClass
     isPaused: @state.isPaused
     hasGameBegun: @state.hasGameBegun
     startGame: @startGame
+    restartGame: @restartGame
+    score: @state.score
+    isGameOver: @state.isGameOver
 
   legendProps: ->
     level: Store.level()
