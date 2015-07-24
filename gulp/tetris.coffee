@@ -50,8 +50,14 @@ watchJs = ->
 buildSass = ->
   gulp.src('./styles/sass/application.scss')
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('./styles'))
+    .pipe(gulp.dest(paths.stylesRoot))
+
+watchSass = ->
+  gulp.watch(paths.sassFiles, ['build:sass'])
+  .on 'change', (e) ->
+    console.log "[watcher] File #{e.path.replace(/.*(?=sass)/,'')} was #{e.type} at #{new Data()}, compiling..."
 
 module.exports.watch = watchJs
 module.exports.build = buildJs
-module.exports.sass  = buildSass
+module.exports.buildSass  = buildSass
+module.exports.watchSass  = watchSass
