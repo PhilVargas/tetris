@@ -7,7 +7,6 @@ Legend = React.createClass
   propTypes:
     score: React.PropTypes.number.isRequired
     level: React.PropTypes.number.isRequired
-    linesCleared: React.PropTypes.number.isRequired
     scoreThisTurn: React.PropTypes.number.isRequired
 
   render: ->
@@ -17,7 +16,7 @@ Legend = React.createClass
           <div className="columns large-3">
             score:
           </div>
-          <div className=" score-container columns large-4">
+          <div className="score-container columns large-4">
             { " #{@props.score}" }
           </div>
           <div className="columns large-4">
@@ -26,14 +25,14 @@ Legend = React.createClass
             </ReactCSSTransitionGroup>
           </div>
         </div>
-        <div className='row' >
-          <div className="columns">
-            { "level: #{@props.level}" }
+        <div className='row collapse' >
+          <div className="columns large-3">
+            level:
           </div>
-        </div>
-        <div className='row' >
-          <div className="columns">
-            { "lines cleared: #{@props.linesCleared}" }
+          <div className="level-container columns large-4">
+            { " #{@props.level}" }
+          </div>
+          <div className="columns large-4">
           </div>
         </div>
         <div className='row'>

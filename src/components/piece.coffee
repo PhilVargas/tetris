@@ -22,7 +22,7 @@ Piece = React.createClass
     setIndeces: React.PropTypes.func.isRequired
     rotation: React.PropTypes.number.isRequired
     isPaused: React.PropTypes.bool.isRequired
-    isVisible: React.PropTypes.bool.isRequired
+    hasGameBegun: React.PropTypes.bool.isRequired
 
   getDefaultProps: ->
     cellEdgeLength: 20
@@ -39,7 +39,7 @@ Piece = React.createClass
 
   containerClass: ->
     cx 'piece-container',
-      hide: !@props.isVisible
+      hide: !@props.hasGameBegun
 
   render: ->
     <div className={ @containerClass() }>
@@ -53,7 +53,7 @@ Piece = React.createClass
   # 39, 68 right
   # 40, 83 down
   handleKeyDown: (e) ->
-    return if @props.isPaused
+    return if @props.isPaused || !@props.hasGameBegun
     switch e.which
       when 37,65 then @props.setIndeces(xIndex: @props.xIndex - 1, yIndex: @props.yIndex)
       when 39,68 then @props.setIndeces(xIndex: @props.xIndex + 1, yIndex: @props.yIndex)
@@ -64,7 +64,7 @@ Piece = React.createClass
   # 81 e
   # 13 enter
   handleKeyUp: (e) ->
-    return if @props.isPaused
+    return if @props.isPaused || !@props.hasGameBegun
     switch e.which
       when 38,87 then @props.dropPiece()
       when 69 then @props.rotateClockwise()
