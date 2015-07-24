@@ -1,0 +1,12 @@
+@import 'transition';
+@import 'legend';
+@import 'overlay';
+@import 'board';
+@import 'cells';
+@import 'piece';
+
+
+body {
+  background-image: url("https://raw.githubusercontent.com/PhilVargas/tetris/master/vendor/assets/images/tetris-background.jpg")!important;
+  background-size: 100%!important;
+}

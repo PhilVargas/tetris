@@ -1,4 +1,5 @@
 gulp = require 'gulp'
+sass = require 'gulp-sass'
 browserify = require 'browserify'
 watchify = require 'watchify'
 uglify = require 'gulp-uglify'
@@ -46,5 +47,11 @@ watchJs = ->
     return
   ).pipe(source('bundle.js')).pipe gulp.dest(paths.build)
 
+buildSass = ->
+  gulp.src('./styles/sass/application.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('./styles'))
+
 module.exports.watch = watchJs
 module.exports.build = buildJs
+module.exports.sass  = buildSass

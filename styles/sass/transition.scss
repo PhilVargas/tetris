@@ -1,0 +1,15 @@
+.incremented-score {
+  display:none;
+}
+
+.incremented-score-enter {
+  display: inherit;
+  opacity: 1;
+
+  &.incremented-score-enter-active {
+    display: inherit;
+    opacity: 0.01;
+    transition: opacity .5s ease-in;
+  }
+}
+
