@@ -47,7 +47,7 @@ BoardStore =
     boardData.level()
 
   turnDelay: ->
-    Math.max(Settings.minTurnDelay, Settings.initialTurnDelay - (10*@level()))
+    Math.max(Settings.minTurnDelay, Settings.initialTurnDelay - (50*@level()))
 
 class BoardData
   constructor: ->
