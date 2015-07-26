@@ -90,7 +90,6 @@ class BoardData
     score: 0
     scoreThisTurn: 0
 
-
   generateCells: ->
     cells =[]
     count = 0
