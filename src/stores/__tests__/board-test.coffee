@@ -50,7 +50,7 @@ describe 'BoardStore', ->
       beforeEach ->
         initialValue = {x: BoardStore.get('xIndex'), y: BoardStore.get('yIndex')}
 
-      describe 'when the piece will be collision free', ->
+      describe 'when there is no collision', ->
         payload =
           eventName: 'board:setPieceIndeces'
           value:
@@ -60,7 +60,7 @@ describe 'BoardStore', ->
         beforeEach ->
           callback payload
 
-        it 'sets the state.xIndex and state.yIndex', ->
+        it 'sets the `state.xIndex` and `state.yIndex`', ->
           expect(BoardStore.get('xIndex')).not.toBe initialValue.x
           expect(BoardStore.get('yIndex')).not.toBe initialValue.y
           expect(BoardStore.get('xIndex')).toBe payload.value.xIndex
@@ -69,7 +69,7 @@ describe 'BoardStore', ->
         it 'calls BoardStore.triggerChange', ->
           expect(BoardStore.triggerChange).toBeCalled()
 
-      describe 'when the piece has a collision', ->
+      describe 'when there is a collision', ->
         payload =
           eventName: 'board:setPieceIndeces'
           value:
@@ -79,7 +79,7 @@ describe 'BoardStore', ->
         beforeEach ->
           callback payload
 
-        it 'does not change the state.xIndex and state.yIndex', ->
+        it 'does not change the `state.xIndex` and `state.yIndex`', ->
           expect(BoardStore.get('xIndex')).toBe initialValue.x
           expect(BoardStore.get('yIndex')).toBe initialValue.y
 
@@ -88,24 +88,46 @@ describe 'BoardStore', ->
 
     describe 'board:dropPiece', ->
       payload = eventName: 'board:dropPiece'
-      beforeEach ->
-        initialValue =
-          score: BoardStore.get('score')
-          scoreThisTurn: BoardStore.get('scoreThisTurn')
-          yIndex: BoardStore.get('yIndex')
-        callback payload
+      describe 'when there is a collision', ->
+        beforeEach ->
+          initialValue =
+            score: BoardStore.get('score')
+            scoreThisTurn: BoardStore.get('scoreThisTurn')
+            yIndex: BoardStore.get('yIndex')
+          BoardStore.isCollisionFree = jest.genMockFn().mockReturnValue(false)
+          callback payload
 
-      it 'drops the state.yIndex to the bottom of the board', ->
-        expect([18,19,20]).toContain BoardStore.get('yIndex')
+        it 'does not modify the `state.yIndex`', ->
+          expect(BoardStore.get('yIndex')).toBe initialValue.yIndex
 
-      it 'sets the state.scoreThisTurn to be > 0', ->
-        expect(BoardStore.get('scoreThisTurn')).toBeGreaterThan 0
+        it 'does not modify the `state.scoreThisTurn`', ->
+          expect(BoardStore.get('scoreThisTurn')).toBe initialValue.scoreThisTurn
 
-      it 'sets the state.score to be > 0', ->
-        expect(BoardStore.get('score')).toBeGreaterThan 0
+        it 'does not modify the `state.score`', ->
+          expect(BoardStore.get('score')).toBe initialValue.score
 
-      it 'calls BoardStore.triggerChange', ->
-        expect(BoardStore.triggerChange).toBeCalled()
+        it 'calls BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange).toBeCalled()
+
+      describe 'when there is no collision', ->
+        beforeEach ->
+          initialValue =
+            score: BoardStore.get('score')
+            scoreThisTurn: BoardStore.get('scoreThisTurn')
+            yIndex: BoardStore.get('yIndex')
+          callback payload
+
+        it 'drops the `state.yIndex` to the bottom of the board', ->
+          expect([18,19,20]).toContain BoardStore.get('yIndex')
+
+        it 'sets the `state.scoreThisTurn` to be > 0', ->
+          expect(BoardStore.get('scoreThisTurn')).toBeGreaterThan 0
+
+        it 'sets the `state.score` to be > 0', ->
+          expect(BoardStore.get('score')).toBeGreaterThan 0
+
+        it 'calls BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange).toBeCalled()
 
     describe 'board:togglePause', ->
       payload = eventName: 'board:togglePause'
@@ -120,7 +142,6 @@ describe 'BoardStore', ->
       it 'calls BoardStore.triggerChange', ->
         expect(BoardStore.triggerChange).toBeCalled()
 
-    # refactor the isCollision free, rotation calculation
     describe 'board:rotatePiece', ->
       beforeEach ->
         initialValue = BoardStore.get('rotation')
@@ -130,11 +151,22 @@ describe 'BoardStore', ->
           eventName: 'board:rotatePiece'
           value: -1
 
-        beforeEach ->
-          callback payload
+        describe 'when there is a collision', ->
+          beforeEach ->
+            BoardStore.isCollisionFree = jest.genMockFn().mockReturnValue(false)
+            callback payload
 
-        describe 'when is collision free', ->
-          it 'decreases the state.rotation', ->
+          it 'does not change the `state.rotation`', ->
+            expect(BoardStore.get('rotation')).toBe initialValue
+
+          it 'does not call BoardStore.triggerChange', ->
+            expect(BoardStore.triggerChange).not.toBeCalled()
+
+        describe 'when there is no collision', ->
+          beforeEach ->
+            callback payload
+
+          it 'decreases the `state.rotation`', ->
             expect(BoardStore.get('rotation')).toBe (4 + initialValue + payload.value) % 4
 
           it 'calls BoardStore.triggerChange', ->
@@ -144,10 +176,22 @@ describe 'BoardStore', ->
         payload =
           eventName: 'board:rotatePiece'
           value: 1
-        beforeEach ->
-          callback payload
 
-        describe 'when is collision free', ->
+        describe 'when there is a collision', ->
+          beforeEach ->
+            BoardStore.isCollisionFree = jest.genMockFn().mockReturnValue(false)
+            callback payload
+
+          it 'does not change the `state.rotation`', ->
+            expect(BoardStore.get('rotation')).toBe initialValue
+
+          it 'does not call BoardStore.triggerChange', ->
+            expect(BoardStore.triggerChange).not.toBeCalled()
+
+        describe 'when there is no collision', ->
+          beforeEach ->
+            callback payload
+
           it 'increases the state.rotation', ->
             expect(BoardStore.get('rotation')).toBe (4 + initialValue + payload.value) % 4
 
@@ -229,6 +273,9 @@ describe 'BoardStore', ->
             expect(actual('queuePieceType')).not.toBe initialValue.queuePieceType
             expect(actual('queuePieceType')).toBe initialValue.currentPieceType
 
+          it 'calls BoardStore.triggerChange', ->
+            expect(BoardStore.triggerChange).toBeCalled()
+
         describe 'when a piece is already in the queue', ->
           beforeEach ->
             BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
@@ -249,5 +296,35 @@ describe 'BoardStore', ->
             expect(initialValue.queuePieceType).toBeTruthy()
             expect(BoardStore.get('currentPieceType')).toBe initialValue.queuePieceType
 
+          it 'calls BoardStore.triggerChange', ->
+            expect(BoardStore.triggerChange).toBeCalled()
+
+    describe 'board:toggleQueue', ->
+      payload = eventName: 'board:toggleQueue'
+
+      beforeEach ->
+        initialValue =
+          shouldAllowQueue: BoardStore.get('shouldAllowQueue')
+        callback payload
+
+      it 'toggles the `state.shouldAllowQueue`', ->
+        expect(BoardStore.get('shouldAllowQueue')).toBe !initialValue.shouldAllowQueue
+
+      it 'calls BoardStore.triggerChange', ->
+        expect(BoardStore.triggerChange).toBeCalled()
+
+    describe 'board:toggleGhost', ->
+      payload = eventName: 'board:toggleGhost'
+
+      beforeEach ->
+        initialValue =
+          isGhostVisible: BoardStore.get('isGhostVisible')
+        callback payload
+
+      it 'toggles the `state.isGhostVisible`', ->
+        expect(BoardStore.get('isGhostVisible')).toBe !initialValue.isGhostVisible
+
+      it 'calls BoardStore.triggerChange', ->
+        expect(BoardStore.triggerChange).toBeCalled()
 
 
