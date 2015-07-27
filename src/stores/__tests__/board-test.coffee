@@ -28,6 +28,9 @@ describe 'BoardStore', ->
         expect(BoardStore.get('turnCount')).toBe 0
         expect(BoardStore.get('hasGameBegun')).toBe false
 
+      it 'calls BoardStore.triggerChange', ->
+        expect(BoardStore.triggerChange).toBeCalled()
+
     describe 'board:startGame', ->
       payload = eventName: 'board:startGame'
       beforeEach ->
@@ -37,6 +40,9 @@ describe 'BoardStore', ->
       it 'sets the `state.hasGameBegun` to true', ->
         expect(initialValue).toBe false
         expect(BoardStore.get('hasGameBegun')).toBe true
+
+      it 'calls BoardStore.triggerChange', ->
+        expect(BoardStore.triggerChange.mock.calls.length).toBe 2
 
     describe 'board:setPieceIndeces', ->
       beforeEach ->
@@ -58,6 +64,9 @@ describe 'BoardStore', ->
           expect(BoardStore.get('xIndex')).toBe payload.value.xIndex
           expect(BoardStore.get('yIndex')).toBe payload.value.yIndex
 
+        it 'calls BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+
       describe 'when the piece has a collision', ->
         payload =
           eventName: 'board:setPieceIndeces'
@@ -72,6 +81,9 @@ describe 'BoardStore', ->
           expect(BoardStore.get('xIndex')).toBe initialValue.x
           expect(BoardStore.get('yIndex')).toBe initialValue.y
 
+        it 'calls BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+
     describe 'board:dropPiece', ->
       payload = eventName: 'board:dropPiece'
       beforeEach ->
@@ -81,6 +93,76 @@ describe 'BoardStore', ->
           yIndex: BoardStore.get('yIndex')
         callback payload
 
-      it 'drops the state.yIndex to the bottom off the board', ->
+      it 'drops the state.yIndex to the bottom of the board', ->
         expect([18,19,20]).toContain BoardStore.get('yIndex')
+
+      it 'sets the state.scoreThisTurn to be > 0', ->
+        expect(BoardStore.get('scoreThisTurn')).toBeGreaterThan 0
+
+      it 'sets the state.score to be > 0', ->
+        expect(BoardStore.get('score')).toBeGreaterThan 0
+
+      it 'calls BoardStore.triggerChange', ->
+        expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+
+    describe 'board:togglePause', ->
+      payload = eventName: 'board:togglePause'
+
+      beforeEach ->
+        initialValue = BoardStore.get('isPaused')
+        callback payload
+
+      it 'toggles the state.isPaused', ->
+        expect(BoardStore.get('isPaused')).toBe true
+
+      it 'calls BoardStore.triggerChange', ->
+        expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+
+    # refactor the isCollision free, rotation calculation
+    describe 'board:rotatePiece', ->
+      beforeEach ->
+        initialValue = BoardStore.get('rotation')
+
+      describe 'counter-clockwise (decreases rotation)', ->
+        payload =
+          eventName: 'board:rotatePiece'
+          value: -1
+
+        beforeEach ->
+          callback payload
+
+        describe 'when is collision free', ->
+          it 'decreases the state.rotation', ->
+            expect(BoardStore.get('rotation')).toBe (4 + initialValue + payload.value) % 4
+
+          it 'calls BoardStore.triggerChange', ->
+            expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+
+      describe 'clockwise (increasing rotation)', ->
+        payload =
+          eventName: 'board:rotatePiece'
+          value: 1
+        beforeEach ->
+          callback payload
+
+        describe 'when is collision free', ->
+          it 'increases the state.rotation', ->
+            expect(BoardStore.get('rotation')).toBe (4 + initialValue + payload.value) % 4
+
+          it 'calls BoardStore.triggerChange', ->
+            expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+
+    describe 'board:queuePiece', ->
+      payload = eventName: 'board:queuePiece'
+
+      beforeEach ->
+        initialValue =
+          yIndex: BoardStore.initialY
+          xIndex: BoardStore.initialX
+          rotation: BoardStore.get('rotation')
+          currentPieceType: BoardStore.get('nextPieceType')
+          color: BoardStore.get('color')
+          queuePieceType: BoardStore.get('currentPieceType')
+
+
 
