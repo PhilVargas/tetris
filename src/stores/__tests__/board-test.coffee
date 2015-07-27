@@ -22,6 +22,7 @@ describe 'BoardStore', ->
     initialPayload = eventName: 'board:init'
     beforeEach ->
       callback initialPayload
+      BoardStore.triggerChange.mockClear()
 
     describe 'board:init', ->
       it 'initializes the store', ->
@@ -29,6 +30,7 @@ describe 'BoardStore', ->
         expect(BoardStore.get('hasGameBegun')).toBe false
 
       it 'calls BoardStore.triggerChange', ->
+        callback initialPayload
         expect(BoardStore.triggerChange).toBeCalled()
 
     describe 'board:startGame', ->
@@ -42,7 +44,7 @@ describe 'BoardStore', ->
         expect(BoardStore.get('hasGameBegun')).toBe true
 
       it 'calls BoardStore.triggerChange', ->
-        expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+        expect(BoardStore.triggerChange).toBeCalled()
 
     describe 'board:setPieceIndeces', ->
       beforeEach ->
@@ -65,7 +67,7 @@ describe 'BoardStore', ->
           expect(BoardStore.get('yIndex')).toBe payload.value.yIndex
 
         it 'calls BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+          expect(BoardStore.triggerChange).toBeCalled()
 
       describe 'when the piece has a collision', ->
         payload =
@@ -82,7 +84,7 @@ describe 'BoardStore', ->
           expect(BoardStore.get('yIndex')).toBe initialValue.y
 
         it 'calls BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+          expect(BoardStore.triggerChange).toBeCalled()
 
     describe 'board:dropPiece', ->
       payload = eventName: 'board:dropPiece'
@@ -103,7 +105,7 @@ describe 'BoardStore', ->
         expect(BoardStore.get('score')).toBeGreaterThan 0
 
       it 'calls BoardStore.triggerChange', ->
-        expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+        expect(BoardStore.triggerChange).toBeCalled()
 
     describe 'board:togglePause', ->
       payload = eventName: 'board:togglePause'
@@ -116,7 +118,7 @@ describe 'BoardStore', ->
         expect(BoardStore.get('isPaused')).toBe true
 
       it 'calls BoardStore.triggerChange', ->
-        expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+        expect(BoardStore.triggerChange).toBeCalled()
 
     # refactor the isCollision free, rotation calculation
     describe 'board:rotatePiece', ->
@@ -136,7 +138,7 @@ describe 'BoardStore', ->
             expect(BoardStore.get('rotation')).toBe (4 + initialValue + payload.value) % 4
 
           it 'calls BoardStore.triggerChange', ->
-            expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+            expect(BoardStore.triggerChange).toBeCalled()
 
       describe 'clockwise (increasing rotation)', ->
         payload =
@@ -150,7 +152,7 @@ describe 'BoardStore', ->
             expect(BoardStore.get('rotation')).toBe (4 + initialValue + payload.value) % 4
 
           it 'calls BoardStore.triggerChange', ->
-            expect(BoardStore.triggerChange.mock.calls.length).toBe 2
+            expect(BoardStore.triggerChange).toBeCalled()
 
     describe 'board:queuePiece', ->
       payload = eventName: 'board:queuePiece'
@@ -164,6 +166,10 @@ describe 'BoardStore', ->
         expect(initialValue.canQueuePiece).toBe true
         expect(BoardStore.get('canQueuePiece')).toBe false
 
+      it 'calls BoardStore.triggerChange', ->
+        callback payload
+        expect(BoardStore.triggerChange).toBeCalled()
+
       describe 'when able to queue a piece', ->
         actual = null
         beforeEach ->
@@ -172,18 +178,10 @@ describe 'BoardStore', ->
           beforeEach ->
             BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
               switch attr
-                when 'canQueuePiece' then return true
-                when 'shouldAllowQueue' then return true
-                when 'queuePieceType'
-                  if ['queuePieceType'] in @get.mock.calls
-                    return actual(attr)
-                  else
-                    return ''
+                when 'canQueuePiece' then true
+                when 'shouldAllowQueue' then true
+                when 'queuePieceType' then ''
                 else return actual(attr)
-
-            require.requireActual('stores/board')
-            callback = Dispatcher.register.mock.calls[0][0]
-            callback initialPayload
             initialValue =
               currentPieceType: BoardStore.get('currentPieceType')
               queuePieceType: actual('queuePieceType')
@@ -201,9 +199,6 @@ describe 'BoardStore', ->
                 when 'shouldAllowQueue' then true
                 when 'queuePieceType' then 'T'
                 else actual(attr)
-            require.requireActual('stores/board')
-            callback = Dispatcher.register.mock.calls[0][0]
-            callback initialPayload
             initialValue =
               currentPieceType: BoardStore.get('currentPieceType')
               queuePieceType: BoardStore.get('queuePieceType')
