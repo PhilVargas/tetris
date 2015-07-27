@@ -156,24 +156,62 @@ describe 'BoardStore', ->
 
     describe 'board:queuePiece', ->
       payload = eventName: 'board:queuePiece'
+      actual = null
 
       beforeEach ->
-        initialValue =
-          canQueuePiece: BoardStore.get('canQueuePiece')
+        actual = BoardStore.get
 
-      it 'sets the state.canQueuePiece to false', ->
-        callback payload
-        expect(initialValue.canQueuePiece).toBe true
-        expect(BoardStore.get('canQueuePiece')).toBe false
+      describe 'when unable to queue a piece (`shouldAllowQueue` is false)', ->
+        beforeEach ->
+          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+            switch attr
+              when 'canQueuePiece' then true
+              when 'shouldAllowQueue' then false
+              else return actual(attr)
 
-      it 'calls BoardStore.triggerChange', ->
-        callback payload
-        expect(BoardStore.triggerChange).toBeCalled()
+          initialValue =
+            currentPieceType: actual('currentPieceType')
+            queuePieceType: actual('queuePieceType')
+          callback payload
+
+        it 'sets `state.canQueuePiece` to false', ->
+          expect(actual('canQueuePiece')).toBe false
+
+        it 'does not change the `state.currentPieceType`', ->
+          expect(actual('currentPieceType')).toBe initialValue.currentPieceType
+
+        it 'does not change the `state.queuePieceType`', ->
+          expect(actual('queuePieceType')).toBe initialValue.queuePieceType
+
+        it 'calls BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange).toBeCalled()
+
+      describe 'when unable to queue a piece (`canQueuePiece` is false)', ->
+        beforeEach ->
+          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+            switch attr
+              when 'canQueuePiece' then false
+              when 'shouldAllowQueue' then true
+              else return actual(attr)
+
+          initialValue =
+            currentPieceType: actual('currentPieceType')
+            queuePieceType: actual('queuePieceType')
+          callback payload
+
+        it 'sets `state.canQueuePiece` to false', ->
+          expect(actual('canQueuePiece')).toBe false
+
+        it 'does not change the `state.currentPieceType`', ->
+          expect(actual('currentPieceType')).toBe initialValue.currentPieceType
+
+        it 'does not change the `state.queuePieceType`', ->
+          expect(actual('queuePieceType')).toBe initialValue.queuePieceType
+
+        it 'calls BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange).toBeCalled()
 
       describe 'when able to queue a piece', ->
-        actual = null
-        beforeEach ->
-          actual = BoardStore.get
         describe 'when a piece is not already in the queue', ->
           beforeEach ->
             BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
