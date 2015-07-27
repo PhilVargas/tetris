@@ -40,6 +40,12 @@ BoardStore =
   bindChange: (callback) ->
     @bind('change', callback)
 
+  isCollisionFree: (nextPosition, rotation) ->
+    boardData.isCollisionFree(nextPosition, rotation)
+
+  didPlayerLose: ->
+    boardData.didPlayerLose()
+
   calculateScoreThisTurn: (linesClearedThisTurn)->
     boardData.calculateScoreThisTurn(linesClearedThisTurn)
 
@@ -214,13 +220,13 @@ Dispatcher.register (payload) ->
       boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:setPieceIndeces'
-      if boardData.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
+      if BoardStore.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
         boardData.updateAttribs(xIndex: payload.value.xIndex, yIndex: payload.value.yIndex)
       boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:dropPiece'
       scoreThisTurn = 0
-      while boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
+      while BoardStore.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
         scoreThisTurn++
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)
       boardData.updateAttribs(score: boardData.score + scoreThisTurn, scoreThisTurn: scoreThisTurn) if scoreThisTurn
@@ -229,13 +235,13 @@ Dispatcher.register (payload) ->
       boardData.updateAttribs(isPaused: !boardData.isPaused)
       BoardStore.triggerChange()
     when 'board:nextTurn'
-      return if boardData.isPaused
+      return if BoardStore.get('isPaused')
       boardData.updateAttribs(turnCount: boardData.turnCount + 1)
-      if boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
+      if BoardStore.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)
       else
         boardData.freezeCells()
-        if boardData.didPlayerLose()
+        if BoardStore.didPlayerLose()
           boardData.updateAttribs(isGameOver: true)
         else
           { scoreThisTurn, linesClearedThisTurn } = boardData.scoreRows()
@@ -256,13 +262,13 @@ Dispatcher.register (payload) ->
       BoardStore.triggerChange()
     when 'board:rotatePiece'
       rotation = Math.abs((4 + payload.value + boardData.rotation) % 4)
-      if boardData.isCollisionFree({ xIndex: boardData.xIndex, yIndex: boardData.yIndex }, rotation)
+      if BoardStore.isCollisionFree({ xIndex: boardData.xIndex, yIndex: boardData.yIndex }, rotation)
         boardData.updateAttribs(rotation: rotation)
         boardData.drawGhost()
         BoardStore.triggerChange()
     when 'board:queuePiece'
-      if boardData.canQueuePiece && boardData.shouldAllowQueue
-        if boardData.queuePieceType
+      if BoardStore.get('canQueuePiece') && BoardStore.get('shouldAllowQueue')
+        if BoardStore.get('queuePieceType')
           boardData.updateAttribs
             yIndex: Settings.initialY
             xIndex: Settings.initialX
