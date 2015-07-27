@@ -27,6 +27,7 @@
       "/node_modules/"
     ],
     "unmockedModulePathPatterns": [
+      "piece-map",
       "react",
       "jquery",
       "classnames",
