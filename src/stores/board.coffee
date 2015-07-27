@@ -268,22 +268,20 @@ Dispatcher.register (payload) ->
         BoardStore.triggerChange()
     when 'board:queuePiece'
       if BoardStore.get('canQueuePiece') && BoardStore.get('shouldAllowQueue')
+        boardData.updateAttribs
+          yIndex: Settings.initialY
+          xIndex: Settings.initialX
+          rotation: 0
         if BoardStore.get('queuePieceType')
           boardData.updateAttribs
-            yIndex: Settings.initialY
-            xIndex: Settings.initialX
-            rotation:0
-            currentPieceType: boardData.queuePieceType
-            color: PieceMap[boardData.queuePieceType].color
-            queuePieceType: boardData.currentPieceType
+            queuePieceType: BoardStore.get('currentPieceType')
+            currentPieceType: BoardStore.get('queuePieceType')
+            color: PieceMap[BoardStore.get('queuePieceType')].color
         else
           boardData.updateAttribs
-            yIndex: Settings.initialY
-            xIndex: Settings.initialX
-            rotation:0
-            currentPieceType: boardData.nextPieceType
+            queuePieceType: BoardStore.get('currentPieceType')
+            currentPieceType: BoardStore.get('nextPieceType')
             color: PieceMap[boardData.nextPieceType].color
-            queuePieceType: boardData.currentPieceType
             nextPieceType: boardData.randomPiece()
       boardData.drawGhost()
       boardData.updateAttribs(canQueuePiece: false)

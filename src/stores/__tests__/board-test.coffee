@@ -157,12 +157,64 @@ describe 'BoardStore', ->
 
       beforeEach ->
         initialValue =
-          yIndex: BoardStore.initialY
-          xIndex: BoardStore.initialX
-          rotation: BoardStore.get('rotation')
-          currentPieceType: BoardStore.get('nextPieceType')
-          color: BoardStore.get('color')
-          queuePieceType: BoardStore.get('currentPieceType')
+          canQueuePiece: BoardStore.get('canQueuePiece')
+
+      it 'sets the state.canQueuePiece to false', ->
+        callback payload
+        expect(initialValue.canQueuePiece).toBe true
+        expect(BoardStore.get('canQueuePiece')).toBe false
+
+      describe 'when able to queue a piece', ->
+        actual = null
+        beforeEach ->
+          actual = BoardStore.get
+        describe 'when a piece is not already in the queue', ->
+          beforeEach ->
+            BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+              switch attr
+                when 'canQueuePiece' then return true
+                when 'shouldAllowQueue' then return true
+                when 'queuePieceType'
+                  if ['queuePieceType'] in @get.mock.calls
+                    return actual(attr)
+                  else
+                    return ''
+                else return actual(attr)
+
+            require.requireActual('stores/board')
+            callback = Dispatcher.register.mock.calls[0][0]
+            callback initialPayload
+            initialValue =
+              currentPieceType: BoardStore.get('currentPieceType')
+              queuePieceType: actual('queuePieceType')
+            callback payload
+
+          it 'sets the `state.queuePieceType` to the initial `currentPieceType`', ->
+            expect(actual('queuePieceType')).not.toBe initialValue.queuePieceType
+            expect(actual('queuePieceType')).toBe initialValue.currentPieceType
+
+        describe 'when a piece is already in the queue', ->
+          beforeEach ->
+            BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+              switch attr
+                when 'canQueuePiece' then true
+                when 'shouldAllowQueue' then true
+                when 'queuePieceType' then 'T'
+                else actual(attr)
+            require.requireActual('stores/board')
+            callback = Dispatcher.register.mock.calls[0][0]
+            callback initialPayload
+            initialValue =
+              currentPieceType: BoardStore.get('currentPieceType')
+              queuePieceType: BoardStore.get('queuePieceType')
+            callback payload
+
+          it 'sets the `state.queuePieceType` to the initial `currentPieceType`', ->
+            expect(actual('queuePieceType')).toBe initialValue.currentPieceType
+
+          it 'sets the `state.currentPieceType` to the initial `queuePieceType`', ->
+            expect(initialValue.queuePieceType).toBeTruthy()
+            expect(BoardStore.get('currentPieceType')).toBe initialValue.queuePieceType
 
 
 
