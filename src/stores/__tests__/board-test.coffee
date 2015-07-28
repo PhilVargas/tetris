@@ -351,5 +351,140 @@ describe 'BoardStore', ->
 
       it 'calls BoardStore.triggerChange', ->
         expect(BoardStore.triggerChange).toBeCalled()
+    describe 'board:nextTurn', ->
+      actual = null
+      beforeEach ->
+        actual = BoardStore.get
+      payload = eventName: 'board:nextTurn'
 
+      describe 'when the game is paused (`state.isPaused` = true)', ->
+        beforeEach ->
+          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+            switch attr
+              when 'isPaused' then true
+              else return actual(attr)
+
+          initialValue =
+            turnCount: actual('turnCount')
+          callback payload
+
+        it 'does not increment the `state.turnCount`', ->
+          expect(actual('turnCount')).toBe initialValue.turnCount
+
+        it 'does not call BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange).not.toBeCalled()
+
+      describe 'when the game is not paused (`state.isPaused` = false)', ->
+        beforeEach ->
+          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+            switch attr
+              when 'isPaused' then false
+              else return actual(attr)
+
+        describe 'when the piece has a collision', ->
+          beforeEach ->
+            BoardStore.isCollisionFree = jest.genMockFn().mockReturnValue(false)
+
+          describe 'when the player does not lose the game', ->
+            beforeEach ->
+              BoardStore.didPlayerLose = jest.genMockFn().mockReturnValue(false)
+
+            describe 'when the player does not score / clear a row', ->
+              mockValue = null
+              beforeEach ->
+                mockValue =
+                  scoreThisTurn: 0
+                  linesClearedThisTurn: 0
+                BoardStore.scoreRows = jest.genMockFn().mockReturnValue(mockValue)
+
+                initialValue =
+                  currentPieceType: actual('currentPieceType')
+                  nextPieceType: actual('nextPieceType')
+                  score: actual('score')
+                  linesCleared: actual('linesCleared')
+                callback payload
+
+              it 'sets the `state.currentPieceType` to the `state.nextPieceType`', ->
+                expect(actual('currentPieceType')).toBe initialValue.nextPieceType
+
+              it 'does not increase the `state.score`', ->
+                expect(actual('score')).toBe(initialValue.score + mockValue.scoreThisTurn)
+
+              it 'does not increase the `state.linesCleared`', ->
+                expect(actual('linesCleared')).toBe initialValue.linesCleared+ mockValue.linesClearedThisTurn
+
+              it 'does not change the `state.didPlayerLose`', ->
+                expect(actual('isGameOver')).toBe false
+
+              it 'calls BoardStore.triggerChange', ->
+                expect(BoardStore.triggerChange).toBeCalled()
+
+            describe 'when the player scores / clears a row', ->
+              mockValue = null
+              beforeEach ->
+                mockValue =
+                  scoreThisTurn: 40
+                  linesClearedThisTurn: 1
+                BoardStore.scoreRows = jest.genMockFn().mockReturnValue(mockValue)
+
+                initialValue =
+                  currentPieceType: actual('currentPieceType')
+                  nextPieceType: actual('nextPieceType')
+                  score: actual('score')
+                  linesCleared: actual('linesCleared')
+                callback payload
+
+              it 'sets the `state.currentPieceType` to the `state.nextPieceType`', ->
+                expect(actual('currentPieceType')).toBe initialValue.nextPieceType
+
+              it 'changes the `state.score`', ->
+                expect(actual('score')).toBe(initialValue.score + mockValue.scoreThisTurn)
+
+              it 'changes the `state.linesCleared`', ->
+                expect(actual('linesCleared')).toBe initialValue.linesCleared+ mockValue.linesClearedThisTurn
+
+              it 'does not change the `state.didPlayerLose`', ->
+                expect(actual('isGameOver')).toBe false
+
+              it 'calls BoardStore.triggerChange', ->
+                expect(BoardStore.triggerChange).toBeCalled()
+
+
+          describe 'when the player loses the game', ->
+            beforeEach ->
+              BoardStore.didPlayerLose = jest.genMockFn().mockReturnValue(true)
+
+              initialValue =
+                isGameOver: actual('isGameOver')
+                score: actual('score')
+                scoreThisTurn: actual('scoreThisTurn')
+                yIndex: actual('yIndex')
+                xIndex: actual('xIndex')
+                turnCount: actual('turnCount')
+              callback payload
+
+            it 'changes the `state.didPlayerLose` to `true`', ->
+              expect(initialValue.isGameOver).toBe false
+              expect(actual('isGameOver')).toBe true
+
+            it 'calls BoardStore.triggerChange', ->
+              expect(BoardStore.triggerChange).toBeCalled()
+
+        describe 'when the piece has no collision', ->
+          beforeEach ->
+            BoardStore.isCollisionFree = jest.genMockFn().mockReturnValue(true)
+
+            initialValue =
+              yIndex: actual('yIndex')
+              turnCount: actual('turnCount')
+            callback payload
+
+          it 'increments the `state.yIndex`', ->
+            expect(actual('yIndex')).toBe initialValue.yIndex + 1
+
+          it 'increments the `state.turnCount`', ->
+            expect(actual('turnCount')).toBe initialValue.turnCount + 1
+
+          it 'calls BoardStore.triggerChange', ->
+            expect(BoardStore.triggerChange).toBeCalled()
 

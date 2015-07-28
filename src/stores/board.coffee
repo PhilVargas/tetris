@@ -53,6 +53,9 @@ BoardStore =
   level: ->
     boardData.level()
 
+  scoreRows: ->
+    boardData.scoreRows()
+
   turnDelay: ->
     Calculate.turnDelay(@level())
 
@@ -242,14 +245,14 @@ Dispatcher.register (payload) ->
     when 'board:nextTurn'
       return if BoardStore.get('isPaused')
       boardData.updateAttribs(turnCount: boardData.turnCount + 1)
-      if BoardStore.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
+      if BoardStore.isCollisionFree(xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1)
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)
       else
         boardData.freezeCells()
         if BoardStore.didPlayerLose()
           boardData.updateAttribs(isGameOver: true)
         else
-          { scoreThisTurn, linesClearedThisTurn } = boardData.scoreRows()
+          { scoreThisTurn, linesClearedThisTurn } = BoardStore.scoreRows()
           nextPiece = boardData.randomPiece()
           boardData.updateAttribs(
             linesCleared: boardData.linesCleared + linesClearedThisTurn
