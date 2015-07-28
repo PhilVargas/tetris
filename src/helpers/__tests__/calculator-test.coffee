@@ -2,6 +2,7 @@ Calc = require.requireActual 'helpers/calculator'
 Settings = require.requireActual 'helpers/settings'
 
 describe 'Calculator', ->
+  # Math.max(Settings.minTurnDelay, Settings.initialTurnDelay - (50*level))
   describe '#turnDelay', ->
     it 'returns a floor of `Settings.minTurnDelay`', ->
       expect(Calc.turnDelay(Number.POSITIVE_INFINITY)).toBe Settings.minTurnDelay
@@ -14,6 +15,8 @@ describe 'Calculator', ->
       expect(Calc.turnDelay(4)).toBe 300
       expect(Calc.turnDelay(5)).toBe 250
 
+  # Math.min(10, totalLinesCleared // 10)
+  # where // === integer division
   describe '#level', ->
     it 'returns a ceiling of `Settings.maxLevel`', ->
       expect(Calc.level(Number.POSITIVE_INFINITY)).toBe Settings.maxLevel
@@ -25,6 +28,7 @@ describe 'Calculator', ->
       expect(Calc.level(30)).toBe 3
       expect(Calc.level(40)).toBe 4
 
+  # [0,40,100,300,1200][linesClearedThisTurn] * ( 1 + scoreMultiplier )
   describe '#scoreThisTurn', ->
     describe 'calculates the score', ->
       it 'gives a higher score based on the `totalLinesCleared`', ->
@@ -40,6 +44,7 @@ describe 'Calculator', ->
         expect(Calc.scoreThisTurn(1, 2)).toBe 120
         expect(Calc.scoreThisTurn(1, 3)).toBe 160
 
+  # |(4 + increment + currentRotation) % 4|
   describe '#rotation', ->
     it 'increments the rotation by +/- 1', ->
       expect(Calc.rotation(1,1)).toBe 2
@@ -50,3 +55,10 @@ describe 'Calculator', ->
       expect(0 <= Calc.rotation(-1000,1) < 4).toBe true
       expect(Calc.rotation(3,1)).toBe 0
       expect(Calc.rotation(0,-1)).toBe 3
+
+  # (xCoord + boardWith*yCoord)
+  describe '#cellIndexFromCoords', ->
+    it 'calculates the flat index from a cells x/y coordinates', ->
+      expect(Calc.cellIndexFromCoords(5,5)).toBe 55
+      expect(Calc.cellIndexFromCoords(Settings.boardWidth,Settings.boardHeight)).toBe Settings.boardWidth * (1 + Settings.boardHeight)
+

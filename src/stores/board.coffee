@@ -106,13 +106,6 @@ class BoardData
         count++
     cells
 
-  frozenCells: ->
-    cell for cell in @cells when cell.isFrozen
-
-  isFrozenCell: (position)->
-    for cell in @frozenCells() when position.x == cell.xIndex && position.y == cell.yIndex
-      return true
-
   randomPiece: ->
     randomInt = Math.floor(Math.random() * Object.keys(PieceMap).length)
     Object.keys(PieceMap)[randomInt]
@@ -121,14 +114,16 @@ class BoardData
     assign(this, attribs)
 
   hasCollision: (nextPosition, cell) ->
+    cellIndex = Calculate.cellIndexFromCoords(nextPosition.xIndex + cell.x, nextPosition.yIndex + cell.y)
     !(0 <= nextPosition.xIndex + cell.x < @width) ||
       nextPosition.yIndex + cell.y >= @height ||
-      @isFrozenCell(x: nextPosition.xIndex + cell.x, y: nextPosition.yIndex + cell.y)
+      @cells[cellIndex].isFrozen
 
   isCollisionFree: (nextPosition, rotation = @rotation) =>
     isCollisionFree = true
     for cell in PieceMap[@currentPieceType].shapes[rotation] when @hasCollision(nextPosition, cell)
       isCollisionFree = false
+      break
     isCollisionFree
 
   getPieceIndeces: (position = {x: @xIndex, y: @yIndex})->
@@ -137,22 +132,23 @@ class BoardData
       indeces.push {x: position.x + a.x, y: position.y + a.y}
     indeces
 
-  getCellIdsFromIndeces: ->
+  getCellIdsForPiece: ->
     piece = @getPieceIndeces()
     cellIds = for cell in piece
-      cell.x + (@width*cell.y)
+      Calculate.cellIndexFromCoords(cell.x, cell.y)
     cellIds
 
   freezeCells: ->
-    cellIds = @getCellIdsFromIndeces()
+    cellIds = @getCellIdsForPiece()
     for cell in @cells when cell.id in cellIds
       cell.isFrozen = true
       cell.color = @color
 
   didPlayerLose: ->
     isGameOver = false
-    frozenCellIds = (cell.id for cell in @frozenCells())
-    isGameOver = true for id in frozenCellIds when id in [0...(@width * @hiddenRows)]
+    for cell in @cells when cell.isFrozen && cell.id in [0...(@width * @hiddenRows)]
+      isGameOver = true
+      break
     isGameOver
 
   getRows: ->
@@ -163,12 +159,16 @@ class BoardData
 
   isAnyRowFrozen: ->
     isAnyRowFrozen = false
-    isAnyRowFrozen = true for row in @getRows() when @isRowFrozen(row)
+    for row in @getRows() when @isRowFrozen(row)
+      isAnyRowFrozen = true
+      break
     isAnyRowFrozen
 
   isRowFrozen: (row) ->
     isRowFrozen = true
-    isRowFrozen = false for cell in row when not cell.isFrozen
+    for cell in row when not cell.isFrozen
+      isRowFrozen = false
+      break
     isRowFrozen
 
   clearFrozenRow: (rows) ->

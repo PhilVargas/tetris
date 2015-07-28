@@ -13,4 +13,7 @@ Calculate =
   rotation: (currentRotation, increment) ->
     Math.abs((4 + increment + currentRotation) % 4)
 
+  cellIndexFromCoords: (xIndex, yIndex) ->
+    xIndex + (Settings.boardWidth*yIndex)
+
 module.exports = Calculate
