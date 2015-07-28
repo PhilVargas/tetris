@@ -2,6 +2,7 @@ Dispatcher = require 'dispatcher'
 MicroEvent = require 'microevent-github'
 PieceMap = require 'helpers/piece-map'
 Settings = require 'helpers/settings'
+Calculate = require 'helpers/calculator'
 
 assign = require 'object-assign'
 
@@ -40,14 +41,23 @@ BoardStore =
   bindChange: (callback) ->
     @bind('change', callback)
 
+  isCollisionFree: (nextPosition, rotation) ->
+    boardData.isCollisionFree(nextPosition, rotation)
+
+  didPlayerLose: ->
+    boardData.didPlayerLose()
+
   calculateScoreThisTurn: (linesClearedThisTurn)->
     boardData.calculateScoreThisTurn(linesClearedThisTurn)
 
   level: ->
     boardData.level()
 
+  scoreRows: ->
+    boardData.scoreRows()
+
   turnDelay: ->
-    Math.max(Settings.minTurnDelay, Settings.initialTurnDelay - (10*@level()))
+    Calculate.turnDelay(@level())
 
 class BoardData
   constructor: ->
@@ -90,7 +100,6 @@ class BoardData
     score: 0
     scoreThisTurn: 0
 
-
   generateCells: ->
     cells =[]
     count = 0
@@ -100,13 +109,6 @@ class BoardData
         count++
     cells
 
-  frozenCells: ->
-    cell for cell in @cells when cell.isFrozen
-
-  isFrozenCell: (position)->
-    for cell in @frozenCells() when position.x == cell.xIndex && position.y == cell.yIndex
-      return true
-
   randomPiece: ->
     randomInt = Math.floor(Math.random() * Object.keys(PieceMap).length)
     Object.keys(PieceMap)[randomInt]
@@ -115,14 +117,16 @@ class BoardData
     assign(this, attribs)
 
   hasCollision: (nextPosition, cell) ->
+    cellIndex = Calculate.cellIndexFromCoords(nextPosition.xIndex + cell.x, nextPosition.yIndex + cell.y)
     !(0 <= nextPosition.xIndex + cell.x < @width) ||
       nextPosition.yIndex + cell.y >= @height ||
-      @isFrozenCell(x: nextPosition.xIndex + cell.x, y: nextPosition.yIndex + cell.y)
+      @cells[cellIndex].isFrozen
 
   isCollisionFree: (nextPosition, rotation = @rotation) =>
     isCollisionFree = true
     for cell in PieceMap[@currentPieceType].shapes[rotation] when @hasCollision(nextPosition, cell)
       isCollisionFree = false
+      break
     isCollisionFree
 
   getPieceIndeces: (position = {x: @xIndex, y: @yIndex})->
@@ -131,22 +135,23 @@ class BoardData
       indeces.push {x: position.x + a.x, y: position.y + a.y}
     indeces
 
-  getCellIdsFromIndeces: ->
+  getCellIdsForPiece: ->
     piece = @getPieceIndeces()
     cellIds = for cell in piece
-      cell.x + (@width*cell.y)
+      Calculate.cellIndexFromCoords(cell.x, cell.y)
     cellIds
 
   freezeCells: ->
-    cellIds = @getCellIdsFromIndeces()
+    cellIds = @getCellIdsForPiece()
     for cell in @cells when cell.id in cellIds
       cell.isFrozen = true
       cell.color = @color
 
   didPlayerLose: ->
     isGameOver = false
-    frozenCellIds = (cell.id for cell in @frozenCells())
-    isGameOver = true for id in frozenCellIds when id in [0...(@width * @hiddenRows)]
+    for cell in @cells when cell.isFrozen && cell.id in [0...(@width * @hiddenRows)]
+      isGameOver = true
+      break
     isGameOver
 
   getRows: ->
@@ -157,12 +162,16 @@ class BoardData
 
   isAnyRowFrozen: ->
     isAnyRowFrozen = false
-    isAnyRowFrozen = true for row in @getRows() when @isRowFrozen(row)
+    for row in @getRows() when @isRowFrozen(row)
+      isAnyRowFrozen = true
+      break
     isAnyRowFrozen
 
   isRowFrozen: (row) ->
     isRowFrozen = true
-    isRowFrozen = false for cell in row when not cell.isFrozen
+    for cell in row when not cell.isFrozen
+      isRowFrozen = false
+      break
     isRowFrozen
 
   clearFrozenRow: (rows) ->
@@ -188,10 +197,13 @@ class BoardData
       yIndex++
 
   level: ->
-    Math.min(10, @linesCleared // 10)
+    Calculate.level(@linesCleared)
 
-  calculateScoreThisTurn: (linesClearedThisTurn)->
-    [0,40,100,300,1200][linesClearedThisTurn] * ( 1 + @level() )
+  calculateScoreThisTurn: (linesClearedThisTurn) ->
+    Calculate.scoreThisTurn(linesClearedThisTurn, @level())
+
+  calculateRotation: (increment) ->
+    Calculate.rotation(@rotation, increment)
 
   scoreRows: ->
     linesClearedThisTurn = 0
@@ -215,31 +227,32 @@ Dispatcher.register (payload) ->
       boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:setPieceIndeces'
-      if boardData.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
+      if BoardStore.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
         boardData.updateAttribs(xIndex: payload.value.xIndex, yIndex: payload.value.yIndex)
       boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:dropPiece'
       scoreThisTurn = 0
-      while boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
+      while BoardStore.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
         scoreThisTurn++
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)
       boardData.updateAttribs(score: boardData.score + scoreThisTurn, scoreThisTurn: scoreThisTurn) if scoreThisTurn
       BoardStore.triggerChange()
     when 'board:togglePause'
-      boardData.updateAttribs(isPaused: !boardData.isPaused)
-      BoardStore.triggerChange()
+      unless BoardStore.get('isGameOver')
+        boardData.updateAttribs(isPaused: !boardData.isPaused)
+        BoardStore.triggerChange()
     when 'board:nextTurn'
-      return if boardData.isPaused
+      return if BoardStore.get('isPaused')
       boardData.updateAttribs(turnCount: boardData.turnCount + 1)
-      if boardData.isCollisionFree({xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1})
+      if BoardStore.isCollisionFree(xIndex: boardData.xIndex, yIndex: boardData.yIndex + 1)
         boardData.updateAttribs(yIndex: boardData.yIndex + 1)
       else
         boardData.freezeCells()
-        if boardData.didPlayerLose()
+        if BoardStore.didPlayerLose()
           boardData.updateAttribs(isGameOver: true)
         else
-          { scoreThisTurn, linesClearedThisTurn } = boardData.scoreRows()
+          { scoreThisTurn, linesClearedThisTurn } = BoardStore.scoreRows()
           nextPiece = boardData.randomPiece()
           boardData.updateAttribs(
             linesCleared: boardData.linesCleared + linesClearedThisTurn
@@ -256,33 +269,31 @@ Dispatcher.register (payload) ->
           boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:rotatePiece'
-      rotation = Math.abs((4 + payload.value + boardData.rotation) % 4)
-      if boardData.isCollisionFree({ xIndex: boardData.xIndex, yIndex: boardData.yIndex }, rotation)
+      rotation = boardData.calculateRotation(payload.value)
+      if BoardStore.isCollisionFree({ xIndex: boardData.xIndex, yIndex: boardData.yIndex }, rotation)
         boardData.updateAttribs(rotation: rotation)
         boardData.drawGhost()
         BoardStore.triggerChange()
     when 'board:queuePiece'
-      if boardData.canQueuePiece && boardData.shouldAllowQueue
-        if boardData.queuePieceType
+      if BoardStore.get('canQueuePiece') && BoardStore.get('shouldAllowQueue')
+        boardData.updateAttribs
+          yIndex: Settings.initialY
+          xIndex: Settings.initialX
+          rotation: 0
+        if BoardStore.get('queuePieceType')
           boardData.updateAttribs
-            yIndex: Settings.initialY
-            xIndex: Settings.initialX
-            rotation:0
-            currentPieceType: boardData.queuePieceType
-            color: PieceMap[boardData.queuePieceType].color
-            queuePieceType: boardData.currentPieceType
+            queuePieceType: BoardStore.get('currentPieceType')
+            currentPieceType: BoardStore.get('queuePieceType')
+            color: PieceMap[BoardStore.get('queuePieceType')].color
         else
           boardData.updateAttribs
-            yIndex: Settings.initialY
-            xIndex: Settings.initialX
-            rotation:0
-            currentPieceType: boardData.nextPieceType
+            queuePieceType: BoardStore.get('currentPieceType')
+            currentPieceType: BoardStore.get('nextPieceType')
             color: PieceMap[boardData.nextPieceType].color
-            queuePieceType: boardData.currentPieceType
             nextPieceType: boardData.randomPiece()
-      boardData.drawGhost()
-      boardData.updateAttribs(canQueuePiece: false)
-      BoardStore.triggerChange()
+        boardData.drawGhost()
+        boardData.updateAttribs(canQueuePiece: false)
+        BoardStore.triggerChange()
     when 'board:toggleQueue'
       boardData.updateAttribs(shouldAllowQueue: !boardData.shouldAllowQueue)
       BoardStore.triggerChange()

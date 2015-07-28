@@ -1,6 +1,7 @@
 Settings =
-  initialTurnDelay: 750
+  initialTurnDelay: 500
   minTurnDelay: 50
+  maxLevel: 10
   cellEdgeLength: 20
   boardHeight: 21
   boardWidth: 10
