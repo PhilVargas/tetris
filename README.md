@@ -3,6 +3,8 @@ Coffeescript tetris using React + Flux with Jest testing
 
 http://philvargas.github.io/tetris/
 
+![PAV Tetris](https://raw.githubusercontent.com/PhilVargas/tetris/master/vendor/assets/images/PAV%20Tetris.png)
+
 ## Features
 - Score and Level tracking
 - Piece Navigation, dropping, and rotation
