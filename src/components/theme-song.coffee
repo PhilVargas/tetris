@@ -35,7 +35,7 @@ ThemeSong = React.createClass
 
   render: ->
     <div className="theme-song-container">
-      <audio ref='themeSong' src="https://raw.githubusercontent.com/PhilVargas/tetris/master/vendor/assets/music/Tetris%20Theme%20-%20Long.ogg" autoPlay loop></audio>
+      <audio ref='themeSong' src="https://raw.githubusercontent.com/PhilVargas/tetris/master/public/assets/music/Tetris%20Theme%20-%20Long.ogg" autoPlay loop></audio>
     </div>
 
 module.exports = ThemeSong
