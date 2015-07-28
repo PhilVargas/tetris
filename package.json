@@ -27,7 +27,7 @@
       "/node_modules/"
     ],
     "unmockedModulePathPatterns": [
-      "piece-map",
+      "helpers",
       "react",
       "jquery",
       "classnames",
@@ -41,7 +41,8 @@
       "preprocessor.js"
     ],
     "testPathDirs": [
-      "<rootDir>/stores/__tests__"
+      "<rootDir>/stores/__tests__",
+      "<rootDir>/helpers/__tests__"
     ]
   },
   "devDependencies": {

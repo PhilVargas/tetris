@@ -5,5 +5,12 @@ Calculate =
     Math.max(Settings.minTurnDelay, Settings.initialTurnDelay - (50*level))
 
   level: (totalLinesCleared) ->
-    # Math.min(10, @linesCleared // 10)
+    Math.min(10, totalLinesCleared // 10)
+
+  scoreThisTurn: (linesClearedThisTurn, scoreMultiplier) ->
+    [0,40,100,300,1200][linesClearedThisTurn] * ( 1 + scoreMultiplier )
+
+  rotation: (currentRotation, increment) ->
+    Math.abs((4 + increment + currentRotation) % 4)
+
 module.exports = Calculate

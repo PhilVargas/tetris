@@ -2,6 +2,7 @@ Dispatcher = require 'dispatcher'
 MicroEvent = require 'microevent-github'
 PieceMap = require 'helpers/piece-map'
 Settings = require 'helpers/settings'
+Calculate = require 'helpers/calculator'
 
 assign = require 'object-assign'
 
@@ -53,7 +54,7 @@ BoardStore =
     boardData.level()
 
   turnDelay: ->
-    Math.max(Settings.minTurnDelay, Settings.initialTurnDelay - (50*@level()))
+    Calculate.turnDelay(@level())
 
 class BoardData
   constructor: ->
@@ -193,10 +194,13 @@ class BoardData
       yIndex++
 
   level: ->
-    Math.min(10, @linesCleared // 10)
+    Calculate.level(@linesCleared)
 
-  calculateScoreThisTurn: (linesClearedThisTurn)->
-    [0,40,100,300,1200][linesClearedThisTurn] * ( 1 + @level() )
+  calculateScoreThisTurn: (linesClearedThisTurn) ->
+    Calculate.scoreThisTurn(linesClearedThisTurn, @level())
+
+  calculateRotation: (increment) ->
+    Calculate.rotation(@rotation, increment)
 
   scoreRows: ->
     linesClearedThisTurn = 0
@@ -261,7 +265,7 @@ Dispatcher.register (payload) ->
           boardData.drawGhost()
       BoardStore.triggerChange()
     when 'board:rotatePiece'
-      rotation = Math.abs((4 + payload.value + boardData.rotation) % 4)
+      rotation = boardData.calculateRotation(payload.value)
       if BoardStore.isCollisionFree({ xIndex: boardData.xIndex, yIndex: boardData.yIndex }, rotation)
         boardData.updateAttribs(rotation: rotation)
         boardData.drawGhost()
