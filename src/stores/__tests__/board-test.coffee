@@ -131,16 +131,39 @@ describe 'BoardStore', ->
 
     describe 'board:togglePause', ->
       payload = eventName: 'board:togglePause'
+      actual = null
 
-      beforeEach ->
-        initialValue = BoardStore.get('isPaused')
-        callback payload
+      describe 'when the game is not over (`@state.isGameOver = false`)', ->
+        beforeEach ->
+          actual = BoardStore.get
+          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+            switch attr
+              when 'isGameOver' then false
+              else return actual(attr)
+          initialValue = actual('isPaused')
+          callback payload
 
-      it 'toggles the state.isPaused', ->
-        expect(BoardStore.get('isPaused')).toBe true
+        it 'toggles the `state.isPaused`', ->
+          expect(actual('isPaused')).toBe !initialValue
 
-      it 'calls BoardStore.triggerChange', ->
-        expect(BoardStore.triggerChange).toBeCalled()
+        it 'calls BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange).toBeCalled()
+
+      describe 'when the game is over (`@state.isGameOver = true`)', ->
+        beforeEach ->
+          actual = BoardStore.get
+          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+            switch attr
+              when 'isGameOver' then true
+              else return actual(attr)
+          initialValue = actual('isPaused')
+          callback payload
+
+        it 'does not toggle the `state.isPaused`', ->
+          expect(actual('isPaused')).toBe initialValue
+
+        it 'does not call BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange).not.toBeCalled()
 
     describe 'board:rotatePiece', ->
       beforeEach ->
@@ -216,10 +239,11 @@ describe 'BoardStore', ->
           initialValue =
             currentPieceType: actual('currentPieceType')
             queuePieceType: actual('queuePieceType')
+            canQueuePiece: actual('canQueuePiece')
           callback payload
 
-        it 'sets `state.canQueuePiece` to false', ->
-          expect(actual('canQueuePiece')).toBe false
+        it 'does not change `state.canQueuePiece`', ->
+          expect(actual('canQueuePiece')).toBe actual('canQueuePiece')
 
         it 'does not change the `state.currentPieceType`', ->
           expect(actual('currentPieceType')).toBe initialValue.currentPieceType
@@ -227,8 +251,8 @@ describe 'BoardStore', ->
         it 'does not change the `state.queuePieceType`', ->
           expect(actual('queuePieceType')).toBe initialValue.queuePieceType
 
-        it 'calls BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).toBeCalled()
+        it 'does not call BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange).not.toBeCalled()
 
       describe 'when unable to queue a piece (`canQueuePiece` is false)', ->
         beforeEach ->
@@ -241,10 +265,11 @@ describe 'BoardStore', ->
           initialValue =
             currentPieceType: actual('currentPieceType')
             queuePieceType: actual('queuePieceType')
+            canQueuePiece: actual('canQueuePiece')
           callback payload
 
-        it 'sets `state.canQueuePiece` to false', ->
-          expect(actual('canQueuePiece')).toBe false
+        it 'does not change `state.canQueuePiece`', ->
+          expect(actual('canQueuePiece')).toBe actual('canQueuePiece')
 
         it 'does not change the `state.currentPieceType`', ->
           expect(actual('currentPieceType')).toBe initialValue.currentPieceType
@@ -252,8 +277,8 @@ describe 'BoardStore', ->
         it 'does not change the `state.queuePieceType`', ->
           expect(actual('queuePieceType')).toBe initialValue.queuePieceType
 
-        it 'calls BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).toBeCalled()
+        it 'does not call BoardStore.triggerChange', ->
+          expect(BoardStore.triggerChange).not.toBeCalled()
 
       describe 'when able to queue a piece', ->
         describe 'when a piece is not already in the queue', ->

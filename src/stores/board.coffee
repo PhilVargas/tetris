@@ -236,8 +236,9 @@ Dispatcher.register (payload) ->
       boardData.updateAttribs(score: boardData.score + scoreThisTurn, scoreThisTurn: scoreThisTurn) if scoreThisTurn
       BoardStore.triggerChange()
     when 'board:togglePause'
-      boardData.updateAttribs(isPaused: !boardData.isPaused)
-      BoardStore.triggerChange()
+      unless BoardStore.get('isGameOver')
+        boardData.updateAttribs(isPaused: !boardData.isPaused)
+        BoardStore.triggerChange()
     when 'board:nextTurn'
       return if BoardStore.get('isPaused')
       boardData.updateAttribs(turnCount: boardData.turnCount + 1)
@@ -287,9 +288,9 @@ Dispatcher.register (payload) ->
             currentPieceType: BoardStore.get('nextPieceType')
             color: PieceMap[boardData.nextPieceType].color
             nextPieceType: boardData.randomPiece()
-      boardData.drawGhost()
-      boardData.updateAttribs(canQueuePiece: false)
-      BoardStore.triggerChange()
+        boardData.drawGhost()
+        boardData.updateAttribs(canQueuePiece: false)
+        BoardStore.triggerChange()
     when 'board:toggleQueue'
       boardData.updateAttribs(shouldAllowQueue: !boardData.shouldAllowQueue)
       BoardStore.triggerChange()
