@@ -23,7 +23,7 @@ buildJs = ->
   browserBundle = browserify(browserifyOptions)
   browserBundle.transform jsxCoffee
   watcher = watchify(browserBundle)
-  watcher.bundle().pipe(source('bundle.js')).pipe(gulp.dest(paths.build)).on 'end', ->
+  watcher.bundle().pipe(source('bundle.js')).pipe(buffer()).pipe(uglify()).pipe(gulp.dest(paths.build)).on 'end', ->
     watcher.close()
 
 initializeWatcher = (bundleToWatch) ->
@@ -49,7 +49,7 @@ watchJs = ->
 
 buildSass = ->
   gulp.src('./styles/sass/application.scss')
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass(outputStyle: 'compressed').on('error', sass.logError))
     .pipe(gulp.dest(paths.stylesRoot))
 
 watchSass = ->
