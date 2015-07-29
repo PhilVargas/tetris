@@ -1,5 +1,6 @@
 React = require 'react'
 PieceMap = require 'helpers/piece-map'
+Settings = require 'helpers/settings'
 
 cx = require 'classnames'
 assign = require 'object-assign'
@@ -8,12 +9,9 @@ Piece = React.createClass
   displayName: 'Piece'
 
   propTypes:
-    initialX: React.PropTypes.number.isRequired
-    initialY: React.PropTypes.number.isRequired
     xIndex: React.PropTypes.number.isRequired
     yIndex: React.PropTypes.number.isRequired
     pieceType: React.PropTypes.string.isRequired
-    cellEdgeLength: React.PropTypes.number.isRequired
     setIndeces: React.PropTypes.func.isRequired
     dropPiece: React.PropTypes.func.isRequired
     queuePiece: React.PropTypes.func.isRequired
@@ -24,13 +22,10 @@ Piece = React.createClass
     isPaused: React.PropTypes.bool.isRequired
     hasGameBegun: React.PropTypes.bool.isRequired
 
-  getDefaultProps: ->
-    cellEdgeLength: 20
-
   getCoords: (cellNumber = 0) ->
     offset = PieceMap[@props.pieceType].shapes[@props.rotation][cellNumber]
-    left: (( @props.xIndex + offset.x)*@props.cellEdgeLength) + @props.initialX
-    top: (( @props.yIndex + offset.y )*@props.cellEdgeLength) + @props.initialY
+    left: (( @props.xIndex + offset.x)*Settings.cellEdgeLength) + Settings.boardXOffset
+    top: (( @props.yIndex + offset.y )*Settings.cellEdgeLength) + Settings.boardYOffset
 
   componentDidMount: ->
     $(document).on

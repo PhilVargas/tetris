@@ -12,25 +12,24 @@ BoardStore =
     boardData[attr]
 
   getAll: ->
-    hasGameBegun: boardData.hasGameBegun
-    xIndex: boardData.xIndex
-    yIndex: boardData.yIndex
-    ghostYIndex: boardData.ghostYIndex
-    turnCount: boardData.turnCount
-    currentPieceType: boardData.currentPieceType
-    nextPieceType: boardData.nextPieceType
-    queuePieceType: boardData.queuePieceType
     canQueuePiece: boardData.canQueuePiece
     cells: boardData.cells
-    rotation: boardData.rotation
+    currentPieceType: boardData.currentPieceType
+    ghostYIndex: boardData.ghostYIndex
+    hasGameBegun: boardData.hasGameBegun
     isGameOver: boardData.isGameOver
+    isGhostVisible: boardData.isGhostVisible
     isPaused: boardData.isPaused
+    linesCleared: boardData.linesCleared
+    nextPieceType: boardData.nextPieceType
+    queuePieceType: boardData.queuePieceType
+    rotation: boardData.rotation
     score: boardData.score
     scoreThisTurn: boardData.scoreThisTurn
-    linesCleared: boardData.linesCleared
-    isGhostVisible: boardData.isGhostVisible
     shouldAllowQueue: boardData.shouldAllowQueue
-    linesCleared: boardData.linesCleared
+    turnCount: boardData.turnCount
+    xIndex: boardData.xIndex
+    yIndex: boardData.yIndex
 
   triggerChange: ->
     @trigger('change')

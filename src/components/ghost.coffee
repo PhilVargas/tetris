@@ -1,5 +1,6 @@
 React = require 'react'
 PieceMap = require 'helpers/piece-map'
+Settings = require 'helpers/settings'
 
 assign = require 'object-assign'
 cx = require 'classnames'
@@ -13,17 +14,15 @@ Ghost = React.createClass
     rotation: React.PropTypes.number.isRequired
     pieceType: React.PropTypes.string.isRequired
     cellEdgeLength: React.PropTypes.number.isRequired
-    initialX: React.PropTypes.number.isRequired
-    initialY: React.PropTypes.number.isRequired
     isVisible: React.PropTypes.bool.isRequired
 
   getDefaultProps: ->
-    cellEdgeLength: 20
+    cellEdgeLength: Settings.cellEdgeLength
 
   getCoords: (cellNumber = 0) ->
     offset = PieceMap[@props.pieceType].shapes[@props.rotation][cellNumber]
-    left: (( @props.xIndex + offset.x )*@props.cellEdgeLength) + @props.initialX
-    top: (( @props.yIndex + offset.y )*@props.cellEdgeLength) + @props.initialY
+    left: (( @props.xIndex + offset.x )*@props.cellEdgeLength) + Settings.boardXOffset
+    top: (( @props.yIndex + offset.y )*@props.cellEdgeLength) + Settings.boardYOffset
 
   containerClass: ->
     cx 'ghost-container',

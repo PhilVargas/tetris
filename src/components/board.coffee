@@ -18,55 +18,44 @@ Board = React.createClass
   displayName: 'Board'
 
   propTypes:
-    width: React.PropTypes.number.isRequired
-    height: React.PropTypes.number.isRequired
-    cellEdgeLength: React.PropTypes.number.isRequired
-    initialX: React.PropTypes.number.isRequired
-    initialY: React.PropTypes.number.isRequired
-    hiddenRows: React.PropTypes.number.isRequired
-    turnCount: React.PropTypes.number.isRequired
+    cells: React.PropTypes.array.isRequired
     currentPieceType: React.PropTypes.string.isRequired
+    ghostYIndex: React.PropTypes.string.isRequired
+    hasGameBegun: React.PropTypes.bool.isRequired
+    isGameOver: React.PropTypes.bool.isRequired
+    isGhostVisible: React.PropTypes.bool.isRequired
+    isMuted: React.PropTypes.bool.isRequired
+    isPaused: React.PropTypes.bool.isRequired
+    linesCleared: React.PropTypes.number.isRequired
     nextPieceType: React.PropTypes.string.isRequired
     queuePieceType: React.PropTypes.string.isRequired
-    cells: React.PropTypes.array.isRequired
     rotation: React.PropTypes.number.isRequired
     score: React.PropTypes.number.isRequired
     scoreThisTurn: React.PropTypes.number.isRequired
-    isGameOver: React.PropTypes.bool.isRequired
-    isPaused: React.PropTypes.bool.isRequired
-    isMuted: React.PropTypes.bool.isRequired
-    isGhostVisible: React.PropTypes.bool.isRequired
     shouldAllowQueue: React.PropTypes.bool.isRequired
-    linesCleared: React.PropTypes.number.isRequired
-    hasGameBegun: React.PropTypes.bool.isRequired
-
-  getDefaultProps: ->
-    cellEdgeLength: Settings.cellEdgeLength
-    initialX: Settings.boardXOffset
-    initialY: Settings.boardYOffest
-    hiddenRows: Settings.hiddenRows
-    width: Settings.boardWidth
-    height: Settings.boardHeight
+    turnCount: React.PropTypes.number.isRequired
+    xIndex: React.PropTypes.number.isRequired
+    yIndex: React.PropTypes.number.isRequired
 
   getInitialState: ->
-    turnCount: @props.turnCount
-    hasGameBegun: @props.hasGameBegun
-    xIndex: @props.xIndex
-    yIndex: @props.yIndex
-    ghostYIndex: @props.ghostYIndex
-    currentPieceType: @props.currentPieceType
-    queuePieceType: @props.queuePieceType
-    nextPieceType: @props.nextPieceType
     cells: @props.cells
-    rotation: @props.rotation
+    currentPieceType: @props.currentPieceType
+    ghostYIndex: @props.ghostYIndex
+    hasGameBegun: @props.hasGameBegun
     isGameOver: @props.isGameOver
-    isPaused: @props.isPaused
+    isGhostVisible: @props.isGhostVisible
     isMuted: @props.isMuted
+    isPaused: @props.isPaused
+    linesCleared: @props.linesCleared
+    nextPieceType: @props.nextPieceType
+    queuePieceType: @props.queuePieceType
+    rotation: @props.rotation
     score: @props.score
     scoreThisTurn: @props.scoreThisTurn
-    isGhostVisible: @props.isGhostVisible
     shouldAllowQueue: @props.shouldAllowQueue
-    linesCleared: @props.linesCleared
+    turnCount: @props.turnCount
+    xIndex: @props.xIndex
+    yIndex: @props.yIndex
 
   # Render functions #
   componentDidMount: ->
@@ -101,53 +90,41 @@ Board = React.createClass
     AudioStore.unbindChange @boardChanged
     $(document).off 'keyup'
 
-  generatePiece: ->
-    <Piece
-      yIndex={ @state.yIndex }
-      xIndex={ @state.xIndex }
-      initialX={ @props.initialX }
-      initialY={ @props.initialY }
-      pieceType={ @state.currentPieceType }
-      setIndeces={ Action.setPieceIndeces }
-      rotateClockwise={ Action.rotateClockwise }
-      dropPiece={ Action.dropPiece }
-      queuePiece={ Action.queuePiece }
-      rotateCounterClockwise={ Action.rotateCounterClockwise }
-      rotation={ @state.rotation }
-      isPaused={ @state.isPaused }
-      hasGameBegun={ @state.hasGameBegun }
-    />
+  pieceProps: ->
+    yIndex: @state.yIndex
+    xIndex: @state.xIndex
+    pieceType: @state.currentPieceType
+    setIndeces: Action.setPieceIndeces
+    rotateClockwise: Action.rotateClockwise
+    dropPiece: Action.dropPiece
+    queuePiece: Action.queuePiece
+    rotateCounterClockwise: Action.rotateCounterClockwise
+    rotation: @state.rotation
+    isPaused: @state.isPaused
+    hasGameBegun: @state.hasGameBegun
 
-  generateGhost: ->
-    <Ghost
-      yIndex={ @state.ghostYIndex }
-      xIndex={ @state.xIndex }
-      initialX={ @props.initialX }
-      initialY={ @props.initialY }
-      pieceType={ @state.currentPieceType }
-      rotation={ @state.rotation }
-      isVisible={ @state.isGhostVisible && @state.hasGameBegun}
-    />
+  ghostProps: ->
+    yIndex: @state.ghostYIndex
+    xIndex: @state.xIndex
+    pieceType: @state.currentPieceType
+    rotation: @state.rotation
+    isVisible: @state.isGhostVisible && @state.hasGameBegun
 
-  generateNextPiece: ->
-    <DisplayPiece
-      pieceType={ @state.nextPieceType }
-      cellClass='next-cell'
-      id="next-piece-container"
-      pieceTitle='Next Piece'
-      isDisabled={ !@state.hasGameBegun }
-      containerClass='columns large-11 large-centered'
-    />
+  nextPieceProps: ->
+    pieceType: @state.nextPieceType
+    cellClass: 'next-cell'
+    id: "next-piece-container"
+    pieceTitle: 'Next Piece'
+    isDisabled: !@state.hasGameBegun
+    containerClass: 'columns large-11 large-centered'
 
-  generateQueuePiece: ->
-    <DisplayPiece
-      pieceType={ @state.queuePieceType }
-      cellClass='queue-cell'
-      id='queue-piece-container'
-      pieceTitle='Queued Piece'
-      isDisabled={ !@state.canQueuePiece || !@state.shouldAllowQueue }
-      containerClass='columns large-11 large-centered'
-    />
+  queuePieceProps: ->
+    pieceType: @state.queuePieceType
+    cellClass: 'queue-cell'
+    id: 'queue-piece-container'
+    pieceTitle: 'Queued Piece'
+    isDisabled: !@state.canQueuePiece || !@state.shouldAllowQueue
+    containerClass: 'columns large-11 large-centered'
 
   render: ->
     <div className="board">
@@ -164,18 +141,18 @@ Board = React.createClass
                 <div id='board-rows'>
                   { @generateRows() }
                 </div>
-                { @generatePiece() }
-                { @generateGhost() }
+                <Piece {...@pieceProps()} />
+                <Ghost {...@ghostProps()} />
                 <Overlay {...@overlayProps()} />
                 </div>
               </div>
             </div>
             <div className="columns large-3 end callout panel radius">
               <div className="row">
-                { @generateNextPiece() }
+                <DisplayPiece {...@nextPieceProps()} />
               </div>
               <div className="row">
-                { @generateQueuePiece() }
+                <DisplayPiece {...@queuePieceProps()} />
               </div>
             </div>
           </div>
@@ -213,7 +190,7 @@ Board = React.createClass
     for i in [0...Settings.boardHeight]
       <div
         key={ i }
-        className={ cx "row collapse cell-container", { 'hidden-row': i < @props.hiddenRows } }
+        className={ cx "row collapse cell-container", { 'hidden-row': i < Settings.hiddenRows } }
       >
         { @generateCells(i) }
       </div>
