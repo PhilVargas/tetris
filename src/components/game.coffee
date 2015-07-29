@@ -1,17 +1,18 @@
 React = require 'react'
+
 Board = require 'components/board'
 Cell = require 'components/cell'
-Piece = require 'components/piece'
-Ghost = require 'components/ghost'
 Legend = require 'components/legend'
 SettingsPanel = require 'components/settings'
 DisplayPiece = require 'components/display-piece'
-Overlay = require 'components/board-overlay'
+
 Store = require 'stores/game'
 Action = require 'actions/game'
 AudioStore = require 'stores/audio'
 AudioAction = require 'actions/audio'
+
 Settings = require 'helpers/settings'
+
 $ = require('jquery')
 cx = require 'classnames'
 
