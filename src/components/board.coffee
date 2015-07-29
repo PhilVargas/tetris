@@ -77,7 +77,7 @@ Board = React.createClass
 
   generateRows: ->
     for i in [0...Settings.boardHeight]
-      <div key={ i } className={ @rowClass(i) } >
+      <div key={ i } className={ @rowClass(i) } style={ maxHeight: Settings.cellEdgeLength }>
         { @generateCells(i) }
       </div>
 

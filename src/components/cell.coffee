@@ -17,6 +17,6 @@ Cell = React.createClass
     color: 'white'
 
   render: ->
-    <div style={ { backgroundColor: @props.color } } className="cell"></div>
+    <div style={ { backgroundColor: @props.color, maxWidth: Settings.cellEdgeLength, height: Settings.cellEdgeLength } } className="cell"></div>
 
 module.exports = Cell

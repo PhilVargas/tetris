@@ -30,10 +30,16 @@ Ghost = React.createClass
 
   render: ->
     <div className={ @containerClass() }>
-      <div style={ assign {}, @getCoords(0), backgroundColor: PieceMap[@props.pieceType].color } className="ghost-cell"></div>
-      <div style={ assign {}, @getCoords(1), backgroundColor: PieceMap[@props.pieceType].color } className="ghost-cell"></div>
-      <div style={ assign {}, @getCoords(2), backgroundColor: PieceMap[@props.pieceType].color } className="ghost-cell"></div>
-      <div style={ assign {}, @getCoords(3), backgroundColor: PieceMap[@props.pieceType].color } className="ghost-cell"></div>
+      <div style={ @pieceCellPosition(0) } className="ghost-cell"></div>
+      <div style={ @pieceCellPosition(1) } className="ghost-cell"></div>
+      <div style={ @pieceCellPosition(2) } className="ghost-cell"></div>
+      <div style={ @pieceCellPosition(3) } className="ghost-cell"></div>
     </div>
+
+  pieceCellPosition: (cellIndex) ->
+    assign {}, @getCoords(cellIndex),
+      backgroundColor: PieceMap[@props.pieceType].color
+      maxWidth: Settings.cellEdgeLength
+      height: Settings.cellEdgeLength
 
 module.exports = Ghost
