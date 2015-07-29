@@ -17,7 +17,7 @@ displayError = (error) ->
 module.exports =
   build: BASE_DIR
   displayError: displayError
-  entries: ['index.coffee']
+  entries: ['initialize.coffee']
   includes: ['./']
   stylesRoot: STYLES_BASE_DIR
   sassRoot: SASS_BASE_DIR
