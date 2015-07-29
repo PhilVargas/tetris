@@ -1,58 +1,58 @@
-describe 'BoardStore', ->
-  Dispatcher = BoardStore = callback = null
+describe 'Store', ->
+  Dispatcher = Store = callback = null
 
   beforeEach ->
     Dispatcher = require('dispatcher')
-    BoardStore = require.requireActual('stores/board')
+    Store = require.requireActual('stores/game')
     callback = Dispatcher.register.mock.calls[0][0]
-    BoardStore.triggerChange = jest.genMockFunction()
+    Store.triggerChange = jest.genMockFunction()
 
   it 'registers a call with the dispatcher', ->
     expect(Dispatcher.register.mock.calls.length).toBe(1)
 
   describe '#drawGhost', ->
-    initialPayload = eventName: 'board:init'
+    initialPayload = eventName: 'game:init'
     beforeEach -> callback initialPayload
 
     it 'sets the state.ghostYIndex to the bottom cells', ->
-      expect([18,19,20]).toContain BoardStore.get('ghostYIndex')
+      expect([18,19,20]).toContain Store.get('ghostYIndex')
 
   describe 'dispatcher actions', ->
     initialValue = null
-    initialPayload = eventName: 'board:init'
+    initialPayload = eventName: 'game:init'
     beforeEach ->
       callback initialPayload
-      BoardStore.triggerChange.mockClear()
+      Store.triggerChange.mockClear()
 
-    describe 'board:init', ->
+    describe 'game:init', ->
       it 'initializes the store', ->
-        expect(BoardStore.get('turnCount')).toBe 0
-        expect(BoardStore.get('hasGameBegun')).toBe false
+        expect(Store.get('turnCount')).toBe 0
+        expect(Store.get('hasGameBegun')).toBe false
 
-      it 'calls BoardStore.triggerChange', ->
+      it 'calls Store.triggerChange', ->
         callback initialPayload
-        expect(BoardStore.triggerChange).toBeCalled()
+        expect(Store.triggerChange).toBeCalled()
 
-    describe 'board:startGame', ->
-      payload = eventName: 'board:startGame'
+    describe 'game:startGame', ->
+      payload = eventName: 'game:startGame'
       beforeEach ->
-        initialValue = BoardStore.get('hasGameBegun')
+        initialValue = Store.get('hasGameBegun')
         callback payload
 
       it 'sets the `state.hasGameBegun` to true', ->
         expect(initialValue).toBe false
-        expect(BoardStore.get('hasGameBegun')).toBe true
+        expect(Store.get('hasGameBegun')).toBe true
 
-      it 'calls BoardStore.triggerChange', ->
-        expect(BoardStore.triggerChange).toBeCalled()
+      it 'calls Store.triggerChange', ->
+        expect(Store.triggerChange).toBeCalled()
 
-    describe 'board:setPieceIndeces', ->
+    describe 'game:setPieceIndeces', ->
       beforeEach ->
-        initialValue = {x: BoardStore.get('xIndex'), y: BoardStore.get('yIndex')}
+        initialValue = {x: Store.get('xIndex'), y: Store.get('yIndex')}
 
       describe 'when there is no collision', ->
         payload =
-          eventName: 'board:setPieceIndeces'
+          eventName: 'game:setPieceIndeces'
           value:
             xIndex: 3
             yIndex: 9
@@ -61,17 +61,17 @@ describe 'BoardStore', ->
           callback payload
 
         it 'sets the `state.xIndex` and `state.yIndex`', ->
-          expect(BoardStore.get('xIndex')).not.toBe initialValue.x
-          expect(BoardStore.get('yIndex')).not.toBe initialValue.y
-          expect(BoardStore.get('xIndex')).toBe payload.value.xIndex
-          expect(BoardStore.get('yIndex')).toBe payload.value.yIndex
+          expect(Store.get('xIndex')).not.toBe initialValue.x
+          expect(Store.get('yIndex')).not.toBe initialValue.y
+          expect(Store.get('xIndex')).toBe payload.value.xIndex
+          expect(Store.get('yIndex')).toBe payload.value.yIndex
 
-        it 'calls BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).toBeCalled()
+        it 'calls Store.triggerChange', ->
+          expect(Store.triggerChange).toBeCalled()
 
       describe 'when there is a collision', ->
         payload =
-          eventName: 'board:setPieceIndeces'
+          eventName: 'game:setPieceIndeces'
           value:
             xIndex: 12
             yIndex: 10
@@ -80,63 +80,63 @@ describe 'BoardStore', ->
           callback payload
 
         it 'does not change the `state.xIndex` and `state.yIndex`', ->
-          expect(BoardStore.get('xIndex')).toBe initialValue.x
-          expect(BoardStore.get('yIndex')).toBe initialValue.y
+          expect(Store.get('xIndex')).toBe initialValue.x
+          expect(Store.get('yIndex')).toBe initialValue.y
 
-        it 'calls BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).toBeCalled()
+        it 'calls Store.triggerChange', ->
+          expect(Store.triggerChange).toBeCalled()
 
-    describe 'board:dropPiece', ->
-      payload = eventName: 'board:dropPiece'
+    describe 'game:dropPiece', ->
+      payload = eventName: 'game:dropPiece'
       describe 'when there is a collision', ->
         beforeEach ->
           initialValue =
-            score: BoardStore.get('score')
-            scoreThisTurn: BoardStore.get('scoreThisTurn')
-            yIndex: BoardStore.get('yIndex')
-          BoardStore.isCollisionFree = jest.genMockFn().mockReturnValue(false)
+            score: Store.get('score')
+            scoreThisTurn: Store.get('scoreThisTurn')
+            yIndex: Store.get('yIndex')
+          Store.isCollisionFree = jest.genMockFn().mockReturnValue(false)
           callback payload
 
         it 'does not modify the `state.yIndex`', ->
-          expect(BoardStore.get('yIndex')).toBe initialValue.yIndex
+          expect(Store.get('yIndex')).toBe initialValue.yIndex
 
         it 'does not modify the `state.scoreThisTurn`', ->
-          expect(BoardStore.get('scoreThisTurn')).toBe initialValue.scoreThisTurn
+          expect(Store.get('scoreThisTurn')).toBe initialValue.scoreThisTurn
 
         it 'does not modify the `state.score`', ->
-          expect(BoardStore.get('score')).toBe initialValue.score
+          expect(Store.get('score')).toBe initialValue.score
 
-        it 'calls BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).toBeCalled()
+        it 'calls Store.triggerChange', ->
+          expect(Store.triggerChange).toBeCalled()
 
       describe 'when there is no collision', ->
         beforeEach ->
           initialValue =
-            score: BoardStore.get('score')
-            scoreThisTurn: BoardStore.get('scoreThisTurn')
-            yIndex: BoardStore.get('yIndex')
+            score: Store.get('score')
+            scoreThisTurn: Store.get('scoreThisTurn')
+            yIndex: Store.get('yIndex')
           callback payload
 
         it 'drops the `state.yIndex` to the bottom of the board', ->
-          expect([18,19,20]).toContain BoardStore.get('yIndex')
+          expect([18,19,20]).toContain Store.get('yIndex')
 
         it 'sets the `state.scoreThisTurn` to be > 0', ->
-          expect(BoardStore.get('scoreThisTurn')).toBeGreaterThan 0
+          expect(Store.get('scoreThisTurn')).toBeGreaterThan 0
 
         it 'sets the `state.score` to be > 0', ->
-          expect(BoardStore.get('score')).toBeGreaterThan 0
+          expect(Store.get('score')).toBeGreaterThan 0
 
-        it 'calls BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).toBeCalled()
+        it 'calls Store.triggerChange', ->
+          expect(Store.triggerChange).toBeCalled()
 
-    describe 'board:togglePause', ->
-      payload = eventName: 'board:togglePause'
+    describe 'game:togglePause', ->
+      payload = eventName: 'game:togglePause'
       actual = null
 
       describe 'when the game is not over (`@state.isGameOver = false`)', ->
         beforeEach ->
-          actual = BoardStore.get
-          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+          actual = Store.get
+          Store.get = jest.genMockFn().mockImplementation (attr) ->
             switch attr
               when 'isGameOver' then false
               else return actual(attr)
@@ -146,13 +146,13 @@ describe 'BoardStore', ->
         it 'toggles the `state.isPaused`', ->
           expect(actual('isPaused')).toBe !initialValue
 
-        it 'calls BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).toBeCalled()
+        it 'calls Store.triggerChange', ->
+          expect(Store.triggerChange).toBeCalled()
 
       describe 'when the game is over (`@state.isGameOver = true`)', ->
         beforeEach ->
-          actual = BoardStore.get
-          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+          actual = Store.get
+          Store.get = jest.genMockFn().mockImplementation (attr) ->
             switch attr
               when 'isGameOver' then true
               else return actual(attr)
@@ -162,75 +162,75 @@ describe 'BoardStore', ->
         it 'does not toggle the `state.isPaused`', ->
           expect(actual('isPaused')).toBe initialValue
 
-        it 'does not call BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).not.toBeCalled()
+        it 'does not call Store.triggerChange', ->
+          expect(Store.triggerChange).not.toBeCalled()
 
-    describe 'board:rotatePiece', ->
+    describe 'game:rotatePiece', ->
       beforeEach ->
-        initialValue = BoardStore.get('rotation')
+        initialValue = Store.get('rotation')
 
       describe 'counter-clockwise (decreases rotation)', ->
         payload =
-          eventName: 'board:rotatePiece'
+          eventName: 'game:rotatePiece'
           value: -1
 
         describe 'when there is a collision', ->
           beforeEach ->
-            BoardStore.isCollisionFree = jest.genMockFn().mockReturnValue(false)
+            Store.isCollisionFree = jest.genMockFn().mockReturnValue(false)
             callback payload
 
           it 'does not change the `state.rotation`', ->
-            expect(BoardStore.get('rotation')).toBe initialValue
+            expect(Store.get('rotation')).toBe initialValue
 
-          it 'does not call BoardStore.triggerChange', ->
-            expect(BoardStore.triggerChange).not.toBeCalled()
+          it 'does not call Store.triggerChange', ->
+            expect(Store.triggerChange).not.toBeCalled()
 
         describe 'when there is no collision', ->
           beforeEach ->
             callback payload
 
           it 'decreases the `state.rotation`', ->
-            expect(BoardStore.get('rotation')).toBe (4 + initialValue + payload.value) % 4
+            expect(Store.get('rotation')).toBe (4 + initialValue + payload.value) % 4
 
-          it 'calls BoardStore.triggerChange', ->
-            expect(BoardStore.triggerChange).toBeCalled()
+          it 'calls Store.triggerChange', ->
+            expect(Store.triggerChange).toBeCalled()
 
       describe 'clockwise (increasing rotation)', ->
         payload =
-          eventName: 'board:rotatePiece'
+          eventName: 'game:rotatePiece'
           value: 1
 
         describe 'when there is a collision', ->
           beforeEach ->
-            BoardStore.isCollisionFree = jest.genMockFn().mockReturnValue(false)
+            Store.isCollisionFree = jest.genMockFn().mockReturnValue(false)
             callback payload
 
           it 'does not change the `state.rotation`', ->
-            expect(BoardStore.get('rotation')).toBe initialValue
+            expect(Store.get('rotation')).toBe initialValue
 
-          it 'does not call BoardStore.triggerChange', ->
-            expect(BoardStore.triggerChange).not.toBeCalled()
+          it 'does not call Store.triggerChange', ->
+            expect(Store.triggerChange).not.toBeCalled()
 
         describe 'when there is no collision', ->
           beforeEach ->
             callback payload
 
           it 'increases the state.rotation', ->
-            expect(BoardStore.get('rotation')).toBe (4 + initialValue + payload.value) % 4
+            expect(Store.get('rotation')).toBe (4 + initialValue + payload.value) % 4
 
-          it 'calls BoardStore.triggerChange', ->
-            expect(BoardStore.triggerChange).toBeCalled()
+          it 'calls Store.triggerChange', ->
+            expect(Store.triggerChange).toBeCalled()
 
-    describe 'board:queuePiece', ->
-      payload = eventName: 'board:queuePiece'
+    describe 'game:queuePiece', ->
+      payload = eventName: 'game:queuePiece'
       actual = null
 
       beforeEach ->
-        actual = BoardStore.get
+        actual = Store.get
 
       describe 'when unable to queue a piece (`shouldAllowQueue` is false)', ->
         beforeEach ->
-          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+          Store.get = jest.genMockFn().mockImplementation (attr) ->
             switch attr
               when 'canQueuePiece' then true
               when 'shouldAllowQueue' then false
@@ -251,12 +251,12 @@ describe 'BoardStore', ->
         it 'does not change the `state.queuePieceType`', ->
           expect(actual('queuePieceType')).toBe initialValue.queuePieceType
 
-        it 'does not call BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).not.toBeCalled()
+        it 'does not call Store.triggerChange', ->
+          expect(Store.triggerChange).not.toBeCalled()
 
       describe 'when unable to queue a piece (`canQueuePiece` is false)', ->
         beforeEach ->
-          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+          Store.get = jest.genMockFn().mockImplementation (attr) ->
             switch attr
               when 'canQueuePiece' then false
               when 'shouldAllowQueue' then true
@@ -277,20 +277,20 @@ describe 'BoardStore', ->
         it 'does not change the `state.queuePieceType`', ->
           expect(actual('queuePieceType')).toBe initialValue.queuePieceType
 
-        it 'does not call BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).not.toBeCalled()
+        it 'does not call Store.triggerChange', ->
+          expect(Store.triggerChange).not.toBeCalled()
 
       describe 'when able to queue a piece', ->
         describe 'when a piece is not already in the queue', ->
           beforeEach ->
-            BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+            Store.get = jest.genMockFn().mockImplementation (attr) ->
               switch attr
                 when 'canQueuePiece' then true
                 when 'shouldAllowQueue' then true
                 when 'queuePieceType' then ''
                 else return actual(attr)
             initialValue =
-              currentPieceType: BoardStore.get('currentPieceType')
+              currentPieceType: Store.get('currentPieceType')
               queuePieceType: actual('queuePieceType')
             callback payload
 
@@ -298,20 +298,20 @@ describe 'BoardStore', ->
             expect(actual('queuePieceType')).not.toBe initialValue.queuePieceType
             expect(actual('queuePieceType')).toBe initialValue.currentPieceType
 
-          it 'calls BoardStore.triggerChange', ->
-            expect(BoardStore.triggerChange).toBeCalled()
+          it 'calls Store.triggerChange', ->
+            expect(Store.triggerChange).toBeCalled()
 
         describe 'when a piece is already in the queue', ->
           beforeEach ->
-            BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+            Store.get = jest.genMockFn().mockImplementation (attr) ->
               switch attr
                 when 'canQueuePiece' then true
                 when 'shouldAllowQueue' then true
                 when 'queuePieceType' then 'T'
                 else actual(attr)
             initialValue =
-              currentPieceType: BoardStore.get('currentPieceType')
-              queuePieceType: BoardStore.get('queuePieceType')
+              currentPieceType: Store.get('currentPieceType')
+              queuePieceType: Store.get('queuePieceType')
             callback payload
 
           it 'sets the `state.queuePieceType` to the initial `currentPieceType`', ->
@@ -319,47 +319,48 @@ describe 'BoardStore', ->
 
           it 'sets the `state.currentPieceType` to the initial `queuePieceType`', ->
             expect(initialValue.queuePieceType).toBeTruthy()
-            expect(BoardStore.get('currentPieceType')).toBe initialValue.queuePieceType
+            expect(Store.get('currentPieceType')).toBe initialValue.queuePieceType
 
-          it 'calls BoardStore.triggerChange', ->
-            expect(BoardStore.triggerChange).toBeCalled()
+          it 'calls Store.triggerChange', ->
+            expect(Store.triggerChange).toBeCalled()
 
-    describe 'board:toggleQueue', ->
-      payload = eventName: 'board:toggleQueue'
+    describe 'game:toggleQueue', ->
+      payload = eventName: 'game:toggleQueue'
 
       beforeEach ->
         initialValue =
-          shouldAllowQueue: BoardStore.get('shouldAllowQueue')
+          shouldAllowQueue: Store.get('shouldAllowQueue')
         callback payload
 
       it 'toggles the `state.shouldAllowQueue`', ->
-        expect(BoardStore.get('shouldAllowQueue')).toBe !initialValue.shouldAllowQueue
+        expect(Store.get('shouldAllowQueue')).toBe !initialValue.shouldAllowQueue
 
-      it 'calls BoardStore.triggerChange', ->
-        expect(BoardStore.triggerChange).toBeCalled()
+      it 'calls Store.triggerChange', ->
+        expect(Store.triggerChange).toBeCalled()
 
-    describe 'board:toggleGhost', ->
-      payload = eventName: 'board:toggleGhost'
+    describe 'game:toggleGhost', ->
+      payload = eventName: 'game:toggleGhost'
 
       beforeEach ->
         initialValue =
-          isGhostVisible: BoardStore.get('isGhostVisible')
+          isGhostVisible: Store.get('isGhostVisible')
         callback payload
 
       it 'toggles the `state.isGhostVisible`', ->
-        expect(BoardStore.get('isGhostVisible')).toBe !initialValue.isGhostVisible
+        expect(Store.get('isGhostVisible')).toBe !initialValue.isGhostVisible
 
-      it 'calls BoardStore.triggerChange', ->
-        expect(BoardStore.triggerChange).toBeCalled()
-    describe 'board:nextTurn', ->
+      it 'calls Store.triggerChange', ->
+        expect(Store.triggerChange).toBeCalled()
+
+    describe 'game:nextTurn', ->
       actual = null
       beforeEach ->
-        actual = BoardStore.get
-      payload = eventName: 'board:nextTurn'
+        actual = Store.get
+      payload = eventName: 'game:nextTurn'
 
       describe 'when the game is paused (`state.isPaused` = true)', ->
         beforeEach ->
-          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+          Store.get = jest.genMockFn().mockImplementation (attr) ->
             switch attr
               when 'isPaused' then true
               else return actual(attr)
@@ -371,23 +372,23 @@ describe 'BoardStore', ->
         it 'does not increment the `state.turnCount`', ->
           expect(actual('turnCount')).toBe initialValue.turnCount
 
-        it 'does not call BoardStore.triggerChange', ->
-          expect(BoardStore.triggerChange).not.toBeCalled()
+        it 'does not call Store.triggerChange', ->
+          expect(Store.triggerChange).not.toBeCalled()
 
       describe 'when the game is not paused (`state.isPaused` = false)', ->
         beforeEach ->
-          BoardStore.get = jest.genMockFn().mockImplementation (attr) ->
+          Store.get = jest.genMockFn().mockImplementation (attr) ->
             switch attr
               when 'isPaused' then false
               else return actual(attr)
 
         describe 'when the piece has a collision', ->
           beforeEach ->
-            BoardStore.isCollisionFree = jest.genMockFn().mockReturnValue(false)
+            Store.isCollisionFree = jest.genMockFn().mockReturnValue(false)
 
           describe 'when the player does not lose the game', ->
             beforeEach ->
-              BoardStore.didPlayerLose = jest.genMockFn().mockReturnValue(false)
+              Store.didPlayerLose = jest.genMockFn().mockReturnValue(false)
 
             describe 'when the player does not score / clear a row', ->
               mockValue = null
@@ -395,7 +396,7 @@ describe 'BoardStore', ->
                 mockValue =
                   scoreThisTurn: 0
                   linesClearedThisTurn: 0
-                BoardStore.scoreRows = jest.genMockFn().mockReturnValue(mockValue)
+                Store.scoreRows = jest.genMockFn().mockReturnValue(mockValue)
 
                 initialValue =
                   currentPieceType: actual('currentPieceType')
@@ -416,8 +417,8 @@ describe 'BoardStore', ->
               it 'does not change the `state.didPlayerLose`', ->
                 expect(actual('isGameOver')).toBe false
 
-              it 'calls BoardStore.triggerChange', ->
-                expect(BoardStore.triggerChange).toBeCalled()
+              it 'calls Store.triggerChange', ->
+                expect(Store.triggerChange).toBeCalled()
 
             describe 'when the player scores / clears a row', ->
               mockValue = null
@@ -425,7 +426,7 @@ describe 'BoardStore', ->
                 mockValue =
                   scoreThisTurn: 40
                   linesClearedThisTurn: 1
-                BoardStore.scoreRows = jest.genMockFn().mockReturnValue(mockValue)
+                Store.scoreRows = jest.genMockFn().mockReturnValue(mockValue)
 
                 initialValue =
                   currentPieceType: actual('currentPieceType')
@@ -446,13 +447,13 @@ describe 'BoardStore', ->
               it 'does not change the `state.didPlayerLose`', ->
                 expect(actual('isGameOver')).toBe false
 
-              it 'calls BoardStore.triggerChange', ->
-                expect(BoardStore.triggerChange).toBeCalled()
+              it 'calls Store.triggerChange', ->
+                expect(Store.triggerChange).toBeCalled()
 
 
           describe 'when the player loses the game', ->
             beforeEach ->
-              BoardStore.didPlayerLose = jest.genMockFn().mockReturnValue(true)
+              Store.didPlayerLose = jest.genMockFn().mockReturnValue(true)
 
               initialValue =
                 isGameOver: actual('isGameOver')
@@ -467,12 +468,12 @@ describe 'BoardStore', ->
               expect(initialValue.isGameOver).toBe false
               expect(actual('isGameOver')).toBe true
 
-            it 'calls BoardStore.triggerChange', ->
-              expect(BoardStore.triggerChange).toBeCalled()
+            it 'calls Store.triggerChange', ->
+              expect(Store.triggerChange).toBeCalled()
 
         describe 'when the piece has no collision', ->
           beforeEach ->
-            BoardStore.isCollisionFree = jest.genMockFn().mockReturnValue(true)
+            Store.isCollisionFree = jest.genMockFn().mockReturnValue(true)
 
             initialValue =
               yIndex: actual('yIndex')
@@ -485,6 +486,6 @@ describe 'BoardStore', ->
           it 'increments the `state.turnCount`', ->
             expect(actual('turnCount')).toBe initialValue.turnCount + 1
 
-          it 'calls BoardStore.triggerChange', ->
-            expect(BoardStore.triggerChange).toBeCalled()
+          it 'calls Store.triggerChange', ->
+            expect(Store.triggerChange).toBeCalled()
 
