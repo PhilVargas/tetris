@@ -1,4 +1,5 @@
 React = require 'react'
+Board = require 'components/board'
 Cell = require 'components/cell'
 Piece = require 'components/piece'
 Ghost = require 'components/ghost'
@@ -90,26 +91,6 @@ Game = React.createClass
     AudioStore.unbindChange @audioChanged
     $(document).off 'keyup'
 
-  pieceProps: ->
-    yIndex: @state.yIndex
-    xIndex: @state.xIndex
-    pieceType: @state.currentPieceType
-    setIndeces: Action.setPieceIndeces
-    rotateClockwise: Action.rotateClockwise
-    dropPiece: Action.dropPiece
-    queuePiece: Action.queuePiece
-    rotateCounterClockwise: Action.rotateCounterClockwise
-    rotation: @state.rotation
-    isPaused: @state.isPaused
-    hasGameBegun: @state.hasGameBegun
-
-  ghostProps: ->
-    yIndex: @state.ghostYIndex
-    xIndex: @state.xIndex
-    pieceType: @state.currentPieceType
-    rotation: @state.rotation
-    isVisible: @state.isGhostVisible && @state.hasGameBegun
-
   nextPieceProps: ->
     pieceType: @state.nextPieceType
     cellClass: 'next-cell'
@@ -127,7 +108,7 @@ Game = React.createClass
     containerClass: 'columns large-11 large-centered'
 
   render: ->
-    <div className="game">
+    <div id="game-container">
       <div className="row">
         <div className="large-11 columns large-centered">
           <div className="row">
@@ -135,18 +116,7 @@ Game = React.createClass
               <Legend {...@legendProps()} />
               <SettingsPanel {...@settingsProps()} />
             </div>
-            <div id='pieces' className='columns large-6'>
-              <div className='row board-pieces-container'>
-                <div className='columns inner-board-pieces-container' style={ @innerBoardStyles }>
-                <div id='board-rows'>
-                  { @generateRows() }
-                </div>
-                <Piece {...@pieceProps()} />
-                <Ghost {...@ghostProps()} />
-                <Overlay {...@overlayProps()} />
-                </div>
-              </div>
-            </div>
+            <Board {...@boardProps()} />
             <div className="columns large-3 end callout panel radius">
               <div className="row">
                 <DisplayPiece {...@nextPieceProps()} />
@@ -160,23 +130,26 @@ Game = React.createClass
       </div>
     </div>
 
-  overlayProps: ->
-    isPaused: @state.isPaused
+  boardProps: ->
+    cells: @state.cells
+    currentPieceType: @state.currentPieceType
+    ghostYIndex: @state.ghostYIndex
     hasGameBegun: @state.hasGameBegun
-    startGame: @startGame
-    restartGame: @restartGame
-    score: @state.score
     isGameOver: @state.isGameOver
+    isGhostVisible: @state.isGhostVisible
+    isPaused: @state.isPaused
+    restartGame: @restartGame
+    rotation: @state.rotation
+    score: @state.score
+    startGame: @startGame
+    xIndex: @state.xIndex
+    yIndex: @state.yIndex
 
   legendProps: ->
     level: Store.level()
     linesCleared: @state.linesCleared
     score: @state.score
     scoreThisTurn: @state.scoreThisTurn
-
-  innerBoardStyles:
-    width: Settings.cellEdgeLength * Settings.boardWidth + 2*Settings.innerBoardBorderWidth
-    border: "#{Settings.innerBoardBorderWidth}px solid black"
 
   settingsProps: ->
     toggleQueue: Action.toggleQueue
@@ -185,19 +158,5 @@ Game = React.createClass
     shouldAllowQueue: @state.shouldAllowQueue
     isMuted: @state.isMuted
     isGhostVisible: @state.isGhostVisible
-
-  generateRows: ->
-    for i in [0...Settings.boardHeight]
-      <div
-        key={ i }
-        className={ cx "row collapse cell-container", { 'hidden-row': i < Settings.hiddenRows } }
-      >
-        { @generateCells(i) }
-      </div>
-
-  generateCells: (yCoord) ->
-    for xCoord in [0...Settings.boardWidth]
-      cell = @state.cells[yCoord*Settings.boardWidth+xCoord]
-      <Cell key={ cell.id } xIndex={ cell.xIndex } yIndex={ cell.yIndex } isFrozen={ cell.isFrozen } color={ cell.color } />
 
 module.exports = Game

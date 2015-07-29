@@ -1,15 +1,12 @@
-.board {
+#game-container {
   padding-top: 60px;
   margin: 0 auto;
   width: 960px;
 }
 
-#pieces {
+#board {
   .board-pieces-container {
     text-align: center;
-  }
-
-  .inner-board-pieces-container {
     margin: 0 auto;
     padding: 0;
     float: none;
