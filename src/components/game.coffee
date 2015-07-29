@@ -6,21 +6,21 @@ Legend = require 'components/legend'
 SettingsPanel = require 'components/settings'
 DisplayPiece = require 'components/display-piece'
 Overlay = require 'components/board-overlay'
-Store = require 'stores/board'
-Action = require 'actions/board'
+Store = require 'stores/game'
+Action = require 'actions/game'
 AudioStore = require 'stores/audio'
 AudioAction = require 'actions/audio'
 Settings = require 'helpers/settings'
 $ = require('jquery')
 cx = require 'classnames'
 
-Board = React.createClass
-  displayName: 'Board'
+Game = React.createClass
+  displayName: 'Game'
 
   propTypes:
     cells: React.PropTypes.array.isRequired
     currentPieceType: React.PropTypes.string.isRequired
-    ghostYIndex: React.PropTypes.string.isRequired
+    ghostYIndex: React.PropTypes.number.isRequired
     hasGameBegun: React.PropTypes.bool.isRequired
     isGameOver: React.PropTypes.bool.isRequired
     isGhostVisible: React.PropTypes.bool.isRequired
@@ -59,7 +59,7 @@ Board = React.createClass
 
   # Render functions #
   componentDidMount: ->
-    Store.bindChange @boardChanged
+    Store.bindChange @gameChanged
     AudioStore.bindChange @audioChanged
 
   startGame: ->
@@ -79,15 +79,15 @@ Board = React.createClass
     Action.restartGame()
     setTimeout(@nextTick, Settings.initialTurnDelay)
 
-  boardChanged: ->
+  gameChanged: ->
     @setState Store.getAll()
 
   audioChanged: ->
     @setState AudioStore.getAll()
 
   componentWillUnmount: ->
-    Store.unbindChange @boardChanged
-    AudioStore.unbindChange @boardChanged
+    Store.unbindChange @gameChanged
+    AudioStore.unbindChange @audioChanged
     $(document).off 'keyup'
 
   pieceProps: ->
@@ -127,7 +127,7 @@ Board = React.createClass
     containerClass: 'columns large-11 large-centered'
 
   render: ->
-    <div className="board">
+    <div className="game">
       <div className="row">
         <div className="large-11 columns large-centered">
           <div className="row">
@@ -200,4 +200,4 @@ Board = React.createClass
       cell = @state.cells[yCoord*Settings.boardWidth+xCoord]
       <Cell key={ cell.id } xIndex={ cell.xIndex } yIndex={ cell.yIndex } isFrozen={ cell.isFrozen } color={ cell.color } />
 
-module.exports = Board
+module.exports = Game
