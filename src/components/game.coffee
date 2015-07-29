@@ -58,10 +58,35 @@ Game = React.createClass
     xIndex: @props.xIndex
     yIndex: @props.yIndex
 
+  # 37, 65 left
+  # 39, 68 right
+  # 40, 83 down
+  handleKeyDown: (e) ->
+    return if @state.isPaused || !@state.hasGameBegun
+    switch e.which
+      when 37,65 then Action.setPieceIndeces(xIndex: @state.xIndex - 1, yIndex: @state.yIndex)
+      when 39,68 then Action.setPieceIndeces(xIndex: @state.xIndex + 1, yIndex: @state.yIndex)
+      when 40,83 then Action.setPieceIndeces(yIndex: @state.yIndex + 1, xIndex: @state.xIndex)
+
+  # 38 87, up w
+  # 69 q
+  # 81 e
+  # 13 enter
+  handleKeyUp: (e) ->
+    return if @state.isPaused || !@state.hasGameBegun
+    switch e.which
+      when 38,87 then Action.dropPiece()
+      when 69 then Action.rotateClockwise()
+      when 81 then Action.rotateCounterClockwise()
+      when 13 then Action.queuePiece()
+
   # Render functions #
   componentDidMount: ->
     Store.bindChange @gameChanged
     AudioStore.bindChange @audioChanged
+    $(document).on
+      keydown: @handleKeyDown
+      keyup: @handleKeyUp
 
   startGame: ->
     unless @state.hasGameBegun
@@ -91,22 +116,6 @@ Game = React.createClass
     AudioStore.unbindChange @audioChanged
     $(document).off 'keyup'
 
-  nextPieceProps: ->
-    pieceType: @state.nextPieceType
-    cellClass: 'next-cell'
-    id: "next-piece-container"
-    pieceTitle: 'Next Piece'
-    isDisabled: !@state.hasGameBegun
-    containerClass: 'columns large-11 large-centered'
-
-  queuePieceProps: ->
-    pieceType: @state.queuePieceType
-    cellClass: 'queue-cell'
-    id: 'queue-piece-container'
-    pieceTitle: 'Queued Piece'
-    isDisabled: !@state.canQueuePiece || !@state.shouldAllowQueue
-    containerClass: 'columns large-11 large-centered'
-
   render: ->
     <div id="game-container">
       <div className="row">
@@ -129,6 +138,22 @@ Game = React.createClass
         </div>
       </div>
     </div>
+
+  nextPieceProps: ->
+    pieceType: @state.nextPieceType
+    cellClass: 'next-cell'
+    id: "next-piece-container"
+    pieceTitle: 'Next Piece'
+    isDisabled: !@state.hasGameBegun
+    containerClass: 'columns large-11 large-centered'
+
+  queuePieceProps: ->
+    pieceType: @state.queuePieceType
+    cellClass: 'queue-cell'
+    id: 'queue-piece-container'
+    pieceTitle: 'Queued Piece'
+    isDisabled: !@state.canQueuePiece || !@state.shouldAllowQueue
+    containerClass: 'columns large-11 large-centered'
 
   boardProps: ->
     cells: @state.cells

@@ -2,7 +2,6 @@ React = require 'react'
 Action = require 'actions/game'
 Cell = require 'components/cell'
 Piece = require 'components/piece'
-Ghost = require 'components/ghost'
 Overlay = require 'components/board-overlay'
 Settings = require 'helpers/settings'
 Calculate = require 'helpers/calculator'
@@ -34,7 +33,7 @@ Board = React.createClass
             { @generateRows() }
           </div>
           <Piece {...@pieceProps()} />
-          <Ghost {...@ghostProps()} />
+          <Piece {...@ghostProps()} />
           <Overlay {...@overlayProps()} />
         </div>
       </div>
@@ -53,19 +52,17 @@ Board = React.createClass
     isGameOver: @props.isGameOver
 
   pieceProps: ->
-    dropPiece: Action.dropPiece
-    hasGameBegun: @props.hasGameBegun
-    isPaused: @props.isPaused
+    containerClass: 'piece-container'
+    cellClass: 'piece-cell'
+    isVisible: @props.hasGameBegun
     pieceType: @props.currentPieceType
-    queuePiece: Action.queuePiece
-    rotateClockwise: Action.rotateClockwise
-    rotateCounterClockwise: Action.rotateCounterClockwise
     rotation: @props.rotation
-    setIndeces: Action.setPieceIndeces
     xIndex: @props.xIndex
     yIndex: @props.yIndex
 
   ghostProps: ->
+    containerClass: 'ghost-container'
+    cellClass: 'ghost-cell'
     isVisible: @props.isGhostVisible && @props.hasGameBegun
     pieceType: @props.currentPieceType
     rotation: @props.rotation
