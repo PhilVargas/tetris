@@ -55,7 +55,7 @@ buildSass = ->
 watchSass = ->
   gulp.watch(paths.sassFiles, ['build:sass'])
   .on 'change', (e) ->
-    console.log "[watcher] File #{e.path.replace(/.*(?=sass)/,'')} was #{e.type} at #{new Data()}, compiling..."
+    console.log "[watcher] File #{e.path.replace(/.*(?=sass)/,'')} was #{e.type} at #{new Date()}, compiling..."
 
 module.exports.watch = watchJs
 module.exports.build = buildJs

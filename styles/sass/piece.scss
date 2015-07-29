@@ -1,7 +1,7 @@
 .piece-cell, .ghost-cell, .next-cell, .queue-cell {
   width: 100%;
-  max-width: 20px;
-  height: 20px;
+  max-width: 20px; // default value overridden with js
+  height: 20px; // default value overridden with js
   border: 1px solid black;
   position: absolute;
 

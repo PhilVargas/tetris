@@ -1,57 +1,57 @@
 Dispatcher = require('dispatcher')
 
-BoardAction =
+GameAction =
   init: ->
     Dispatcher.dispatch
-      eventName: 'board:init'
+      eventName: 'game:init'
 
   startGame: ->
     Dispatcher.dispatch
-      eventName: 'board:startGame'
+      eventName: 'game:startGame'
 
   restartGame: ->
     Dispatcher.dispatch
-      eventName: 'board:restartGame'
+      eventName: 'game:restartGame'
 
   setPieceIndeces: (indeces)->
     Dispatcher.dispatch
-      eventName: 'board:setPieceIndeces'
+      eventName: 'game:setPieceIndeces'
       value:
         xIndex: indeces.xIndex
         yIndex: indeces.yIndex
 
   nextTurn: ->
     Dispatcher.dispatch
-      eventName: 'board:nextTurn'
+      eventName: 'game:nextTurn'
 
   rotateClockwise: ->
     Dispatcher.dispatch
-      eventName: 'board:rotatePiece'
+      eventName: 'game:rotatePiece'
       value: 1
 
   rotateCounterClockwise: ->
     Dispatcher.dispatch
-      eventName: 'board:rotatePiece'
+      eventName: 'game:rotatePiece'
       value: -1
 
   dropPiece: ->
     Dispatcher.dispatch
-      eventName: 'board:dropPiece'
+      eventName: 'game:dropPiece'
 
   togglePause: ->
     Dispatcher.dispatch
-      eventName: 'board:togglePause'
+      eventName: 'game:togglePause'
 
   queuePiece: ->
     Dispatcher.dispatch
-      eventName: 'board:queuePiece'
+      eventName: 'game:queuePiece'
 
   toggleQueue: ->
     Dispatcher.dispatch
-      eventName: 'board:toggleQueue'
+      eventName: 'game:toggleQueue'
 
   toggleGhost: ->
     Dispatcher.dispatch
-      eventName: 'board:toggleGhost'
+      eventName: 'game:toggleGhost'
 
-module.exports = BoardAction
+module.exports = GameAction

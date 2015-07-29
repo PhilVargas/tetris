@@ -1,6 +1,6 @@
 React = require 'react'
 AudioStore = require 'stores/audio'
-BoardStore = require 'stores/board'
+GameStore = require 'stores/game'
 Action = require 'actions/audio'
 $ = require 'jquery'
 
@@ -16,11 +16,11 @@ ThemeSong = React.createClass
     isMuted: @props.isMuted
 
   componentDidMount: ->
-    BoardStore.bindChange @stateChange
+    GameStore.bindChange @stateChange
     AudioStore.bindChange @stateChange
 
   stateChange: ->
-    @setState isPaused: BoardStore.get('isPaused')
+    @setState isPaused: GameStore.get('isPaused')
     @setState AudioStore.getAll()
 
   componentDidUpdate: ->
@@ -30,7 +30,7 @@ ThemeSong = React.createClass
       @refs.themeSong.getDOMNode().play()
 
   componentWillUnmount: ->
-    BoardStore.unbindChange @stateChange
+    GameStore.unbindChange @stateChange
     AudioStore.unbindChange @stateChange
 
   render: ->

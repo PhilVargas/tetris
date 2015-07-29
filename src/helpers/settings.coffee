@@ -9,7 +9,7 @@ Settings =
   initialX: 5
   initialY: 1
   boardXOffset: 0
-  boardYOffest: 0
+  boardYOffset: 0
   innerBoardBorderWidth: 5
   defaultCellBackgroundColor: 'lightgrey'
 
