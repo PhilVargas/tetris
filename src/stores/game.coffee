@@ -12,6 +12,7 @@ GameStore =
     gameData[attr]
 
   getAll: ->
+    boardDisplaySize: gameData.boardDisplaySize
     canQueuePiece: gameData.canQueuePiece
     cells: gameData.cells
     currentPieceType: gameData.currentPieceType
@@ -82,6 +83,7 @@ class BoardData
     @isGhostVisible = true
     @shouldAllowQueue = true
     @hasGameBegun = false
+    @boardDisplaySize = 5
 
   initialGameState: ->
     currentPieceType = @randomPiece()
@@ -298,6 +300,9 @@ Dispatcher.register (payload) ->
       GameStore.triggerChange()
     when 'game:toggleGhost'
       gameData.updateAttribs(isGhostVisible: !gameData.isGhostVisible)
+      GameStore.triggerChange()
+    when 'game:setBoardDisplaySize'
+      gameData.updateAttribs(boardDisplaySize: payload.value)
       GameStore.triggerChange()
 
 

@@ -12,6 +12,7 @@ AudioStore = require 'stores/audio'
 AudioAction = require 'actions/audio'
 
 Settings = require 'helpers/settings'
+Calculate = require 'helpers/calculator'
 
 $ = require('jquery')
 cx = require 'classnames'
@@ -20,6 +21,7 @@ Game = React.createClass
   displayName: 'Game'
 
   propTypes:
+    boardDisplaySize: React.PropTypes.number.isRequired
     cells: React.PropTypes.array.isRequired
     currentPieceType: React.PropTypes.string.isRequired
     ghostYIndex: React.PropTypes.number.isRequired
@@ -41,6 +43,7 @@ Game = React.createClass
 
   getInitialState: ->
     cells: @props.cells
+    boardDisplaySize: @props.boardDisplaySize
     currentPieceType: @props.currentPieceType
     ghostYIndex: @props.ghostYIndex
     hasGameBegun: @props.hasGameBegun
@@ -158,6 +161,7 @@ Game = React.createClass
 
   boardProps: ->
     cells: @state.cells
+    cellEdgeLength: Calculate.cellEdgeLength(@state.boardDisplaySize)
     currentPieceType: @state.currentPieceType
     ghostYIndex: @state.ghostYIndex
     hasGameBegun: @state.hasGameBegun
