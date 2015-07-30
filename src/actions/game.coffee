@@ -54,4 +54,9 @@ GameAction =
     Dispatcher.dispatch
       eventName: 'game:toggleGhost'
 
+  setBoardDisplaySize: (size) ->
+    Dispatcher.dispatch
+      eventName: 'game:setBoardDisplaySize'
+      value: size
+
 module.exports = GameAction

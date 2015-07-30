@@ -489,3 +489,21 @@ describe 'Store', ->
           it 'calls Store.triggerChange', ->
             expect(Store.triggerChange).toBeCalled()
 
+    describe 'game:setBoardDisplaySize', ->
+      payload =
+        eventName: 'game:setBoardDisplaySize'
+        value: 0
+
+      beforeEach ->
+        initialValue = Store.get('boardDisplaySize')
+        callback payload
+
+      it 'changes the board display size', ->
+        expect(initialValue).toBe 5
+        expect(Store.get('boardDisplaySize')).toBe 0
+
+      it 'calls Store.triggerChange', ->
+        expect(Store.triggerChange).toBeCalled()
+
+
+

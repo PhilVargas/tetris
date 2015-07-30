@@ -10,17 +10,18 @@ Piece = React.createClass
 
   propTypes:
     cellClass: React.PropTypes.string.isRequired
+    cellEdgeLength: React.PropTypes.number.isRequired
     containerClass: React.PropTypes.string.isRequired
-    xIndex: React.PropTypes.number.isRequired
-    yIndex: React.PropTypes.number.isRequired
+    isVisible: React.PropTypes.bool.isRequired
     pieceType: React.PropTypes.string.isRequired
     rotation: React.PropTypes.number.isRequired
-    isVisible: React.PropTypes.bool.isRequired
+    xIndex: React.PropTypes.number.isRequired
+    yIndex: React.PropTypes.number.isRequired
 
   getCoords: (cellNumber = 0) ->
     offset = PieceMap[@props.pieceType].shapes[@props.rotation][cellNumber]
-    left: (( @props.xIndex + offset.x)*Settings.cellEdgeLength) + Settings.boardXOffset
-    top: (( @props.yIndex + offset.y )*Settings.cellEdgeLength) + Settings.boardYOffset
+    left: (( @props.xIndex + offset.x)*@props.cellEdgeLength) + Settings.boardXOffset
+    top: (( @props.yIndex + offset.y )*@props.cellEdgeLength) + Settings.boardYOffset
 
   containerClass: ->
     cx @props.containerClass,
@@ -37,7 +38,7 @@ Piece = React.createClass
   pieceCellPosition: (cellIndex) ->
     assign {}, @getCoords(cellIndex),
       backgroundColor: PieceMap[@props.pieceType].color
-      maxWidth: Settings.cellEdgeLength
-      height: Settings.cellEdgeLength
+      maxWidth: @props.cellEdgeLength
+      height: @props.cellEdgeLength
 
 module.exports = Piece

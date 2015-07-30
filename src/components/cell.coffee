@@ -6,17 +6,16 @@ Cell = React.createClass
   displayName: 'Cell'
 
   propTypes:
-    xIndex: React.PropTypes.number.isRequired
-    yIndex: React.PropTypes.number.isRequired
-    edgeLength: React.PropTypes.number.isRequired
+    cellEdgeLength: React.PropTypes.number.isRequired
     color: React.PropTypes.string.isRequired
     isFrozen: React.PropTypes.bool.isRequired
+    xIndex: React.PropTypes.number.isRequired
+    yIndex: React.PropTypes.number.isRequired
 
   getDefaultProps: ->
-    edgeLength: Settings.cellEdgeLength
     color: 'white'
 
   render: ->
-    <div style={ { backgroundColor: @props.color, maxWidth: Settings.cellEdgeLength, height: Settings.cellEdgeLength } } className="cell"></div>
+    <div style={ { backgroundColor: @props.color, maxWidth: @props.cellEdgeLength, height: @props.cellEdgeLength } } className="cell"></div>
 
 module.exports = Cell

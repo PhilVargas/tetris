@@ -11,6 +11,7 @@ Board = React.createClass
   displayName: 'Board'
 
   propTypes:
+    cellEdgeLength: React.PropTypes.number.isRequired
     cells: React.PropTypes.array.isRequired
     currentPieceType: React.PropTypes.string.isRequired
     ghostYIndex: React.PropTypes.number.isRequired
@@ -28,7 +29,7 @@ Board = React.createClass
   render: ->
     <div id='board' className='columns large-6'>
       <div className='row'>
-        <div className='columns board-pieces-container' style={ @innerBoardStyles }>
+        <div className='columns board-pieces-container' style={ @innerBoardStyles() }>
           <div id='board-rows'>
             { @generateRows() }
           </div>
@@ -39,8 +40,8 @@ Board = React.createClass
       </div>
     </div>
 
-  innerBoardStyles:
-    width: Settings.cellEdgeLength * Settings.boardWidth + 2*Settings.innerBoardBorderWidth
+  innerBoardStyles: ->
+    width: @props.cellEdgeLength * Settings.boardWidth + 2*Settings.innerBoardBorderWidth
     border: "#{Settings.innerBoardBorderWidth}px solid black"
 
   overlayProps: ->
@@ -52,8 +53,9 @@ Board = React.createClass
     isGameOver: @props.isGameOver
 
   pieceProps: ->
-    containerClass: 'piece-container'
     cellClass: 'piece-cell'
+    cellEdgeLength: @props.cellEdgeLength
+    containerClass: 'piece-container'
     isVisible: @props.hasGameBegun
     pieceType: @props.currentPieceType
     rotation: @props.rotation
@@ -61,8 +63,9 @@ Board = React.createClass
     yIndex: @props.yIndex
 
   ghostProps: ->
-    containerClass: 'ghost-container'
     cellClass: 'ghost-cell'
+    cellEdgeLength: @props.cellEdgeLength
+    containerClass: 'ghost-container'
     isVisible: @props.isGhostVisible && @props.hasGameBegun
     pieceType: @props.currentPieceType
     rotation: @props.rotation
@@ -74,13 +77,13 @@ Board = React.createClass
 
   generateRows: ->
     for i in [0...Settings.boardHeight]
-      <div key={ i } className={ @rowClass(i) } style={ maxHeight: Settings.cellEdgeLength }>
+      <div key={ i } className={ @rowClass(i) } style={ maxHeight: @props.cellEdgeLength }>
         { @generateCells(i) }
       </div>
 
   generateCells: (yCoord) ->
     for xCoord in [0...Settings.boardWidth]
       cell = @props.cells[Calculate.cellIndexFromCoords(xCoord, yCoord)]
-      <Cell key={ cell.id } xIndex={ cell.xIndex } yIndex={ cell.yIndex } isFrozen={ cell.isFrozen } color={ cell.color } />
+      <Cell cellEdgeLength={ @props.cellEdgeLength } key={ cell.id } xIndex={ cell.xIndex } yIndex={ cell.yIndex } isFrozen={ cell.isFrozen } color={ cell.color } />
 
 module.exports = Board
