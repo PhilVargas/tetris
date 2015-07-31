@@ -8,12 +8,12 @@ ThemeSong = React.createClass
   displayName: 'ThemeSong'
 
   propTypes:
-    isPaused: React.PropTypes.bool.isRequired
     isMuted: React.PropTypes.bool.isRequired
+    isPaused: React.PropTypes.bool.isRequired
 
   getInitialState: ->
-    isPaused: @props.isPaused
     isMuted: @props.isMuted
+    isPaused: @props.isPaused
 
   componentDidMount: ->
     GameStore.bindChange @stateChange

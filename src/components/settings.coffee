@@ -5,13 +5,13 @@ Settings = React.createClass
   displayName: 'Settings'
 
   propTypes:
-    isMuted: React.PropTypes.bool.isRequired
     isGhostVisible: React.PropTypes.bool.isRequired
-    shouldAllowQueue: React.PropTypes.bool.isRequired
+    isMuted: React.PropTypes.bool.isRequired
     setBoardDisplaySize: React.PropTypes.func.isRequired
-    toggleQueue: React.PropTypes.func.isRequired
+    shouldAllowQueue: React.PropTypes.bool.isRequired
     toggleGhost: React.PropTypes.func.isRequired
     toggleMute: React.PropTypes.func.isRequired
+    toggleQueue: React.PropTypes.func.isRequired
 
   render: ->
     <div id='settings' className='row' >

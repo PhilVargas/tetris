@@ -42,8 +42,8 @@ Game = React.createClass
     yIndex: React.PropTypes.number.isRequired
 
   getInitialState: ->
-    cells: @props.cells
     boardDisplaySize: @props.boardDisplaySize
+    cells: @props.cells
     currentPieceType: @props.currentPieceType
     ghostYIndex: @props.ghostYIndex
     hasGameBegun: @props.hasGameBegun

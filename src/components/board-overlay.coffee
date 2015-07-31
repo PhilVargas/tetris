@@ -7,11 +7,11 @@ Overlay = React.createClass
 
   propTypes:
     hasGameBegun: React.PropTypes.bool.isRequired
-    isPaused: React.PropTypes.bool.isRequired
-    startGame: React.PropTypes.func.isRequired
-    restartGame: React.PropTypes.func.isRequired
     isGameOver: React.PropTypes.bool.isRequired
+    isPaused: React.PropTypes.bool.isRequired
+    restartGame: React.PropTypes.func.isRequired
     score: React.PropTypes.number.isRequired
+    startGame: React.PropTypes.func.isRequired
 
   containerClass: ->
     cx

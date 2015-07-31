@@ -58,41 +58,41 @@ Store =
 
 class BoardData
   constructor: ->
-    @xIndex = Settings.initialX
-    @yIndex = Settings.initialY
-    @linesCleared = 0
-    @ghostYIndex = 0
-    @width = Settings.boardWidth
-    @height = Settings.boardHeight
-    @hiddenRows = Settings.hiddenRows
-    @turnCount = 0
-    @currentPieceType = @randomPiece()
-    @nextPieceType = @randomPiece()
-    @queuePieceType = ''
     @canQueuePiece = true
     @cells = @generateCells()
-    @rotation = 0
-    @isGameOver = false
     @color = PieceMap[@currentPieceType].color
+    @currentPieceType = @randomPiece()
+    @ghostYIndex = 0
+    @hasGameBegun = false
+    @height = Settings.boardHeight
+    @hiddenRows = Settings.hiddenRows
+    @isGameOver = false
+    @linesCleared = 0
+    @nextPieceType = @randomPiece()
+    @queuePieceType = ''
+    @rotation = 0
     @score = 0
     @scoreThisTurn = 0
-    @hasGameBegun = false
+    @turnCount = 0
+    @width = Settings.boardWidth
+    @xIndex = Settings.initialX
+    @yIndex = Settings.initialY
 
   initialGameState: ->
     currentPieceType = @randomPiece()
-    linesCleared: 0
-    ghostYindex: 0
-    turnCount: 0
+    cells: @generateCells()
+    color: PieceMap[currentPieceType].color
     currentPieceType: currentPieceType
+    ghostYindex: 0
+    isGameOver: false
+    isPaused: false
+    linesCleared: 0
     nextPieceType: @randomPiece()
     queuePieceType: ''
     rotation: 0
-    isGameOver: false
-    isPaused: false
-    cells: @generateCells()
-    color: PieceMap[currentPieceType].color
     score: 0
     scoreThisTurn: 0
+    turnCount: 0
 
   generateCells: ->
     cells =[]

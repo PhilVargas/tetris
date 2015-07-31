@@ -9,11 +9,11 @@ Store =
     settingsData[attr]
 
   getAll: ->
-    isMuted: settingsData.isMuted
-    shouldAllowQueue: settingsData.shouldAllowQueue
-    isGhostVisible: settingsData.isGhostVisible
     boardDisplaySize: settingsData.boardDisplaySize
+    isGhostVisible: settingsData.isGhostVisible
+    isMuted: settingsData.isMuted
     isPaused: settingsData.isPaused
+    shouldAllowQueue: settingsData.shouldAllowQueue
 
   triggerChange: ->
     @trigger('change')
@@ -26,11 +26,11 @@ Store =
 
 class SettingsData
   constructor: ->
+    @boardDisplaySize = DefaultSettings.boardDisplayMap.medium
+    @isGhostVisible = true
     @isMuted = false
     @isPaused = false
     @shouldAllowQueue = true
-    @isGhostVisible = true
-    @boardDisplaySize = DefaultSettings.boardDisplayMap.medium
 
   updateAttribs: (attribs) ->
     assign(this, attribs)
