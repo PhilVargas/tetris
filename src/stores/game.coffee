@@ -59,8 +59,6 @@ Store =
 class BoardData
   constructor: ->
     @canQueuePiece = true
-    @cells = @generateCells()
-    @color = PieceMap[@currentPieceType].color
     @currentPieceType = @randomPiece()
     @ghostYIndex = 0
     @hasGameBegun = false
@@ -77,6 +75,8 @@ class BoardData
     @width = Settings.boardWidth
     @xIndex = Settings.initialX
     @yIndex = Settings.initialY
+    @color = PieceMap[@currentPieceType].color
+    @cells = @generateCells()
 
   initialGameState: ->
     currentPieceType = @randomPiece()
