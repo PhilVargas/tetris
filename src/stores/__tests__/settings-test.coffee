@@ -1,3 +1,5 @@
+Settings = require 'helpers/settings'
+
 describe 'Store', ->
   Dispatcher = Store = callback = null
 
@@ -6,6 +8,9 @@ describe 'Store', ->
     Store = require.requireActual('stores/settings')
     callback = Dispatcher.register.mock.calls[0][0]
     Store.triggerChange = jest.genMockFunction()
+
+  afterEach ->
+    Store.triggerChange.mockClear()
 
   it 'registers a call with the dispatcher', ->
     expect(Dispatcher.register.mock.calls.length).toBe(1)
@@ -68,18 +73,35 @@ describe 'Store', ->
         expect(Store.triggerChange).toBeCalled()
 
     describe 'settings:setBoardDisplaySize', ->
-      payload =
-        eventName: 'settings:setBoardDisplaySize'
-        value: 0
+      describe 'when a valid size is called', ->
+        payload =
+          eventName: 'settings:setBoardDisplaySize'
+          value: 'small'
 
-      beforeEach ->
-        initialValue = Store.get('boardDisplaySize')
-        callback payload
+        beforeEach ->
+          initialValue = Store.get('boardDisplaySize')
+          callback payload
 
-      it 'changes the board display size', ->
-        expect(initialValue).toBe 5
-        expect(Store.get('boardDisplaySize')).toBe 0
+        it 'changes the board display size', ->
+          expect(initialValue).toBe Settings.boardDisplayMap.medium
+          expect(Store.get('boardDisplaySize')).toBe Settings.boardDisplayMap[payload.value]
 
-      it 'calls Store.triggerChange', ->
-        expect(Store.triggerChange).toBeCalled()
+        it 'calls Store.triggerChange', ->
+          expect(Store.triggerChange).toBeCalled()
+
+      describe 'when an invalid size is called', ->
+        payload =
+          eventName: 'settings:setBoardDisplaySize'
+          value: 40
+
+        beforeEach ->
+          initialValue = Store.get('boardDisplaySize')
+          callback payload
+
+        it 'does not change the boardDisplaySize', ->
+          expect(Store.get('boardDisplaySize')).toBe initialValue
+
+        it 'does not call Store.triggerChange', ->
+          expect(Store.triggerChange).not.toBeCalled()
+
 

@@ -96,7 +96,7 @@ Game = React.createClass
     unless @state.hasGameBegun
       Action.startGame()
       $(document).on 'keyup', (e) ->
-        Action.togglePause() if e.which == 32 && !Store.get('isGameOver')
+        SettingsAction.togglePause() if e.which == 32 && !Store.get('isGameOver')
     setTimeout(@nextTick, Settings.initialTurnDelay)
 
   nextTick: ->
@@ -161,7 +161,7 @@ Game = React.createClass
 
   boardProps: ->
     cells: @state.cells
-    cellEdgeLength: Calculate.cellEdgeLength(@state.boardDisplaySize)
+    cellEdgeLength: @state.boardDisplaySize
     currentPieceType: @state.currentPieceType
     ghostYIndex: @state.ghostYIndex
     hasGameBegun: @state.hasGameBegun
@@ -182,8 +182,9 @@ Game = React.createClass
     scoreThisTurn: @state.scoreThisTurn
 
   settingsProps: ->
-    toggleQueue: Action.toggleQueue
-    toggleGhost: Action.toggleGhost
+    setBoardDisplaySize: SettingsAction.setBoardDisplaySize
+    toggleQueue: SettingsAction.toggleQueue
+    toggleGhost: SettingsAction.toggleGhost
     toggleMute: SettingsAction.toggleMute
     shouldAllowQueue: @state.shouldAllowQueue
     isMuted: @state.isMuted

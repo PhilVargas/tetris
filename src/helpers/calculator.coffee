@@ -16,7 +16,4 @@ Calculate =
   cellIndexFromCoords: (xIndex, yIndex) ->
     xIndex + (Settings.boardWidth*yIndex)
 
-  cellEdgeLength: (boardDisplaySize = 0) ->
-    Settings.cellEdgeLength + boardDisplaySize
-
 module.exports = Calculate

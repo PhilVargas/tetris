@@ -1,5 +1,6 @@
 Dispatcher = require 'dispatcher'
 MicroEvent = require 'microevent-github'
+DefaultSettings = require 'helpers/settings'
 
 assign = require 'object-assign'
 
@@ -29,7 +30,7 @@ class SettingsData
     @isPaused = false
     @shouldAllowQueue = true
     @isGhostVisible = true
-    @boardDisplaySize = 5
+    @boardDisplaySize = DefaultSettings.boardDisplayMap.medium
 
   updateAttribs: (attribs) ->
     assign(this, attribs)
@@ -47,8 +48,9 @@ Dispatcher.register (payload) ->
       settingsData.updateAttribs(isGhostVisible: !settingsData.isGhostVisible)
       Store.triggerChange()
     when 'settings:setBoardDisplaySize'
-      settingsData.updateAttribs(boardDisplaySize: payload.value)
-      Store.triggerChange()
+      if size = DefaultSettings.boardDisplayMap[payload.value]
+        settingsData.updateAttribs(boardDisplaySize: size)
+        Store.triggerChange()
     when 'settings:togglePause'
       settingsData.updateAttribs(isPaused: !settingsData.isPaused)
       Store.triggerChange()

@@ -62,8 +62,3 @@ describe 'Calculator', ->
       expect(Calc.cellIndexFromCoords(5,5)).toBe 55
       expect(Calc.cellIndexFromCoords(Settings.boardWidth,Settings.boardHeight)).toBe Settings.boardWidth * (1 + Settings.boardHeight)
 
-  # (Settings.cellEdgeLength + boardDisplaySize)
-  describe '#cellEdgeLength', ->
-    it 'it calculates the cell `cellEdgeLength`', ->
-      expect(Calc.cellEdgeLength(5)).toBe Settings.cellEdgeLength + 5
-
