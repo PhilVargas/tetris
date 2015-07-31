@@ -42,6 +42,7 @@
     ],
     "testPathDirs": [
       "<rootDir>/stores/__tests__",
+      "<rootDir>/actions/__tests__",
       "<rootDir>/helpers/__tests__"
     ]
   },

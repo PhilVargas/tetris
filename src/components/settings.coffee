@@ -1,17 +1,17 @@
 React = require 'react'
-Action = require 'actions/game'
 
 cx = require 'classnames'
 Settings = React.createClass
   displayName: 'Settings'
 
   propTypes:
-    isMuted: React.PropTypes.bool.isRequired
     isGhostVisible: React.PropTypes.bool.isRequired
+    isMuted: React.PropTypes.bool.isRequired
+    setBoardDisplaySize: React.PropTypes.func.isRequired
     shouldAllowQueue: React.PropTypes.bool.isRequired
-    toggleQueue: React.PropTypes.func.isRequired
     toggleGhost: React.PropTypes.func.isRequired
     toggleMute: React.PropTypes.func.isRequired
+    toggleQueue: React.PropTypes.func.isRequired
 
   render: ->
     <div id='settings' className='row' >
@@ -47,13 +47,13 @@ Settings = React.createClass
               <div className="columns large-12">
                 <ul className='button-group stack'>
                   <li>
-                    <a className="button radius tiny" onClick={ Action.setBoardDisplaySize.bind(null, 0) }>Small</a>
+                    <a className="button radius tiny" onClick={ @props.setBoardDisplaySize.bind(null, 'small') }>Small</a>
                   </li>
                   <li>
-                    <a className="button radius tiny" onClick={ Action.setBoardDisplaySize.bind(null, 5) }>Medium</a>
+                    <a className="button radius tiny" onClick={ @props.setBoardDisplaySize.bind(null, 'medium') }>Medium</a>
                   </li>
                   <li>
-                    <a className="button radius tiny" onClick={ Action.setBoardDisplaySize.bind(null, 10) }>Large</a>
+                    <a className="button radius tiny" onClick={ @props.setBoardDisplaySize.bind(null, 'large') }>Large</a>
                   </li>
                 </ul>
               </div>

@@ -5,8 +5,8 @@ Legend = React.createClass
   displayName: 'Legend'
 
   propTypes:
-    score: React.PropTypes.number.isRequired
     level: React.PropTypes.number.isRequired
+    score: React.PropTypes.number.isRequired
     scoreThisTurn: React.PropTypes.number.isRequired
 
   render: ->

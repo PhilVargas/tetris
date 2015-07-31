@@ -8,12 +8,12 @@ DisplayPiece = React.createClass
   displayName: 'DisplayerPiece'
 
   propTypes:
-    pieceType: React.PropTypes.string.isRequired
-    pieceTitle: React.PropTypes.string.isRequired
     cellEdgeLength: React.PropTypes.number.isRequired
     initialX: React.PropTypes.number.isRequired
     initialY: React.PropTypes.number.isRequired
     isDisabled: React.PropTypes.bool
+    pieceTitle: React.PropTypes.string.isRequired
+    pieceType: React.PropTypes.string.isRequired
 
   getDefaultProps: ->
     cellEdgeLength: 20

@@ -38,25 +38,8 @@ GameAction =
     Dispatcher.dispatch
       eventName: 'game:dropPiece'
 
-  togglePause: ->
-    Dispatcher.dispatch
-      eventName: 'game:togglePause'
-
   queuePiece: ->
     Dispatcher.dispatch
       eventName: 'game:queuePiece'
-
-  toggleQueue: ->
-    Dispatcher.dispatch
-      eventName: 'game:toggleQueue'
-
-  toggleGhost: ->
-    Dispatcher.dispatch
-      eventName: 'game:toggleGhost'
-
-  setBoardDisplaySize: (size) ->
-    Dispatcher.dispatch
-      eventName: 'game:setBoardDisplaySize'
-      value: size
 
 module.exports = GameAction

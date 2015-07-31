@@ -3,31 +3,28 @@ MicroEvent = require 'microevent-github'
 PieceMap = require 'helpers/piece-map'
 Settings = require 'helpers/settings'
 Calculate = require 'helpers/calculator'
+SettingsStore = require 'stores/settings'
 
 assign = require 'object-assign'
 
 gameData = null
-GameStore =
+Store =
   get: (attr) ->
     gameData[attr]
 
   getAll: ->
-    boardDisplaySize: gameData.boardDisplaySize
     canQueuePiece: gameData.canQueuePiece
     cells: gameData.cells
     currentPieceType: gameData.currentPieceType
     ghostYIndex: gameData.ghostYIndex
     hasGameBegun: gameData.hasGameBegun
     isGameOver: gameData.isGameOver
-    isGhostVisible: gameData.isGhostVisible
-    isPaused: gameData.isPaused
     linesCleared: gameData.linesCleared
     nextPieceType: gameData.nextPieceType
     queuePieceType: gameData.queuePieceType
     rotation: gameData.rotation
     score: gameData.score
     scoreThisTurn: gameData.scoreThisTurn
-    shouldAllowQueue: gameData.shouldAllowQueue
     turnCount: gameData.turnCount
     xIndex: gameData.xIndex
     yIndex: gameData.yIndex
@@ -61,45 +58,41 @@ GameStore =
 
 class BoardData
   constructor: ->
-    @xIndex = Settings.initialX
-    @yIndex = Settings.initialY
-    @linesCleared = 0
+    @canQueuePiece = true
+    @currentPieceType = @randomPiece()
     @ghostYIndex = 0
-    @width = Settings.boardWidth
+    @hasGameBegun = false
     @height = Settings.boardHeight
     @hiddenRows = Settings.hiddenRows
-    @turnCount = 0
-    @currentPieceType = @randomPiece()
+    @isGameOver = false
+    @linesCleared = 0
     @nextPieceType = @randomPiece()
     @queuePieceType = ''
-    @canQueuePiece = true
-    @cells = @generateCells()
     @rotation = 0
-    @isGameOver = false
-    @isPaused = false
-    @color = PieceMap[@currentPieceType].color
     @score = 0
     @scoreThisTurn = 0
-    @isGhostVisible = true
-    @shouldAllowQueue = true
-    @hasGameBegun = false
-    @boardDisplaySize = 5
+    @turnCount = 0
+    @width = Settings.boardWidth
+    @xIndex = Settings.initialX
+    @yIndex = Settings.initialY
+    @color = PieceMap[@currentPieceType].color
+    @cells = @generateCells()
 
   initialGameState: ->
     currentPieceType = @randomPiece()
-    linesCleared: 0
-    ghostYindex: 0
-    turnCount: 0
+    cells: @generateCells()
+    color: PieceMap[currentPieceType].color
     currentPieceType: currentPieceType
+    ghostYindex: 0
+    isGameOver: false
+    isPaused: false
+    linesCleared: 0
     nextPieceType: @randomPiece()
     queuePieceType: ''
     rotation: 0
-    isGameOver: false
-    isPaused: false
-    cells: @generateCells()
-    color: PieceMap[currentPieceType].color
     score: 0
     scoreThisTurn: 0
+    turnCount: 0
 
   generateCells: ->
     cells =[]
@@ -219,41 +212,37 @@ Dispatcher.register (payload) ->
     when 'game:init'
       gameData = new BoardData()
       gameData.drawGhost()
-      GameStore.triggerChange()
+      Store.triggerChange()
     when 'game:startGame'
       gameData.updateAttribs(hasGameBegun: true)
-      GameStore.triggerChange()
+      Store.triggerChange()
     when 'game:restartGame'
       gameData.updateAttribs(gameData.initialGameState())
       gameData.drawGhost()
-      GameStore.triggerChange()
+      Store.triggerChange()
     when 'game:setPieceIndeces'
-      if GameStore.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
+      if Store.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
         gameData.updateAttribs(xIndex: payload.value.xIndex, yIndex: payload.value.yIndex)
       gameData.drawGhost()
-      GameStore.triggerChange()
+      Store.triggerChange()
     when 'game:dropPiece'
       scoreThisTurn = 0
-      while GameStore.isCollisionFree({xIndex: gameData.xIndex, yIndex: gameData.yIndex + 1})
+      while Store.isCollisionFree({xIndex: gameData.xIndex, yIndex: gameData.yIndex + 1})
         scoreThisTurn++
         gameData.updateAttribs(yIndex: gameData.yIndex + 1)
       gameData.updateAttribs(score: gameData.score + scoreThisTurn, scoreThisTurn: scoreThisTurn) if scoreThisTurn
-      GameStore.triggerChange()
-    when 'game:togglePause'
-      unless GameStore.get('isGameOver')
-        gameData.updateAttribs(isPaused: !gameData.isPaused)
-        GameStore.triggerChange()
+      Store.triggerChange()
     when 'game:nextTurn'
-      return if GameStore.get('isPaused')
+      return if SettingsStore.get('isPaused')
       gameData.updateAttribs(turnCount: gameData.turnCount + 1)
-      if GameStore.isCollisionFree(xIndex: gameData.xIndex, yIndex: gameData.yIndex + 1)
+      if Store.isCollisionFree(xIndex: gameData.xIndex, yIndex: gameData.yIndex + 1)
         gameData.updateAttribs(yIndex: gameData.yIndex + 1)
       else
         gameData.freezeCells()
-        if GameStore.didPlayerLose()
+        if Store.didPlayerLose()
           gameData.updateAttribs(isGameOver: true)
         else
-          { scoreThisTurn, linesClearedThisTurn } = GameStore.scoreRows()
+          { scoreThisTurn, linesClearedThisTurn } = Store.scoreRows()
           nextPiece = gameData.randomPiece()
           gameData.updateAttribs(
             linesCleared: gameData.linesCleared + linesClearedThisTurn
@@ -268,43 +257,34 @@ Dispatcher.register (payload) ->
           )
           gameData.updateAttribs(scoreThisTurn: scoreThisTurn) if scoreThisTurn
           gameData.drawGhost()
-      GameStore.triggerChange()
+      Store.triggerChange()
     when 'game:rotatePiece'
       rotation = gameData.calculateRotation(payload.value)
-      if GameStore.isCollisionFree({ xIndex: gameData.xIndex, yIndex: gameData.yIndex }, rotation)
+      if Store.isCollisionFree({ xIndex: gameData.xIndex, yIndex: gameData.yIndex }, rotation)
         gameData.updateAttribs(rotation: rotation)
         gameData.drawGhost()
-        GameStore.triggerChange()
+        Store.triggerChange()
     when 'game:queuePiece'
-      if GameStore.get('canQueuePiece') && GameStore.get('shouldAllowQueue')
+      if Store.get('canQueuePiece') && SettingsStore.get('shouldAllowQueue')
         gameData.updateAttribs
           yIndex: Settings.initialY
           xIndex: Settings.initialX
           rotation: 0
-        if GameStore.get('queuePieceType')
+        if Store.get('queuePieceType')
           gameData.updateAttribs
-            queuePieceType: GameStore.get('currentPieceType')
-            currentPieceType: GameStore.get('queuePieceType')
-            color: PieceMap[GameStore.get('queuePieceType')].color
+            queuePieceType: Store.get('currentPieceType')
+            currentPieceType: Store.get('queuePieceType')
+            color: PieceMap[Store.get('queuePieceType')].color
         else
           gameData.updateAttribs
-            queuePieceType: GameStore.get('currentPieceType')
-            currentPieceType: GameStore.get('nextPieceType')
+            queuePieceType: Store.get('currentPieceType')
+            currentPieceType: Store.get('nextPieceType')
             color: PieceMap[gameData.nextPieceType].color
             nextPieceType: gameData.randomPiece()
         gameData.drawGhost()
         gameData.updateAttribs(canQueuePiece: false)
-        GameStore.triggerChange()
-    when 'game:toggleQueue'
-      gameData.updateAttribs(shouldAllowQueue: !gameData.shouldAllowQueue)
-      GameStore.triggerChange()
-    when 'game:toggleGhost'
-      gameData.updateAttribs(isGhostVisible: !gameData.isGhostVisible)
-      GameStore.triggerChange()
-    when 'game:setBoardDisplaySize'
-      gameData.updateAttribs(boardDisplaySize: payload.value)
-      GameStore.triggerChange()
+        Store.triggerChange()
 
 
-MicroEvent.mixin( GameStore )
-module.exports = GameStore
+MicroEvent.mixin( Store )
+module.exports = Store

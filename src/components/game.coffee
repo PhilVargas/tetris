@@ -8,8 +8,8 @@ DisplayPiece = require 'components/display-piece'
 
 Store = require 'stores/game'
 Action = require 'actions/game'
-AudioStore = require 'stores/audio'
-AudioAction = require 'actions/audio'
+SettingsStore = require 'stores/settings'
+SettingsAction = require 'actions/settings'
 
 Settings = require 'helpers/settings'
 Calculate = require 'helpers/calculator'
@@ -42,8 +42,8 @@ Game = React.createClass
     yIndex: React.PropTypes.number.isRequired
 
   getInitialState: ->
-    cells: @props.cells
     boardDisplaySize: @props.boardDisplaySize
+    cells: @props.cells
     currentPieceType: @props.currentPieceType
     ghostYIndex: @props.ghostYIndex
     hasGameBegun: @props.hasGameBegun
@@ -87,7 +87,7 @@ Game = React.createClass
   # Render functions #
   componentDidMount: ->
     Store.bindChange @gameChanged
-    AudioStore.bindChange @audioChanged
+    SettingsStore.bindChange @settingsChanged
     $(document).on
       keydown: @handleKeyDown
       keyup: @handleKeyUp
@@ -96,7 +96,7 @@ Game = React.createClass
     unless @state.hasGameBegun
       Action.startGame()
       $(document).on 'keyup', (e) ->
-        Action.togglePause() if e.which == 32
+        SettingsAction.togglePause() if e.which == 32 && !Store.get('isGameOver')
     setTimeout(@nextTick, Settings.initialTurnDelay)
 
   nextTick: ->
@@ -112,12 +112,12 @@ Game = React.createClass
   gameChanged: ->
     @setState Store.getAll()
 
-  audioChanged: ->
-    @setState AudioStore.getAll()
+  settingsChanged: ->
+    @setState SettingsStore.getAll()
 
   componentWillUnmount: ->
     Store.unbindChange @gameChanged
-    AudioStore.unbindChange @audioChanged
+    SettingsStore.unbindChange @settingsChanged
     $(document).off 'keyup'
 
   render: ->
@@ -161,7 +161,7 @@ Game = React.createClass
 
   boardProps: ->
     cells: @state.cells
-    cellEdgeLength: Calculate.cellEdgeLength(@state.boardDisplaySize)
+    cellEdgeLength: @state.boardDisplaySize
     currentPieceType: @state.currentPieceType
     ghostYIndex: @state.ghostYIndex
     hasGameBegun: @state.hasGameBegun
@@ -182,9 +182,10 @@ Game = React.createClass
     scoreThisTurn: @state.scoreThisTurn
 
   settingsProps: ->
-    toggleQueue: Action.toggleQueue
-    toggleGhost: Action.toggleGhost
-    toggleMute: AudioAction.toggleMute
+    setBoardDisplaySize: SettingsAction.setBoardDisplaySize
+    toggleQueue: SettingsAction.toggleQueue
+    toggleGhost: SettingsAction.toggleGhost
+    toggleMute: SettingsAction.toggleMute
     shouldAllowQueue: @state.shouldAllowQueue
     isMuted: @state.isMuted
     isGhostVisible: @state.isGhostVisible
