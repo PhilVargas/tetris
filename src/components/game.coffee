@@ -7,6 +7,7 @@ SettingsPanel = require 'components/settings'
 DisplayPiece = require 'components/display-piece'
 
 Store = require 'stores/game'
+SettingsStore = require 'stores/settings'
 Action = require 'actions/game'
 AudioStore = require 'stores/audio'
 AudioAction = require 'actions/audio'
@@ -96,7 +97,7 @@ Game = React.createClass
     unless @state.hasGameBegun
       Action.startGame()
       $(document).on 'keyup', (e) ->
-        Action.togglePause() if e.which == 32
+        Action.togglePause() if e.which == 32 && !Store.get('isGameOver')
     setTimeout(@nextTick, Settings.initialTurnDelay)
 
   nextTick: ->
