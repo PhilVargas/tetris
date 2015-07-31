@@ -1,9 +1,10 @@
 describe 'Store', ->
-  Dispatcher = Store = callback = null
+  Dispatcher = SettingsStore = Store = callback = null
 
   beforeEach ->
     Dispatcher = require('dispatcher')
     Store = require.requireActual('stores/game')
+    SettingsStore = require('stores/settings')
     callback = Dispatcher.register.mock.calls[0][0]
     Store.triggerChange = jest.genMockFunction()
 
@@ -129,42 +130,6 @@ describe 'Store', ->
         it 'calls Store.triggerChange', ->
           expect(Store.triggerChange).toBeCalled()
 
-    describe 'game:togglePause', ->
-      payload = eventName: 'game:togglePause'
-      actual = null
-
-      describe 'when the game is not over (`@state.isGameOver = false`)', ->
-        beforeEach ->
-          actual = Store.get
-          Store.get = jest.genMockFn().mockImplementation (attr) ->
-            switch attr
-              when 'isGameOver' then false
-              else return actual(attr)
-          initialValue = actual('isPaused')
-          callback payload
-
-        it 'toggles the `state.isPaused`', ->
-          expect(actual('isPaused')).toBe !initialValue
-
-        it 'calls Store.triggerChange', ->
-          expect(Store.triggerChange).toBeCalled()
-
-      describe 'when the game is over (`@state.isGameOver = true`)', ->
-        beforeEach ->
-          actual = Store.get
-          Store.get = jest.genMockFn().mockImplementation (attr) ->
-            switch attr
-              when 'isGameOver' then true
-              else return actual(attr)
-          initialValue = actual('isPaused')
-          callback payload
-
-        it 'does not toggle the `state.isPaused`', ->
-          expect(actual('isPaused')).toBe initialValue
-
-        it 'does not call Store.triggerChange', ->
-          expect(Store.triggerChange).not.toBeCalled()
-
     describe 'game:rotatePiece', ->
       beforeEach ->
         initialValue = Store.get('rotation')
@@ -231,10 +196,8 @@ describe 'Store', ->
       describe 'when unable to queue a piece (`shouldAllowQueue` is false)', ->
         beforeEach ->
           Store.get = jest.genMockFn().mockImplementation (attr) ->
-            switch attr
-              when 'canQueuePiece' then true
-              when 'shouldAllowQueue' then false
-              else return actual(attr)
+            if attr == 'canQueuePiece' then true else actual(attr)
+          SettingsStore.get = jest.genMockFn().mockReturnValue(false)
 
           initialValue =
             currentPieceType: actual('currentPieceType')
@@ -257,10 +220,8 @@ describe 'Store', ->
       describe 'when unable to queue a piece (`canQueuePiece` is false)', ->
         beforeEach ->
           Store.get = jest.genMockFn().mockImplementation (attr) ->
-            switch attr
-              when 'canQueuePiece' then false
-              when 'shouldAllowQueue' then true
-              else return actual(attr)
+            if attr == 'canQueuePiece' then false else actual(attr)
+          SettingsStore.get = jest.genMockFn().mockReturnValue(true)
 
           initialValue =
             currentPieceType: actual('currentPieceType')
@@ -286,9 +247,9 @@ describe 'Store', ->
             Store.get = jest.genMockFn().mockImplementation (attr) ->
               switch attr
                 when 'canQueuePiece' then true
-                when 'shouldAllowQueue' then true
                 when 'queuePieceType' then ''
                 else return actual(attr)
+            SettingsStore.get = jest.genMockFn().mockReturnValue(true)
             initialValue =
               currentPieceType: Store.get('currentPieceType')
               queuePieceType: actual('queuePieceType')
@@ -306,9 +267,9 @@ describe 'Store', ->
             Store.get = jest.genMockFn().mockImplementation (attr) ->
               switch attr
                 when 'canQueuePiece' then true
-                when 'shouldAllowQueue' then true
                 when 'queuePieceType' then 'T'
                 else actual(attr)
+            SettingsStore.get = jest.genMockFn().mockReturnValue(true)
             initialValue =
               currentPieceType: Store.get('currentPieceType')
               queuePieceType: Store.get('queuePieceType')
@@ -324,34 +285,6 @@ describe 'Store', ->
           it 'calls Store.triggerChange', ->
             expect(Store.triggerChange).toBeCalled()
 
-    describe 'game:toggleQueue', ->
-      payload = eventName: 'game:toggleQueue'
-
-      beforeEach ->
-        initialValue =
-          shouldAllowQueue: Store.get('shouldAllowQueue')
-        callback payload
-
-      it 'toggles the `state.shouldAllowQueue`', ->
-        expect(Store.get('shouldAllowQueue')).toBe !initialValue.shouldAllowQueue
-
-      it 'calls Store.triggerChange', ->
-        expect(Store.triggerChange).toBeCalled()
-
-    describe 'game:toggleGhost', ->
-      payload = eventName: 'game:toggleGhost'
-
-      beforeEach ->
-        initialValue =
-          isGhostVisible: Store.get('isGhostVisible')
-        callback payload
-
-      it 'toggles the `state.isGhostVisible`', ->
-        expect(Store.get('isGhostVisible')).toBe !initialValue.isGhostVisible
-
-      it 'calls Store.triggerChange', ->
-        expect(Store.triggerChange).toBeCalled()
-
     describe 'game:nextTurn', ->
       actual = null
       beforeEach ->
@@ -360,10 +293,7 @@ describe 'Store', ->
 
       describe 'when the game is paused (`state.isPaused` = true)', ->
         beforeEach ->
-          Store.get = jest.genMockFn().mockImplementation (attr) ->
-            switch attr
-              when 'isPaused' then true
-              else return actual(attr)
+          SettingsStore.get = jest.genMockFn().mockReturnValue(true)
 
           initialValue =
             turnCount: actual('turnCount')
@@ -377,10 +307,7 @@ describe 'Store', ->
 
       describe 'when the game is not paused (`state.isPaused` = false)', ->
         beforeEach ->
-          Store.get = jest.genMockFn().mockImplementation (attr) ->
-            switch attr
-              when 'isPaused' then false
-              else return actual(attr)
+          SettingsStore.get = jest.genMockFn().mockReturnValue(false)
 
         describe 'when the piece has a collision', ->
           beforeEach ->
@@ -488,22 +415,4 @@ describe 'Store', ->
 
           it 'calls Store.triggerChange', ->
             expect(Store.triggerChange).toBeCalled()
-
-    describe 'game:setBoardDisplaySize', ->
-      payload =
-        eventName: 'game:setBoardDisplaySize'
-        value: 0
-
-      beforeEach ->
-        initialValue = Store.get('boardDisplaySize')
-        callback payload
-
-      it 'changes the board display size', ->
-        expect(initialValue).toBe 5
-        expect(Store.get('boardDisplaySize')).toBe 0
-
-      it 'calls Store.triggerChange', ->
-        expect(Store.triggerChange).toBeCalled()
-
-
 
