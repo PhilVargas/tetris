@@ -7,10 +7,9 @@ SettingsPanel = require 'components/settings'
 DisplayPiece = require 'components/display-piece'
 
 Store = require 'stores/game'
-SettingsStore = require 'stores/settings'
 Action = require 'actions/game'
-AudioStore = require 'stores/audio'
-AudioAction = require 'actions/audio'
+SettingsStore = require 'stores/settings'
+SettingsAction = require 'actions/settings'
 
 Settings = require 'helpers/settings'
 Calculate = require 'helpers/calculator'
@@ -88,7 +87,7 @@ Game = React.createClass
   # Render functions #
   componentDidMount: ->
     Store.bindChange @gameChanged
-    AudioStore.bindChange @audioChanged
+    SettingsStore.bindChange @settingsChanged
     $(document).on
       keydown: @handleKeyDown
       keyup: @handleKeyUp
@@ -113,12 +112,12 @@ Game = React.createClass
   gameChanged: ->
     @setState Store.getAll()
 
-  audioChanged: ->
-    @setState AudioStore.getAll()
+  settingsChanged: ->
+    @setState SettingsStore.getAll()
 
   componentWillUnmount: ->
     Store.unbindChange @gameChanged
-    AudioStore.unbindChange @audioChanged
+    SettingsStore.unbindChange @settingsChanged
     $(document).off 'keyup'
 
   render: ->
@@ -185,7 +184,7 @@ Game = React.createClass
   settingsProps: ->
     toggleQueue: Action.toggleQueue
     toggleGhost: Action.toggleGhost
-    toggleMute: AudioAction.toggleMute
+    toggleMute: SettingsAction.toggleMute
     shouldAllowQueue: @state.shouldAllowQueue
     isMuted: @state.isMuted
     isGhostVisible: @state.isGhostVisible

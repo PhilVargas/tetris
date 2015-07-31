@@ -1,7 +1,7 @@
 React = require 'react'
-AudioStore = require 'stores/audio'
+SettingsStore = require 'stores/settings'
 GameStore = require 'stores/game'
-Action = require 'actions/audio'
+Action = require 'actions/settings'
 $ = require 'jquery'
 
 ThemeSong = React.createClass
@@ -17,11 +17,11 @@ ThemeSong = React.createClass
 
   componentDidMount: ->
     GameStore.bindChange @stateChange
-    AudioStore.bindChange @stateChange
+    SettingsStore.bindChange @stateChange
 
   stateChange: ->
     @setState isPaused: GameStore.get('isPaused')
-    @setState AudioStore.getAll()
+    @setState SettingsStore.getAll()
 
   componentDidUpdate: ->
     if @state.isMuted || @state.isPaused
@@ -31,7 +31,7 @@ ThemeSong = React.createClass
 
   componentWillUnmount: ->
     GameStore.unbindChange @stateChange
-    AudioStore.unbindChange @stateChange
+    SettingsStore.unbindChange @stateChange
 
   render: ->
     <div className="theme-song-container">
