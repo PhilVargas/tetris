@@ -104,7 +104,7 @@ class BoardData
     cells
 
   randomPiece: ->
-    randomInt = Math.floor(Math.random() * Object.keys(PieceMap).length)
+    randomInt = (Math.random() * Object.keys(PieceMap).length) // 1
     Object.keys(PieceMap)[randomInt]
 
   updateAttribs: (attribs) ->
@@ -134,10 +134,8 @@ class BoardData
     @cells.some (cell) => cell.isFrozen && cell.id in [0...(@width * @hiddenRows)]
 
   getRows: ->
-    rows = []
     for i in [0...@height]
-      rows.push @cells[@width*i...@width*(i+1)]
-    rows
+      @cells[@width*i...@width*(i+1)]
 
   isAnyRowFrozen: =>
     @getRows().some @isRowFrozen
@@ -161,11 +159,11 @@ class BoardData
       cell.color = Settings.defaultCellBackgroundColor
 
   drawGhost: ->
-    yIndex = @yIndex
-    @updateAttribs(ghostYIndex: yIndex) unless gameData.isCollisionFree({xIndex: @xIndex, yIndex: yIndex + 1})
-    while gameData.isCollisionFree({xIndex: @xIndex, yIndex: yIndex + 1})
-      @updateAttribs(ghostYIndex: yIndex + 1)
-      yIndex++
+    nextYIndex = @yIndex + 1
+    @updateAttribs(ghostYIndex: @yIndex)
+    while gameData.isCollisionFree({xIndex: @xIndex, yIndex: nextYIndex})
+      @updateAttribs(ghostYIndex: nextYIndex)
+      nextYIndex++
 
   level: ->
     Calculate.level(@linesCleared)
