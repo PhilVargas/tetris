@@ -117,17 +117,8 @@ class BoardData
       @cells[cellIndex].isFrozen
 
   isCollisionFree: (nextPosition, rotation = @rotation) =>
-    isCollisionFree = true
-    for cell in PieceMap[@currentPieceType].shapes[rotation] when @hasCollision(nextPosition, cell)
-      isCollisionFree = false
-      break
-    isCollisionFree
-
-  getPieceIndeces: (position = {x: @xIndex, y: @yIndex})->
-    indeces = []
-    for a in PieceMap[@currentPieceType].shapes[@rotation]
-      indeces.push {x: position.x + a.x, y: position.y + a.y}
-    indeces
+    !PieceMap[@currentPieceType].shapes[rotation].some (cell) =>
+      @hasCollision(nextPosition, cell)
 
   getCellIdsForPiece: (position = {x: @xIndex, y: @yIndex})->
     for pieceCell in PieceMap[@currentPieceType].shapes[@rotation]
@@ -140,11 +131,7 @@ class BoardData
       cell.color = @color
 
   didPlayerLose: ->
-    isGameOver = false
-    for cell in @cells when cell.isFrozen && cell.id in [0...(@width * @hiddenRows)]
-      isGameOver = true
-      break
-    isGameOver
+    @cells.some (cell) => cell.isFrozen && cell.id in [0...(@width * @hiddenRows)]
 
   getRows: ->
     rows = []
@@ -152,19 +139,11 @@ class BoardData
       rows.push @cells[@width*i...@width*(i+1)]
     rows
 
-  isAnyRowFrozen: ->
-    isAnyRowFrozen = false
-    for row in @getRows() when @isRowFrozen(row)
-      isAnyRowFrozen = true
-      break
-    isAnyRowFrozen
+  isAnyRowFrozen: =>
+    @getRows().some @isRowFrozen
 
   isRowFrozen: (row) ->
-    isRowFrozen = true
-    for cell in row when not cell.isFrozen
-      isRowFrozen = false
-      break
-    isRowFrozen
+    row.every (cell) -> cell.isFrozen
 
   clearFrozenRow: (rows) ->
     frozenIndex = null
