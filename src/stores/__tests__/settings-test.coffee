@@ -1,6 +1,6 @@
 Settings = require 'helpers/settings'
 
-describe 'Store', ->
+describe 'SettingsStore', ->
   Dispatcher = Store = callback = null
 
   beforeEach ->

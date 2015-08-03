@@ -104,7 +104,7 @@ class BoardData
     cells
 
   randomPiece: ->
-    randomInt = Math.floor(Math.random() * Object.keys(PieceMap).length)
+    randomInt = (Math.random() * Object.keys(PieceMap).length) // 1
     Object.keys(PieceMap)[randomInt]
 
   updateAttribs: (attribs) ->
@@ -117,23 +117,12 @@ class BoardData
       @cells[cellIndex].isFrozen
 
   isCollisionFree: (nextPosition, rotation = @rotation) =>
-    isCollisionFree = true
-    for cell in PieceMap[@currentPieceType].shapes[rotation] when @hasCollision(nextPosition, cell)
-      isCollisionFree = false
-      break
-    isCollisionFree
+    !PieceMap[@currentPieceType].shapes[rotation].some (cell) =>
+      @hasCollision(nextPosition, cell)
 
-  getPieceIndeces: (position = {x: @xIndex, y: @yIndex})->
-    indeces = []
-    for a in PieceMap[@currentPieceType].shapes[@rotation]
-      indeces.push {x: position.x + a.x, y: position.y + a.y}
-    indeces
-
-  getCellIdsForPiece: ->
-    piece = @getPieceIndeces()
-    cellIds = for cell in piece
-      Calculate.cellIndexFromCoords(cell.x, cell.y)
-    cellIds
+  getCellIdsForPiece: (position = {x: @xIndex, y: @yIndex})->
+    for pieceCell in PieceMap[@currentPieceType].shapes[@rotation]
+      Calculate.cellIndexFromCoords(position.x + pieceCell.x, position.y + pieceCell.y)
 
   freezeCells: ->
     cellIds = @getCellIdsForPiece()
@@ -142,31 +131,17 @@ class BoardData
       cell.color = @color
 
   didPlayerLose: ->
-    isGameOver = false
-    for cell in @cells when cell.isFrozen && cell.id in [0...(@width * @hiddenRows)]
-      isGameOver = true
-      break
-    isGameOver
+    @cells.some (cell) => cell.isFrozen && cell.id in [0...(@width * @hiddenRows)]
 
   getRows: ->
-    rows = []
     for i in [0...@height]
-      rows.push @cells[@width*i...@width*(i+1)]
-    rows
+      @cells[@width*i...@width*(i+1)]
 
-  isAnyRowFrozen: ->
-    isAnyRowFrozen = false
-    for row in @getRows() when @isRowFrozen(row)
-      isAnyRowFrozen = true
-      break
-    isAnyRowFrozen
+  isAnyRowFrozen: =>
+    @getRows().some @isRowFrozen
 
   isRowFrozen: (row) ->
-    isRowFrozen = true
-    for cell in row when not cell.isFrozen
-      isRowFrozen = false
-      break
-    isRowFrozen
+    row.every (cell) -> cell.isFrozen
 
   clearFrozenRow: (rows) ->
     frozenIndex = null
@@ -184,11 +159,11 @@ class BoardData
       cell.color = Settings.defaultCellBackgroundColor
 
   drawGhost: ->
-    yIndex = @yIndex
-    @updateAttribs(ghostYIndex: yIndex) unless gameData.isCollisionFree({xIndex: @xIndex, yIndex: yIndex + 1})
-    while gameData.isCollisionFree({xIndex: @xIndex, yIndex: yIndex + 1})
-      @updateAttribs(ghostYIndex: yIndex + 1)
-      yIndex++
+    nextYIndex = @yIndex + 1
+    @updateAttribs(ghostYIndex: @yIndex)
+    while gameData.isCollisionFree({xIndex: @xIndex, yIndex: nextYIndex})
+      @updateAttribs(ghostYIndex: nextYIndex)
+      nextYIndex++
 
   level: ->
     Calculate.level(@linesCleared)
