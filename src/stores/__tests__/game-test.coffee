@@ -1,4 +1,4 @@
-describe 'Store', ->
+describe 'GameStore', ->
   Dispatcher = SettingsStore = Store = callback = null
 
   beforeEach ->
