@@ -129,11 +129,9 @@ class BoardData
       indeces.push {x: position.x + a.x, y: position.y + a.y}
     indeces
 
-  getCellIdsForPiece: ->
-    piece = @getPieceIndeces()
-    cellIds = for cell in piece
-      Calculate.cellIndexFromCoords(cell.x, cell.y)
-    cellIds
+  getCellIdsForPiece: (position = {x: @xIndex, y: @yIndex})->
+    for pieceCell in PieceMap[@currentPieceType].shapes[@rotation]
+      Calculate.cellIndexFromCoords(position.x + pieceCell.x, position.y + pieceCell.y)
 
   freezeCells: ->
     cellIds = @getCellIdsForPiece()
