@@ -47,13 +47,13 @@ Settings = React.createClass
               <div className="columns large-12">
                 <ul className='button-group stack'>
                   <li>
-                    <a className="button radius tiny" onClick={ @props.setBoardDisplaySize.bind(null, 'small') }>Small</a>
+                    <a className="button radius tiny" onClick={ @handleBoardDisplayClick.bind(null, 'small') }>Small</a>
                   </li>
                   <li>
-                    <a className="button radius tiny" onClick={ @props.setBoardDisplaySize.bind(null, 'medium') }>Medium</a>
+                    <a className="button radius tiny" onClick={ @handleBoardDisplayClick.bind(null, 'medium') }>Medium</a>
                   </li>
                   <li>
-                    <a className="button radius tiny" onClick={ @props.setBoardDisplaySize.bind(null, 'large') }>Large</a>
+                    <a className="button radius tiny" onClick={ @handleBoardDisplayClick.bind(null, 'large') }>Large</a>
                   </li>
                 </ul>
               </div>
@@ -62,6 +62,9 @@ Settings = React.createClass
         </div>
       </div>
     </div>
+
+  handleBoardDisplayClick: (size) ->
+    @props.setBoardDisplaySize(size)
 
   handleQueueChange: ->
     @props.toggleQueue()
