@@ -1,13 +1,22 @@
-.queue-legend {
+#legend{
+  text-transform: capitalize;
   font-size: 15px;
+  .queue-legend .legend-text{
+    font-size: 14px;
+  }
 }
 
 .code {
   display: inline;
   background-color: lightgray;
   padding: 0 5px;
+  font-size: inherit;
 }
 
 .score-container, .level-container {
   text-align: right;
+}
+
+.incremented-score {
+  color: limegreen;
 }
