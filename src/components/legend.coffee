@@ -37,17 +37,17 @@ Legend = React.createClass
         </div>
         <div className='row'>
           <div className="columns">
-            Move with <pre className='code'>ASD</pre>
+            move with <pre className='code'>ASD</pre>
           </div>
         </div>
         <div className='row'>
           <div className="columns">
-            Drop with <pre className='code' >W</pre>
+            drop with <pre className='code' >W</pre>
           </div>
         </div>
         <div className='row'>
           <div className="columns">
-            Rotate with <pre className='code'>Q</pre> & <pre className='code'>E</pre>
+            rotate with <pre className='code'>Q</pre> & <pre className='code'>E</pre>
           </div>
         </div>
         <div className='row'>
@@ -57,7 +57,8 @@ Legend = React.createClass
         </div>
         <div className='row'>
           <div className="columns queue-legend">
-            <pre className='code'>Enter</pre> to queue a piece
+            <pre className='code'>Enter</pre>
+            <span className='legend-text'> to queue a piece</span>
           </div>
         </div>
       </div>
