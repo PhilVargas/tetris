@@ -9,9 +9,12 @@ DisplayPiece = React.createClass
 
   propTypes:
     cellEdgeLength: React.PropTypes.number.isRequired
+    cellClass: React.PropTypes.string
+    containerClass: React.PropTypes.string
+    id: React.PropTypes.string
     initialX: React.PropTypes.number.isRequired
     initialY: React.PropTypes.number.isRequired
-    isDisabled: React.PropTypes.bool
+    isDisabled: React.PropTypes.bool.isRequired
     pieceTitle: React.PropTypes.string.isRequired
     pieceType: React.PropTypes.string.isRequired
 
@@ -19,7 +22,6 @@ DisplayPiece = React.createClass
     cellEdgeLength: 20
     initialY: 40
     initialX: 40
-    isDisabled: false
 
   getCoords: (cellNumber = 0) ->
     offset = PieceMap[@props.pieceType].shapes[0][cellNumber]
@@ -28,14 +30,14 @@ DisplayPiece = React.createClass
     top: (offset.y * @props.cellEdgeLength) + initialCoords.top + @props.initialY
 
   renderCells: ->
-    for i in [0..3] when @props.pieceType
+    for i in [0..3]
       <div key={ i } style={ assign {}, @getCoords(i), backgroundColor: PieceMap[@props.pieceType].color } className={ @props.cellClass }></div>
 
   render: ->
     <div id={ @props.id } className={ @props.containerClass }>
       <div className="pieces-title">{ @props.pieceTitle }</div>
       <div className={ cx "pieces-container", disabled: !@props.pieceType || @props.isDisabled }>
-        { @renderCells() }
+        { @renderCells() if @props.pieceType }
       </div>
     </div>
 
