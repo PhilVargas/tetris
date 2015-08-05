@@ -1,8 +1,5 @@
 React = require 'react'
 SettingsStore = require 'stores/settings'
-GameStore = require 'stores/game'
-Action = require 'actions/settings'
-$ = require 'jquery'
 
 ThemeSong = React.createClass
   displayName: 'ThemeSong'
@@ -16,12 +13,12 @@ ThemeSong = React.createClass
     isPaused: @props.isPaused
 
   componentDidMount: ->
-    GameStore.bindChange @stateChange
     SettingsStore.bindChange @stateChange
 
   stateChange: ->
-    @setState isPaused: GameStore.get('isPaused')
-    @setState SettingsStore.getAll()
+    @setState
+      isMuted: SettingsStore.get('isMuted')
+      isPaused: SettingsStore.get('isPaused')
 
   componentDidUpdate: ->
     if @state.isMuted || @state.isPaused
@@ -30,7 +27,6 @@ ThemeSong = React.createClass
       @refs.themeSong.getDOMNode().play()
 
   componentWillUnmount: ->
-    GameStore.unbindChange @stateChange
     SettingsStore.unbindChange @stateChange
 
   render: ->
