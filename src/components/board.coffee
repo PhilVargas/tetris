@@ -84,6 +84,8 @@ Board = React.createClass
   generateCells: (yCoord) ->
     for xCoord in [0...Settings.boardWidth]
       cell = @props.cells[Calculate.cellIndexFromCoords(xCoord, yCoord)]
-      <Cell cellEdgeLength={ @props.cellEdgeLength } key={ cell.id } xIndex={ cell.xIndex } yIndex={ cell.yIndex } isFrozen={ cell.isFrozen } color={ cell.color } />
+      <Cell key={ cell.id } color={ cell.color } cellEdgeLength={ @props.cellEdgeLength } />
+
+
 
 module.exports = Board
