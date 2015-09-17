@@ -26,6 +26,7 @@ Game = React.createClass
     currentPieceType: React.PropTypes.string.isRequired
     ghostYIndex: React.PropTypes.number.isRequired
     hasGameBegun: React.PropTypes.bool.isRequired
+    isColorblindActive: React.PropTypes.bool.isRequired
     isGameOver: React.PropTypes.bool.isRequired
     isGhostVisible: React.PropTypes.bool.isRequired
     isMuted: React.PropTypes.bool.isRequired
@@ -47,6 +48,7 @@ Game = React.createClass
     currentPieceType: @props.currentPieceType
     ghostYIndex: @props.ghostYIndex
     hasGameBegun: @props.hasGameBegun
+    isColorblindActive: @props.isColorblindActive
     isGameOver: @props.isGameOver
     isGhostVisible: @props.isGhostVisible
     isMuted: @props.isMuted
@@ -186,6 +188,8 @@ Game = React.createClass
     toggleQueue: SettingsAction.toggleQueue
     toggleGhost: SettingsAction.toggleGhost
     toggleMute: SettingsAction.toggleMute
+    toggleColorBlindMode: SettingsAction.toggleColorBlindMode
+    isColorblindActive: @state.isColorblindActive
     shouldAllowQueue: @state.shouldAllowQueue
     isMuted: @state.isMuted
     isGhostVisible: @state.isGhostVisible

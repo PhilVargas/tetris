@@ -9,9 +9,11 @@ Settings = React.createClass
     isMuted: React.PropTypes.bool.isRequired
     setBoardDisplaySize: React.PropTypes.func.isRequired
     shouldAllowQueue: React.PropTypes.bool.isRequired
+    isColorblindActive: React.PropTypes.bool.isRequired
     toggleGhost: React.PropTypes.func.isRequired
     toggleMute: React.PropTypes.func.isRequired
     toggleQueue: React.PropTypes.func.isRequired
+    toggleColorBlindMode: React.PropTypes.func.isRequired
 
   render: ->
     <div id='settings' className='row' >
@@ -35,6 +37,13 @@ Settings = React.createClass
           <div className="columns large-4">Queue</div>
           <input id="ghost-button" type="checkbox" checked={ @props.shouldAllowQueue  } onChange={ @handleQueueChange } />
           <label onClick={ @handleQueueChange }></label>
+        </div>
+        <div id='colorblind-setting' className="row collapse">
+          <div className="columns large-8">Colorblind Mode</div>
+          <div className="columns large-4 switch radius tiny">
+            <input id="colorblind-button" type="checkbox" checked={ @props.isColorblindActive  } onChange={ @handleColorBlindChange } />
+            <label onClick={ @handleColorBlindChange }></label>
+          </div>
         </div>
         <div id="display-size-setting" className='row'>
           <div className="columns">
@@ -74,5 +83,8 @@ Settings = React.createClass
 
   handleAudioChange: ->
     @props.toggleMute()
+
+  handleColorBlindChange: ->
+    @props.toggleColorBlindMode()
 
 module.exports = Settings

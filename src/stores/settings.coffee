@@ -9,6 +9,7 @@ Store =
     settingsData[attr]
 
   getAll: ->
+    isColorblindActive: settingsData.isColorblindActive
     boardDisplaySize: settingsData.boardDisplaySize
     isGhostVisible: settingsData.isGhostVisible
     isMuted: settingsData.isMuted
@@ -31,6 +32,7 @@ class SettingsData
     @isMuted = false
     @isPaused = false
     @shouldAllowQueue = true
+    @isColorblindActive = false
 
   updateAttribs: (attribs) ->
     assign(this, attribs)
@@ -38,6 +40,9 @@ class SettingsData
 settingsData = new SettingsData()
 Dispatcher.register (payload) ->
   switch payload.eventName
+    when 'settings:toggleColorBlindMode'
+      settingsData.updateAttribs(isColorblindActive: !settingsData.isColorblindActive)
+      Store.triggerChange()
     when 'settings:toggleMute'
       settingsData.updateAttribs(isMuted: !settingsData.isMuted)
       Store.triggerChange()
