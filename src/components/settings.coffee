@@ -1,5 +1,7 @@
 React = require 'react'
 
+SettingsCheckbox = require('components/settings-checkbox')
+
 cx = require 'classnames'
 Settings = React.createClass
   displayName: 'Settings'
@@ -38,13 +40,13 @@ Settings = React.createClass
           <input id="ghost-button" type="checkbox" checked={ @props.shouldAllowQueue  } onChange={ @handleQueueChange } />
           <label onClick={ @handleQueueChange }></label>
         </div>
-        <div id='colorblind-setting' className="row collapse">
-          <div className="columns large-8">Colorblind Mode</div>
-          <div className="columns large-4 switch radius tiny">
-            <input id="colorblind-button" type="checkbox" checked={ @props.isColorblindActive  } onChange={ @handleColorBlindChange } />
-            <label onClick={ @handleColorBlindChange }></label>
-          </div>
-        </div>
+        <SettingsCheckbox
+          containerId='colorblind-setting'
+          inputId='colorblind-button'
+          isChecked={ @props.isColorblindActive }
+          onCheckboxChange={ @handleColorBlindChange }
+          settingText='Colorblind Mode'
+        />
         <div id="display-size-setting" className='row'>
           <div className="columns">
             <div className="row">
