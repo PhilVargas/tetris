@@ -25,21 +25,27 @@ Settings = React.createClass
             Settings
           </div>
         </div>
-        <div id='music-setting' className="row switch radius tiny">
-          <div className="columns large-4">Music</div>
-          <input id="mute-button" type="checkbox" checked={ !@props.isMuted  } onChange={ @handleAudioChange } />
-          <label onClick={ @handleAudioChange }></label>
-        </div>
-        <div id='ghost-setting' className="row switch radius tiny">
-          <div className="columns large-4">Ghost</div>
-          <input id="ghost-button" type="checkbox" checked={ @props.isGhostVisible  } onChange={ @handleGhostChange } />
-          <label onClick={ @handleGhostChange }></label>
-        </div>
-        <div id='queue-setting' className="row switch radius tiny">
-          <div className="columns large-4">Queue</div>
-          <input id="ghost-button" type="checkbox" checked={ @props.shouldAllowQueue  } onChange={ @handleQueueChange } />
-          <label onClick={ @handleQueueChange }></label>
-        </div>
+        <SettingsCheckbox
+          containerId='music-setting'
+          inputId='mute-button'
+          isChecked={ !@props.isMuted }
+          onCheckboxChange={ @handleAudioChange }
+          settingText='Music'
+        />
+        <SettingsCheckbox
+          containerId='ghost-setting'
+          inputId='ghosts-button'
+          isChecked={ @props.isGhostVisible }
+          onCheckboxChange={ @handleGhostChange }
+          settingText='Ghost'
+        />
+        <SettingsCheckbox
+          containerId='queue-setting'
+          inputId='queue-button'
+          isChecked={ @props.shouldAllowQueue }
+          onCheckboxChange={ @handleQueueChange }
+          settingText='Queue'
+        />
         <SettingsCheckbox
           containerId='colorblind-setting'
           inputId='colorblind-button'
