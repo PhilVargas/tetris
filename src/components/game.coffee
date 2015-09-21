@@ -151,6 +151,7 @@ Game = React.createClass
     id: "next-piece-container"
     pieceTitle: 'Next Piece'
     isDisabled: !@state.hasGameBegun
+    isColorblindActive: @state.isColorblindActive
     containerClass: 'columns large-11 large-centered'
 
   queuePieceProps: ->
@@ -160,6 +161,7 @@ Game = React.createClass
     pieceTitle: 'Queued Piece'
     isDisabled: !@state.canQueuePiece || !@state.shouldAllowQueue
     containerClass: 'columns large-11 large-centered'
+    isColorblindActive: @state.isColorblindActive
 
   boardProps: ->
     cells: @state.cells
@@ -167,6 +169,7 @@ Game = React.createClass
     currentPieceType: @state.currentPieceType
     ghostYIndex: @state.ghostYIndex
     hasGameBegun: @state.hasGameBegun
+    isColorblindActive: @state.isColorblindActive
     isGameOver: @state.isGameOver
     isGhostVisible: @state.isGhostVisible
     isPaused: @state.isPaused

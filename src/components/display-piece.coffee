@@ -12,6 +12,7 @@ DisplayPiece = React.createClass
     cellClass: React.PropTypes.string
     containerClass: React.PropTypes.string
     id: React.PropTypes.string
+    isColorblindActive: React.PropTypes.bool.isRequired
     initialX: React.PropTypes.number.isRequired
     initialY: React.PropTypes.number.isRequired
     isDisabled: React.PropTypes.bool.isRequired
@@ -31,7 +32,7 @@ DisplayPiece = React.createClass
 
   renderCells: ->
     for i in [0..3]
-      <div key={ i } style={ assign {}, @getCoords(i), backgroundColor: PieceMap[@props.pieceType].color } className={ @props.cellClass }></div>
+      <div key={ i } style={ assign {}, @getCoords(i), backgroundColor: PieceMap[@props.pieceType].color(@props.isColorblindActive) } className={ @props.cellClass }></div>
 
   render: ->
     <div id={ @props.id } className={ @props.containerClass }>
