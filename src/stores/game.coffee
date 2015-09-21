@@ -44,7 +44,7 @@ Store =
   didPlayerLose: ->
     gameData.didPlayerLose()
 
-  calculateScoreThisTurn: (linesClearedThisTurn)->
+  calculateScoreThisTurn: (linesClearedThisTurn) ->
     gameData.calculateScoreThisTurn(linesClearedThisTurn)
 
   level: ->
