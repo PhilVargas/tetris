@@ -13,6 +13,8 @@ http://philvargas.github.io/tetris/
 - Ghost Piece toggle
 - Hold Piece toggle
 - Next Piece display
+- Variable Board Size
+- Colorblind-friendly Mode
 
 ## Controls
 - Move left with `A`, down with `S`, and right with `D`
@@ -37,5 +39,5 @@ npm test
 ## Versions
 
  - React v0.13.3
- - npm v1.4.28
+ - npm v2.13.3
  - node v0.10.38
