@@ -23,8 +23,8 @@ SettingsCheckbox = React.createClass
 
   render: ->
     <div id={ @props.containerId } className={ @containerClass() }>
-      <div className="columns large-8">{ @props.settingText }</div>
-      <div className="columns large-4 switch radius tiny">
+      <div className="settings-text columns large-8">{ @props.settingText }</div>
+      <div className="settings-switch columns large-4 switch radius tiny">
         <input id={ @props.inputId } type="checkbox" checked={ @props.isChecked } onChange={ @handleChange } />
         <label onClick={ @handleChange }></label>
       </div>
