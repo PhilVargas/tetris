@@ -1,6 +1,10 @@
 Dispatcher = require 'dispatcher'
 
 Action =
+  toggleColorBlindMode: ->
+    Dispatcher.dispatch
+      eventName: 'settings:toggleColorBlindMode'
+
   toggleMute: ->
     Dispatcher.dispatch
       eventName: 'settings:toggleMute'

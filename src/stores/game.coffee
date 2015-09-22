@@ -44,7 +44,7 @@ Store =
   didPlayerLose: ->
     gameData.didPlayerLose()
 
-  calculateScoreThisTurn: (linesClearedThisTurn)->
+  calculateScoreThisTurn: (linesClearedThisTurn) ->
     gameData.calculateScoreThisTurn(linesClearedThisTurn)
 
   level: ->
@@ -75,14 +75,10 @@ class BoardData
     @width = Settings.boardWidth
     @xIndex = Settings.initialX
     @yIndex = Settings.initialY
-    @color = PieceMap[@currentPieceType].color
     @cells = @generateCells()
 
   initialGameState: ->
-    currentPieceType = @randomPiece()
-    cells: @generateCells()
-    color: PieceMap[currentPieceType].color
-    currentPieceType: currentPieceType
+    currentPieceType: @randomPiece()
     ghostYindex: 0
     isGameOver: false
     isPaused: false
@@ -93,19 +89,21 @@ class BoardData
     score: 0
     scoreThisTurn: 0
     turnCount: 0
+    cells: @generateCells()
 
   generateCells: ->
-    cells =[]
+    cells = []
     count = 0
     for y in [0...@height]
       for x in [0...@width]
-        cells.push { id: count, yIndex: y, xIndex: x, isFrozen: false, color: Settings.defaultCellBackgroundColor }
+        cells.push { id: count, yIndex: y, xIndex: x, isFrozen: false, cellPieceType: 'E' }
         count++
     cells
 
   randomPiece: ->
-    randomInt = (Math.random() * Object.keys(PieceMap).length) // 1
-    Object.keys(PieceMap)[randomInt]
+    possiblePieces = ['I', 'Z', 'S', 'O', 'J', 'L', 'T']
+    randomInt = (Math.random() * possiblePieces.length) // 1
+    possiblePieces[randomInt]
 
   updateAttribs: (attribs) ->
     assign(this, attribs)
@@ -120,7 +118,7 @@ class BoardData
     !PieceMap[@currentPieceType].shapes[rotation].some (cell) =>
       @hasCollision(nextPosition, cell)
 
-  getCellIdsForPiece: (position = {x: @xIndex, y: @yIndex})->
+  getCellIdsForPiece: (position = {x: @xIndex, y: @yIndex}) ->
     for pieceCell in PieceMap[@currentPieceType].shapes[@rotation]
       Calculate.cellIndexFromCoords(position.x + pieceCell.x, position.y + pieceCell.y)
 
@@ -128,14 +126,14 @@ class BoardData
     cellIds = @getCellIdsForPiece()
     for cell in @cells when cell.id in cellIds
       cell.isFrozen = true
-      cell.color = @color
+      cell.cellPieceType = @currentPieceType
 
   didPlayerLose: ->
     @cells.some (cell) => cell.isFrozen && cell.id in [0...(@width * @hiddenRows)]
 
   getRows: ->
     for i in [0...@height]
-      @cells[@width*i...@width*(i+1)]
+      @cells[@width * i...@width * (i + 1)]
 
   isAnyRowFrozen: =>
     @getRows().some @isRowFrozen
@@ -152,11 +150,11 @@ class BoardData
       prevRow = rows[frozenIndex - 1]
       row = rows[frozenIndex]
       for cell, j in row
-        [row[j].isFrozen, row[j].color,prevRow[j].isFrozen, prevRow[j].color] = [prevRow[j].isFrozen, prevRow[j].color, row[j].isFrozen, row[j].color]
+        [row[j].isFrozen, row[j].cellPieceType,prevRow[j].isFrozen, prevRow[j].cellPieceType] = [prevRow[j].isFrozen, prevRow[j].cellPieceType, row[j].isFrozen, row[j].cellPieceType]
       @clearFrozenRow(rows)
     for cell in rows[0]
       cell.isFrozen = false
-      cell.color = Settings.defaultCellBackgroundColor
+      cell.cellPieceType = 'E'
 
   drawGhost: ->
     nextYIndex = @yIndex + 1
@@ -226,7 +224,6 @@ Dispatcher.register (payload) ->
             xIndex: Settings.initialX
             rotation: 0
             currentPieceType: gameData.nextPieceType
-            color: PieceMap[gameData.nextPieceType].color
             nextPieceType: nextPiece
             canQueuePiece: true
           )
@@ -249,12 +246,10 @@ Dispatcher.register (payload) ->
           gameData.updateAttribs
             queuePieceType: Store.get('currentPieceType')
             currentPieceType: Store.get('queuePieceType')
-            color: PieceMap[Store.get('queuePieceType')].color
         else
           gameData.updateAttribs
             queuePieceType: Store.get('currentPieceType')
             currentPieceType: Store.get('nextPieceType')
-            color: PieceMap[gameData.nextPieceType].color
             nextPieceType: gameData.randomPiece()
         gameData.drawGhost()
         gameData.updateAttribs(canQueuePiece: false)

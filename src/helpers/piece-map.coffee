@@ -1,6 +1,9 @@
 PieceMap =
+  E:
+    color: -> 'lightgrey'
   I:
-    color: 'turquoise'
+    color: (isColorblindActive) ->
+      if isColorblindActive then '#44AA99' else 'turquoise'
     displayPieceCoords: {top: -10, left: 0}
     shapes: [
       [
@@ -29,7 +32,8 @@ PieceMap =
       ]
     ]
   O:
-    color: 'yellow'
+    color: (isColorblindActive) ->
+      if isColorblindActive then '#999933' else 'yellow'
     displayPieceCoords: {top: 10, left: 10}
     shapes: [
       [
@@ -58,7 +62,8 @@ PieceMap =
       ]
     ]
   Z:
-    color: 'red'
+    color: (isColorblindActive) ->
+      if isColorblindActive then '#882255' else 'red'
     displayPieceCoords: {top: 10, left: 0}
     shapes: [
       [
@@ -87,7 +92,8 @@ PieceMap =
       ]
     ]
   S:
-    color: 'lime'
+    color: (isColorblindActive) ->
+      if isColorblindActive then '#117733' else 'lime'
     displayPieceCoords: {top: 10, left: 0}
     shapes: [
       [
@@ -116,7 +122,8 @@ PieceMap =
       ]
     ]
   L:
-    color: 'orange'
+    color: (isColorblindActive) ->
+      if isColorblindActive then '#EE7722' else 'orange'
     displayPieceCoords: {top: 10, left: 0}
     shapes: [
       [
@@ -145,7 +152,8 @@ PieceMap =
       ]
     ]
   J:
-    color: 'blue'
+    color: (isColorblindActive) ->
+      if isColorblindActive then '#3366AA' else 'blue'
     displayPieceCoords: {top: 10, left: 0}
     shapes: [
       [
@@ -174,7 +182,8 @@ PieceMap =
       ]
     ]
   T:
-    color: 'purple'
+    color: (isColorblindActive) ->
+      if isColorblindActive then '#332288' else 'purple'
     displayPieceCoords: {top: 10, left: 0}
     shapes: [
       [

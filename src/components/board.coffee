@@ -5,6 +5,7 @@ Piece = require 'components/piece'
 Overlay = require 'components/board-overlay'
 Settings = require 'helpers/settings'
 Calculate = require 'helpers/calculator'
+PieceMap = require 'helpers/piece-map'
 
 cx = require 'classnames'
 Board = React.createClass
@@ -16,6 +17,7 @@ Board = React.createClass
     currentPieceType: React.PropTypes.string.isRequired
     ghostYIndex: React.PropTypes.number.isRequired
     hasGameBegun: React.PropTypes.bool.isRequired
+    isColorblindActive: React.PropTypes.bool.isRequired
     isGameOver: React.PropTypes.bool.isRequired
     isGhostVisible: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
@@ -57,6 +59,7 @@ Board = React.createClass
     cellEdgeLength: @props.cellEdgeLength
     containerClass: 'piece-container'
     isVisible: @props.hasGameBegun
+    isColorblindActive: @props.isColorblindActive
     pieceType: @props.currentPieceType
     rotation: @props.rotation
     xIndex: @props.xIndex
@@ -67,6 +70,7 @@ Board = React.createClass
     cellEdgeLength: @props.cellEdgeLength
     containerClass: 'ghost-container'
     isVisible: @props.isGhostVisible && @props.hasGameBegun
+    isColorblindActive: @props.isColorblindActive
     pieceType: @props.currentPieceType
     rotation: @props.rotation
     xIndex: @props.xIndex
@@ -84,7 +88,7 @@ Board = React.createClass
   generateCells: (yCoord) ->
     for xCoord in [0...Settings.boardWidth]
       cell = @props.cells[Calculate.cellIndexFromCoords(xCoord, yCoord)]
-      <Cell key={ cell.id } color={ cell.color } cellEdgeLength={ @props.cellEdgeLength } />
+      <Cell key={ cell.id } color={ PieceMap[cell.cellPieceType].color(@props.isColorblindActive) } cellEdgeLength={ @props.cellEdgeLength } />
 
 
 

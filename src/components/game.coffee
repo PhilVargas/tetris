@@ -26,6 +26,7 @@ Game = React.createClass
     currentPieceType: React.PropTypes.string.isRequired
     ghostYIndex: React.PropTypes.number.isRequired
     hasGameBegun: React.PropTypes.bool.isRequired
+    isColorblindActive: React.PropTypes.bool.isRequired
     isGameOver: React.PropTypes.bool.isRequired
     isGhostVisible: React.PropTypes.bool.isRequired
     isMuted: React.PropTypes.bool.isRequired
@@ -47,6 +48,7 @@ Game = React.createClass
     currentPieceType: @props.currentPieceType
     ghostYIndex: @props.ghostYIndex
     hasGameBegun: @props.hasGameBegun
+    isColorblindActive: @props.isColorblindActive
     isGameOver: @props.isGameOver
     isGhostVisible: @props.isGhostVisible
     isMuted: @props.isMuted
@@ -149,6 +151,7 @@ Game = React.createClass
     id: "next-piece-container"
     pieceTitle: 'Next Piece'
     isDisabled: !@state.hasGameBegun
+    isColorblindActive: @state.isColorblindActive
     containerClass: 'columns large-11 large-centered'
 
   queuePieceProps: ->
@@ -158,6 +161,7 @@ Game = React.createClass
     pieceTitle: 'Queued Piece'
     isDisabled: !@state.canQueuePiece || !@state.shouldAllowQueue
     containerClass: 'columns large-11 large-centered'
+    isColorblindActive: @state.isColorblindActive
 
   boardProps: ->
     cells: @state.cells
@@ -165,6 +169,7 @@ Game = React.createClass
     currentPieceType: @state.currentPieceType
     ghostYIndex: @state.ghostYIndex
     hasGameBegun: @state.hasGameBegun
+    isColorblindActive: @state.isColorblindActive
     isGameOver: @state.isGameOver
     isGhostVisible: @state.isGhostVisible
     isPaused: @state.isPaused
@@ -186,6 +191,8 @@ Game = React.createClass
     toggleQueue: SettingsAction.toggleQueue
     toggleGhost: SettingsAction.toggleGhost
     toggleMute: SettingsAction.toggleMute
+    toggleColorBlindMode: SettingsAction.toggleColorBlindMode
+    isColorblindActive: @state.isColorblindActive
     shouldAllowQueue: @state.shouldAllowQueue
     isMuted: @state.isMuted
     isGhostVisible: @state.isGhostVisible
