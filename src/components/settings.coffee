@@ -21,7 +21,7 @@ Settings = React.createClass
     <div id='settings' className='row' >
       <div className="columns panel radius">
         <div className='row' >
-          <div className="columns">
+          <div id='settings-header' className="columns">
             Settings
           </div>
         </div>
