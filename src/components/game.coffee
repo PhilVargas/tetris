@@ -132,12 +132,53 @@ Game = React.createClass
               <SettingsPanel {...@settingsProps()} />
             </div>
             <Board {...@boardProps()} />
-            <div className="columns large-3 end callout panel radius">
+            <div className="columns large-3 end">
               <div className="row">
-                <DisplayPiece {...@nextPieceProps()} />
+                <div className="columns callout panel radius">
+                  <div className="row">
+                    <DisplayPiece {...@nextPieceProps()} />
+                  </div>
+                  <div className="row">
+                    <DisplayPiece {...@queuePieceProps()} />
+                  </div>
+                </div>
               </div>
               <div className="row">
-                <DisplayPiece {...@queuePieceProps()} />
+                <div className="columns panel radius">
+                  <div id="attribution">
+                    <h6 className='attribution-title'>Tetris By Philip A Vargas</h6>
+                    <div id="contact">
+                      <div id="linkedin-contact">
+                        <a target="_blank" href="https://www.linkedin.com/in/philipavargas">
+                          <i className="fa fa-linkedin"></i>
+                          {"\u0020"}
+                          <span>philipavargas</span>
+                        </a>
+                      </div>
+                      <div id="github-contact">
+                        <a target="_blank" href="https://github.com/PhilVargas">
+                          <i className="fa fa-github"></i>
+                          {"\u0020"}
+                          <span>@PhilVargas</span>
+                        </a>
+                      </div>
+                      <div id="email-contact">
+                        <i className="fa fa-envelope"></i>
+                        {"\u0020"}
+                        <span>philipavargas@gmail.com</span>
+                      </div>
+                    </div>
+                    <div id="github-source-container">
+                      <a target="_blank" href="https://github.com/PhilVargas/tetris">
+                        <i className='fa fa-github'></i>
+                        {"\u0020"}
+                        <span>View Source Code</span>
+                      </a>
+                    </div>
+                    <div id="contact-container">
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
