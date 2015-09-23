@@ -167,15 +167,20 @@ Game = React.createClass
                         {"\u0020"}
                         <span>philipavargas@gmail.com</span>
                       </div>
-                    </div>
-                    <div id="github-source-container">
-                      <a target="_blank" href="https://github.com/PhilVargas/tetris">
-                        <i className='fa fa-github'></i>
-                        {"\u0020"}
-                        <span>View Source Code</span>
-                      </a>
-                    </div>
-                    <div id="contact-container">
+                      <div id="stack-overflow-contact">
+                        <a target="_blank" href="http://stackoverflow.com/users/3213605/philvarg?tab=profile">
+                          <i className="fa fa-stack-overflow"></i>
+                          {"\u0020"}
+                          <span>@PhilVarg</span>
+                        </a>
+                      </div>
+                      <div id="github-source-container">
+                        <a target="_blank" href="https://github.com/PhilVargas/tetris">
+                          <i className='fa fa-github'></i>
+                          {"\u0020"}
+                          <span>View Source Code</span>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
