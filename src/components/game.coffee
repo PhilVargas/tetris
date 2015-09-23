@@ -5,6 +5,7 @@ Cell = require 'components/cell'
 Legend = require 'components/legend'
 SettingsPanel = require 'components/settings'
 DisplayPiece = require 'components/display-piece'
+Attribution = require 'components/attribution'
 
 Store = require 'stores/game'
 Action = require 'actions/game'
@@ -132,12 +133,21 @@ Game = React.createClass
               <SettingsPanel {...@settingsProps()} />
             </div>
             <Board {...@boardProps()} />
-            <div className="columns large-3 end callout panel radius">
+            <div className="columns large-3 end">
               <div className="row">
-                <DisplayPiece {...@nextPieceProps()} />
+                <div className="columns callout panel radius">
+                  <div className="row">
+                    <DisplayPiece {...@nextPieceProps()} />
+                  </div>
+                  <div className="row">
+                    <DisplayPiece {...@queuePieceProps()} />
+                  </div>
+                </div>
               </div>
               <div className="row">
-                <DisplayPiece {...@queuePieceProps()} />
+                <div className="columns panel radius">
+                  <Attribution />
+                </div>
               </div>
             </div>
           </div>
