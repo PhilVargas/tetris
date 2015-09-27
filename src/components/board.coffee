@@ -20,6 +20,7 @@ Board = React.createClass
     isColorblindActive: React.PropTypes.bool.isRequired
     isGameOver: React.PropTypes.bool.isRequired
     isGhostVisible: React.PropTypes.bool.isRequired
+    isMuted: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
     restartGame: React.PropTypes.func.isRequired
     rotation: React.PropTypes.number.isRequired
@@ -48,6 +49,7 @@ Board = React.createClass
 
   overlayProps: ->
     isPaused: @props.isPaused
+    isMuted: @props.isMuted
     hasGameBegun: @props.hasGameBegun
     startGame: @props.startGame
     restartGame: @props.restartGame

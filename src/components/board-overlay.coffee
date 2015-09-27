@@ -9,6 +9,7 @@ Overlay = React.createClass
     hasGameBegun: React.PropTypes.bool.isRequired
     isGameOver: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
+    isMuted: React.PropTypes.bool.isRequired
     restartGame: React.PropTypes.func.isRequired
     score: React.PropTypes.number.isRequired
     startGame: React.PropTypes.func.isRequired
@@ -29,9 +30,17 @@ Overlay = React.createClass
     cx
       hide: !@props.isGameOver
 
+  audioDisplayText: ->
+    cx
+      Enabled: !@props.isMuted
+      Disabled: @props.isMuted
+
   render: ->
     <div id='board-overlay' className={ @containerClass() }>
-      <button id='start-button' className={ @startButtonClass() } onClick={ @props.startGame }>Start!</button>
+      <div id='start-container'>
+        <button id='start-button' className={ @startButtonClass() } onClick={ @props.startGame }>Start!</button>
+        <div id='audio-display-text' className='display-text'>(Audio is { @audioDisplayText() })</div>
+      </div>
       <div id="pause-display-container" className={ @pauseIconClass() }>
         <i className="icon-pause icon-4x display-text"></i>
       </div>

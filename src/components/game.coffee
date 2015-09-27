@@ -183,6 +183,7 @@ Game = React.createClass
     isGameOver: @state.isGameOver
     isGhostVisible: @state.isGhostVisible
     isPaused: @state.isPaused
+    isMuted: @state.isMuted
     restartGame: @restartGame
     rotation: @state.rotation
     score: @state.score
