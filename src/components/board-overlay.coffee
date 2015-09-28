@@ -42,7 +42,7 @@ Overlay = React.createClass
         <div id='audio-display-text' className='display-text'>(Audio is { @audioDisplayText() })</div>
       </div>
       <div id="pause-display-container" className={ @pauseIconClass() }>
-        <i className="icon-pause icon-4x display-text"></i>
+        <i className="fa fa-pause fa-4x display-text"></i>
       </div>
       <div id='game-over-container' className={ @gameOverClass() }>
         <div className='display-text row'>Game Over!</div>
