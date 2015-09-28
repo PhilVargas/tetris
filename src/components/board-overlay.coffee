@@ -30,6 +30,10 @@ Overlay = React.createClass
     cx
       hide: !@props.isGameOver
 
+  audioDisplayClass: ->
+    cx 'display-text',
+      hide: @props.hasGameBegun
+
   audioDisplayText: ->
     cx
       Enabled: !@props.isMuted
@@ -39,7 +43,7 @@ Overlay = React.createClass
     <div id='board-overlay' className={ @containerClass() }>
       <div id='start-container'>
         <button id='start-button' className={ @startButtonClass() } onClick={ @props.startGame }>Start!</button>
-        <div id='audio-display-text' className='display-text'>(Audio is { @audioDisplayText() })</div>
+        <div id='audio-display-text' className={ @audioDisplayClass() }>(Audio is { @audioDisplayText() })</div>
       </div>
       <div id="pause-display-container" className={ @pauseIconClass() }>
         <i className="fa fa-pause fa-4x display-text"></i>
