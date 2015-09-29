@@ -8,20 +8,17 @@
   z-index: 5;
   display: none;
 
+  .display-text { color: white; }
+
   &.active {
     display: inherit;
   }
 }
 
-#pause-display-container, #start-button, #game-over-container {
+#pause-display-container, #start-container, #game-over-container {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-
-  .display-text {
-    color: white;
-  }
-
   .icon-pause{
     width: 40px;
     height: 40px;
