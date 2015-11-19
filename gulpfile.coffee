@@ -1,5 +1,5 @@
 gulp = require 'gulp'
-gulpTasks = require './gulp/tetris'
+gulpTasks = require './gulp/tasks'
 
 gulp.task('js:build', gulpTasks.build)
 gulp.task('js:watch', gulpTasks.watch)
