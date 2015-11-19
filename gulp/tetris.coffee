@@ -1,7 +1,9 @@
 gulp = require 'gulp'
+clean = require 'del'
+merge = require 'merge-stream'
+ghPages = require 'gulp-gh-pages'
 sass = require 'gulp-sass'
 browserify = require 'browserify'
-watchify = require 'watchify'
 uglify = require 'gulp-uglify'
 buffer = require 'vinyl-buffer'
 source = require 'vinyl-source-stream'
@@ -19,45 +21,59 @@ browserifyOptions =
   packageCache: {}
   fullPaths: true
 
-buildJs = ->
-  browserBundle = browserify(browserifyOptions)
-  browserBundle.transform jsxCoffee
-  watcher = watchify(browserBundle)
-  watcher.bundle().pipe(source('bundle.js')).pipe(buffer()).pipe(uglify()).pipe(gulp.dest(paths.build)).on 'end', ->
-    watcher.close()
-
-initializeWatcher = (bundleToWatch) ->
-  watcher = watchify bundleToWatch
-  watcher.on 'update', ->
-    updateStart = Date.now()
-    console.log 'Updating!'
-    watcher.bundle().on('error', (e) ->
-      displayError e
-      return
-    ).pipe(source('bundle.js')).pipe(gulp.dest(paths.build))
-    console.log "Updated! #{Date.now() - updateStart} ms. Complete at #{new Date()}"
-  watcher
+buildJs = (destination)->
+  browserify(browserifyOptions)
+    .transform(jsxCoffee)
+    .bundle()
+    .on('error', (e) ->
+      displayError(e)
+    )
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest(destination))
 
 watchJs = ->
-  browserBundle = browserify(browserifyOptions)
-  browserBundle.transform jsxCoffee
-  watcher = initializeWatcher(browserBundle)
-  watcher.bundle().on('error', (e) ->
-    displayError e
-    return
-  ).pipe(source('bundle.js')).pipe gulp.dest(paths.build)
+  buildJs(paths.build)
+  console.log("[watcher] Bundle initialized at #{new Date()}")
+  gulp.watch paths.jsFiles, (e) ->
+    buildJs(paths.build)
+    console.log("[watcher] File #{e.path.replace(/.*(?=coffee)/, '')} was #{e.type} at #{new Date()}, compiling...")
 
-buildSass = ->
+buildSass = (destination, outputStyle = 'nested') ->
   gulp.src('./styles/sass/application.scss')
-    .pipe(sass(outputStyle: 'compressed').on('error', sass.logError))
-    .pipe(gulp.dest(paths.stylesRoot))
+    .pipe(sass(outputStyle: outputStyle)
+    .on('error', sass.logError))
+    .pipe(gulp.dest(destination))
 
 watchSass = ->
-  gulp.watch(paths.sassFiles, ['build:sass'])
-  .on 'change', (e) ->
+  buildSass(paths.stylesRoot, 'nested')
+  gulp.watch paths.sassFiles, (e) ->
+    buildSass(paths.stylesRoot, 'nested')
     console.log "[watcher] File #{e.path.replace(/.*(?=sass)/,'')} was #{e.type} at #{new Date()}, compiling..."
 
+cleanScripts = ->
+  clean([
+    './dist'
+  ])
+
+deployPrep = ->
+  merge buildSass(paths.stylesDeployRoot, 'compressed'),
+    buildJs(paths.jsDeployRoot),
+    gulp.src('README.md').pipe(gulp.dest('./dist/')),
+    gulp.src('favicon.ico').pipe(gulp.dest('./dist/')),
+    gulp.src('public/**/*').pipe(gulp.dest('./dist/')),
+    gulp.src('index.html').pipe(gulp.dest('./dist/'))
+
+deployProd = ->
+  gulp.src('./dist/**/*').pipe(ghPages(force: true))
+
 module.exports.watch = watchJs
-module.exports.build = buildJs
-module.exports.buildSass  = buildSass
+module.exports.build = buildJs.bind(null, paths.build)
+module.exports.buildSass  = buildSass.bind(null, paths.stylesRoot, 'compressed')
 module.exports.watchSass  = watchSass
+
+module.exports.deploy =
+  clean: cleanScripts
+  prep: deployPrep
+  prod: deployProd
