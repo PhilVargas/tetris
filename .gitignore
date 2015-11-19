@@ -1,1 +1,5 @@
 *.log
+**/bundle.js
+**/application.css
+dist
+.publish
