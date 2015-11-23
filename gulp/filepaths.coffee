@@ -2,20 +2,18 @@ path = require('path')
 
 BASE_DIR = 'src'
 STYLES_BASE_DIR = 'styles'
+JS_DEPLOY_DIR = 'dist/src'
+STYLES_DEPLOY_DIR = 'dist/styles'
 SASS_BASE_DIR = 'styles/sass'
 VENDOR_ROOT = 'node_modules'
 
 displayError = (error) ->
-  errorMessage = "[#{error.plugin}] #{error.message.replace('\n', '')}"
-  if error.fileName
-    errorMessage += " in #{error.fileName}"
-  if error.lineNumber
-    errorMessage += " on line #{error.lineNumber}"
-
-  console.error errorMessage
+  console.log(error.annotated)
 
 module.exports =
   build: BASE_DIR
+  jsDeployRoot: JS_DEPLOY_DIR
+  stylesDeployRoot: STYLES_DEPLOY_DIR
   displayError: displayError
   entries: ['initialize.coffee']
   includes: ['./']
