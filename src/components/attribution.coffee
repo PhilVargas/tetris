@@ -26,7 +26,7 @@ Attribution = React.createClass
         <div id="email-contact">
           <i className="fa fa-envelope"></i>
           {"\u0020"}
-          <span>philipavargas@gmail.com</span>
+          <span className='contact-text'>philipavargas@gmail.com</span>
         </div>
         <div id="stack-overflow-contact">
           <a target="_blank" href="http://stackoverflow.com/users/3213605/philvarg?tab=profile">
