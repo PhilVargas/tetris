@@ -8,7 +8,7 @@ SASS_BASE_DIR = 'styles/sass'
 VENDOR_ROOT = 'node_modules'
 
 displayError = (error) ->
-  console.log(error.annotated)
+  console.log error.message
 
 module.exports =
   build: BASE_DIR
