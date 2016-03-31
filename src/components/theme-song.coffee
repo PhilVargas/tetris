@@ -27,9 +27,9 @@ ThemeSong = React.createClass
 
   componentDidUpdate: ->
     if @state.isMuted || @state.isPaused || !@state.hasGameBegun
-      @refs.themeSong.getDOMNode().pause()
+      @refs.themeSong.pause()
     else
-      @refs.themeSong.getDOMNode().play()
+      @refs.themeSong.play()
 
   componentWillUnmount: ->
     SettingsStore.unbindChange @stateChange
