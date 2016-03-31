@@ -29,8 +29,6 @@ buildJs = (destination)->
       displayError(e)
     )
     .pipe(source('bundle.js'))
-    .pipe(buffer())
-    .pipe(uglify())
     .pipe(gulp.dest(destination))
 
 watchJs = ->
