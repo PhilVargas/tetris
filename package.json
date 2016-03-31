@@ -68,7 +68,8 @@
     "jquery": "^2.1.4",
     "microevent-github": "^1.0.0",
     "object-assign": "^3.0.0",
-    "react": "^0.13.3",
+    "react": "^0.14.8",
+    "react-dom": "^0.14.8",
     "reactify": "^1.1.1"
   }
 }
