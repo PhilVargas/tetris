@@ -1,5 +1,5 @@
-React = require 'react/addons'
-ReactCSSTransitionGroup = React.addons.CSSTransitionGroup
+React = require 'react'
+ReactCSSTransitionGroup = require 'react-addons-css-transition-group'
 
 Legend = React.createClass
   displayName: 'Legend'
@@ -20,7 +20,7 @@ Legend = React.createClass
             { " #{@props.score}" }
           </div>
           <div className="columns large-4">
-            <ReactCSSTransitionGroup transitionLeave={ false } transitionName="incremented-score">
+            <ReactCSSTransitionGroup transitionLeave={ false } transitionName="incremented-score" transitionEnterTimeout={ 500 }>
               <span key={ @props.score } className='incremented-score'>{ "+#{@props.scoreThisTurn}" }</span>
             </ReactCSSTransitionGroup>
           </div>
