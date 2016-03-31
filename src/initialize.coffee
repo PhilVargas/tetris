@@ -1,4 +1,5 @@
 React = require 'react'
+ReactDOM = require 'react-dom'
 window.$ = require 'jquery'
 Tetris = require 'components/game'
 ThemeSong = require 'components/theme-song'
@@ -9,8 +10,8 @@ assign = require 'object-assign'
 
 $(document).on 'ready', ->
   TetrisAction.init()
-  React.render React.createElement(Tetris, assign {}, SettingsStore.getAll(), TetrisStore.getAll()), document.getElementById 'tetris-anchor'
-  React.render(
+  ReactDOM.render React.createElement(Tetris, assign {}, SettingsStore.getAll(), TetrisStore.getAll()), document.getElementById 'tetris-anchor'
+  ReactDOM.render(
     React.createElement(ThemeSong,
       isMuted: SettingsStore.get('isMuted')
       isPaused: SettingsStore.get('isPaused')
