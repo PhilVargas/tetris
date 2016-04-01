@@ -71,4 +71,4 @@ Action =
     type: SET_BOARD_DISPLAY_SIZE
     value: size
 
-module.exports.actions = Action
+module.exports.creators = Action
