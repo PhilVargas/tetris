@@ -1,8 +1,19 @@
 Constants = require('actions/settings').constants
+DefaultSettings = require 'helpers/settings'
 
 assign = require('object-assign')
 
+initialState =
+    boardDisplaySize: DefaultSettings.boardDisplayMap.medium
+    isGhostVisible: true
+    isMuted: false
+    isPaused: false
+    shouldAllowQueue: true
+    isColorblindActive: false
+
 settings = (state, action) ->
+  return initialState unless state?
+
   switch action.type
     when Constants.TOGGLE_COLOR_BLIND_MODE
       assign({}, state, isColorblindActive: !state.isColorblindActive)

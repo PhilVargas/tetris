@@ -3,7 +3,7 @@ React = require 'react'
 Board = require 'components/board'
 Cell = require 'components/cell'
 Legend = require 'components/legend'
-SettingsPanel = require 'components/settings'
+SettingsPanel = require 'containers/settings-panel'
 DisplayPiece = require 'components/display-piece'
 Attribution = require 'components/attribution'
 
@@ -130,7 +130,7 @@ Game = React.createClass
           <div className="row">
             <div className="columns large-3">
               <Legend {...@legendProps()} />
-              <SettingsPanel {...@settingsProps()} />
+              <SettingsPanel />
             </div>
             <Board {...@boardProps()} />
             <div className="columns large-3 end">
