@@ -8,9 +8,13 @@ TetrisAction = require 'actions/game'
 SettingsStore = require 'stores/settings'
 assign = require 'object-assign'
 
+store = require 'reducers/store'
+redux = require 'react-redux'
+Provider = redux.Provider
+
 $(document).on 'ready', ->
   TetrisAction.init()
-  ReactDOM.render React.createElement(Tetris, assign {}, SettingsStore.getAll(), TetrisStore.getAll()), document.getElementById 'tetris-anchor'
+  ReactDOM.render <Provider store={store}><Tetris {...SettingsStore.getAll()} {...TetrisStore.getAll()} /></Provider>, document.getElementById 'tetris-anchor'
   ReactDOM.render(
     React.createElement(ThemeSong,
       isMuted: SettingsStore.get('isMuted')
