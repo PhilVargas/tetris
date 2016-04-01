@@ -4,7 +4,8 @@ Board = require 'components/board'
 Cell = require 'components/cell'
 Legend = require 'components/legend'
 SettingsPanel = require 'containers/settings-panel'
-DisplayPiece = require 'components/display-piece'
+NextPiece = require 'containers/next-piece'
+QueuePiece = require 'containers/queue-piece'
 Attribution = require 'components/attribution'
 
 Store = require 'stores/game'
@@ -137,10 +138,10 @@ Game = React.createClass
               <div className="row">
                 <div className="columns callout panel radius">
                   <div className="row">
-                    <DisplayPiece {...@nextPieceProps()} />
+                    <NextPiece {...@nextPieceProps()} />
                   </div>
                   <div className="row">
-                    <DisplayPiece {...@queuePieceProps()} />
+                    <QueuePiece {...@queuePieceProps()} />
                   </div>
                 </div>
               </div>
@@ -155,23 +156,20 @@ Game = React.createClass
       </div>
     </div>
 
+  # TODO: delete dependance on state
   nextPieceProps: ->
     pieceType: @state.nextPieceType
-    cellClass: 'next-cell'
-    id: "next-piece-container"
-    pieceTitle: 'Next Piece'
     isDisabled: !@state.hasGameBegun
-    isColorblindActive: @state.isColorblindActive
-    containerClass: 'columns large-11 large-centered'
 
   queuePieceProps: ->
     pieceType: @state.queuePieceType
-    cellClass: 'queue-cell'
-    id: 'queue-piece-container'
-    pieceTitle: 'Queued Piece'
-    isDisabled: !@state.canQueuePiece || !@state.shouldAllowQueue
-    containerClass: 'columns large-11 large-centered'
-    isColorblindActive: @state.isColorblindActive
+    canQueuePiece: @state.canQueuePiece
+
+  legendProps: ->
+    level: Store.level()
+    linesCleared: @state.linesCleared
+    score: @state.score
+    scoreThisTurn: @state.scoreThisTurn
 
   boardProps: ->
     cells: @state.cells
@@ -190,22 +188,5 @@ Game = React.createClass
     startGame: @startGame
     xIndex: @state.xIndex
     yIndex: @state.yIndex
-
-  legendProps: ->
-    level: Store.level()
-    linesCleared: @state.linesCleared
-    score: @state.score
-    scoreThisTurn: @state.scoreThisTurn
-
-  settingsProps: ->
-    setBoardDisplaySize: SettingsAction.setBoardDisplaySize
-    toggleQueue: SettingsAction.toggleQueue
-    toggleGhost: SettingsAction.toggleGhost
-    toggleMute: SettingsAction.toggleMute
-    toggleColorBlindMode: SettingsAction.toggleColorBlindMode
-    isColorblindActive: @state.isColorblindActive
-    shouldAllowQueue: @state.shouldAllowQueue
-    isMuted: @state.isMuted
-    isGhostVisible: @state.isGhostVisible
 
 module.exports = Game
