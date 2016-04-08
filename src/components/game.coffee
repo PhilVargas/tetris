@@ -1,6 +1,7 @@
 React = require 'react'
+redux = require 'react-redux'
 
-Board = require 'components/board'
+Board = require 'containers/board'
 Cell = require 'components/cell'
 Legend = require 'components/legend'
 SettingsPanel = require 'containers/settings-panel'
@@ -8,6 +9,7 @@ NextPiece = require 'containers/next-piece'
 QueuePiece = require 'containers/queue-piece'
 Attribution = require 'components/attribution'
 
+Calculate = require 'helpers/calculator'
 Store = require 'stores/game'
 Action = require 'actions/game'
 SettingsStore = require 'stores/settings'
@@ -70,58 +72,48 @@ Game = React.createClass
   # 39, 68 right
   # 40, 83 down
   handleKeyDown: (e) ->
-    return if @state.isPaused || !@state.hasGameBegun
+    return if @props.isPaused || !@props.hasGameBegun
     switch e.which
-      when 37,65 then Action.setPieceIndeces(xIndex: @state.xIndex - 1, yIndex: @state.yIndex)
-      when 39,68 then Action.setPieceIndeces(xIndex: @state.xIndex + 1, yIndex: @state.yIndex)
-      when 40,83 then Action.setPieceIndeces(yIndex: @state.yIndex + 1, xIndex: @state.xIndex)
+      when 37,65 then @props.setPieceIndeces(xIndex: @props.xIndex - 1, yIndex: @props.yIndex)
+      when 39,68 then @props.setPieceIndeces(xIndex: @props.xIndex + 1, yIndex: @props.yIndex)
+      when 40,83 then @props.setPieceIndeces(yIndex: @props.yIndex + 1, xIndex: @props.xIndex)
 
   # 38 87, up w
   # 69 q
   # 81 e
   # 13 enter
   handleKeyUp: (e) ->
-    return if @state.isPaused || !@state.hasGameBegun
+    return if @props.isPaused || !@state.hasGameBegun
     switch e.which
-      when 38,87 then Action.dropPiece()
-      when 69 then Action.rotateClockwise()
-      when 81 then Action.rotateCounterClockwise()
-      when 13 then Action.queuePiece()
+      when 38,87 then @props.dropPiece()
+      # when 69 then Action.rotateClockwise()
+      # when 81 then Action.rotateCounterClockwise()
+      # when 13 then Action.queuePiece()
 
   # Render functions #
   componentDidMount: ->
-    Store.bindChange @gameChanged
-    SettingsStore.bindChange @settingsChanged
     $(document).on
       keydown: @handleKeyDown
       keyup: @handleKeyUp
 
   startGame: ->
-    unless @state.hasGameBegun
-      Action.startGame()
-      $(document).on 'keyup', (e) ->
-        SettingsAction.togglePause() if e.which == 32 && !Store.get('isGameOver')
+    unless @props.hasGameBegun
+      @props.start()
+      $(document).on 'keyup', (e) =>
+        @props.togglePause() if e.which == 32 && !@props.isGameOver
     setTimeout(@nextTick, Settings.initialTurnDelay)
 
   nextTick: ->
-    delay = Store.turnDelay()
-    unless @state.isGameOver
-      Action.nextTurn()
+    delay = Calculate.turnDelay(@props.level)
+    if !@props.isGameOver || !@props.isPaused
+      @props.nextTurn()
       setTimeout(@nextTick, delay)
 
   restartGame: ->
-    Action.restartGame()
+    # Action.restartGame()
     setTimeout(@nextTick, Settings.initialTurnDelay)
 
-  gameChanged: ->
-    @setState Store.getAll()
-
-  settingsChanged: ->
-    @setState SettingsStore.getAll()
-
   componentWillUnmount: ->
-    Store.unbindChange @gameChanged
-    SettingsStore.unbindChange @settingsChanged
     $(document).off 'keyup'
 
   render: ->
@@ -166,27 +158,22 @@ Game = React.createClass
     canQueuePiece: @state.canQueuePiece
 
   legendProps: ->
-    level: Store.level()
-    linesCleared: @state.linesCleared
-    score: @state.score
-    scoreThisTurn: @state.scoreThisTurn
+    level: @props.level
+    linesCleared: @props.linesCleared
+    score: @props.score
+    scoreThisTurn: @props.scoreThisTurn
 
   boardProps: ->
-    cells: @state.cells
-    cellEdgeLength: @state.boardDisplaySize
-    currentPieceType: @state.currentPieceType
-    ghostYIndex: @state.ghostYIndex
-    hasGameBegun: @state.hasGameBegun
-    isColorblindActive: @state.isColorblindActive
-    isGameOver: @state.isGameOver
-    isGhostVisible: @state.isGhostVisible
-    isPaused: @state.isPaused
-    isMuted: @state.isMuted
+    # cells: @state.cells
+    # currentPieceType: @state.currentPieceType
+    # ghostYIndex: @state.ghostYIndex
+    # hasGameBegun: @state.hasGameBegun
+    # isGameOver: @state.isGameOver
     restartGame: @restartGame
-    rotation: @state.rotation
-    score: @state.score
+    # rotation: @state.rotation
+    # score: @state.score
     startGame: @startGame
-    xIndex: @state.xIndex
-    yIndex: @state.yIndex
+    # xIndex: @state.xIndex
+    # yIndex: @state.yIndex
 
 module.exports = Game

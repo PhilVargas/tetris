@@ -26,7 +26,8 @@ settings = (state, action) ->
     when Constants.TOGGLE_QUEUE
       assign({}, state, shouldAllowQueue: !state.shouldAllowQueue)
     when Constants.SET_BOARD_DISPLAY_SIZE
-      assign({}, state, boardDisplaySize: action.payload)
+      size = DefaultSettings.boardDisplayMap[action.payload]
+      assign({}, state, boardDisplaySize: size)
     else state
 
 module.exports = settings

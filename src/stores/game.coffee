@@ -186,26 +186,26 @@ Dispatcher.register (payload) ->
       gameData = new BoardData()
       gameData.drawGhost()
       Store.triggerChange()
-    when 'game:startGame'
+    when 'xgame:startGame'
       gameData.updateAttribs(hasGameBegun: true)
       Store.triggerChange()
-    when 'game:restartGame'
+    when 'xgame:restartGame'
       gameData.updateAttribs(gameData.initialGameState())
       gameData.drawGhost()
       Store.triggerChange()
-    when 'game:setPieceIndeces'
+    when 'xgame:setPieceIndeces'
       if Store.isCollisionFree({xIndex: payload.value.xIndex, yIndex: payload.value.yIndex})
         gameData.updateAttribs(xIndex: payload.value.xIndex, yIndex: payload.value.yIndex)
       gameData.drawGhost()
       Store.triggerChange()
-    when 'game:dropPiece'
+    when 'xgame:dropPiece'
       scoreThisTurn = 0
       while Store.isCollisionFree({xIndex: gameData.xIndex, yIndex: gameData.yIndex + 1})
         scoreThisTurn++
         gameData.updateAttribs(yIndex: gameData.yIndex + 1)
       gameData.updateAttribs(score: gameData.score + scoreThisTurn, scoreThisTurn: scoreThisTurn) if scoreThisTurn
       Store.triggerChange()
-    when 'game:nextTurn'
+    when 'xgame:nextTurn'
       return if SettingsStore.get('isPaused')
       gameData.updateAttribs(turnCount: gameData.turnCount + 1)
       if Store.isCollisionFree(xIndex: gameData.xIndex, yIndex: gameData.yIndex + 1)
@@ -230,13 +230,13 @@ Dispatcher.register (payload) ->
           gameData.updateAttribs(scoreThisTurn: scoreThisTurn) if scoreThisTurn
           gameData.drawGhost()
       Store.triggerChange()
-    when 'game:rotatePiece'
+    when 'xgame:rotatePiece'
       rotation = gameData.calculateRotation(payload.value)
       if Store.isCollisionFree({ xIndex: gameData.xIndex, yIndex: gameData.yIndex }, rotation)
         gameData.updateAttribs(rotation: rotation)
         gameData.drawGhost()
         Store.triggerChange()
-    when 'game:queuePiece'
+    when 'xgame:queuePiece'
       if Store.get('canQueuePiece') && SettingsStore.get('shouldAllowQueue')
         gameData.updateAttribs
           yIndex: Settings.initialY
