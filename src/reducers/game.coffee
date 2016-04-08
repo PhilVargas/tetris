@@ -114,6 +114,21 @@ game = (state, action) ->
   return initialState unless state?
 
   switch action.type
+    when Constants.RESTART_GAME
+      state = assign {}, state,
+        currentPieceType: Helper.randomPiece()
+        ghostYindex: 0
+        isGameOver: false
+        isPaused: false
+        linesCleared: 0
+        nextPieceType: Helper.randomPiece()
+        queuePieceType: ''
+        rotation: 0
+        score: 0
+        scoreThisTurn: 0
+        turnCount: 0
+        cells: Helper.generateCells()
+      assign({}, state, ghostYIndex: Helper.ghostPosition(state))
     when Constants.START_GAME
       assign({}, state, hasGameBegun: true, ghostYIndex: Helper.ghostPosition(state))
     when Constants.SET_PIECE_INDECES

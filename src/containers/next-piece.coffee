@@ -12,7 +12,6 @@ mapStateToProps = (state, ownProps) ->
   pieceType: state.game.nextPieceType
   isDisabled: !state.game.hasGameBegun
 
-
 Container = redux.connect(
   mapStateToProps,
 )(DisplayPiece)

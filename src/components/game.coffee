@@ -105,12 +105,12 @@ Game = React.createClass
 
   nextTick: ->
     delay = Calculate.turnDelay(@props.level)
-    if !@props.isGameOver || !@props.isPaused
+    unless @props.isGameOver
       @props.nextTurn()
       setTimeout(@nextTick, delay)
 
   restartGame: ->
-    # Action.restartGame()
+    @props.restartGame()
     setTimeout(@nextTick, Settings.initialTurnDelay)
 
   componentWillUnmount: ->
