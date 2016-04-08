@@ -7,9 +7,9 @@ gameReducer = require 'reducers/game'
 
 reducer = (state, action) ->
   gameState = null
-  if state?.game then gameState = assign {}, state.game, isPaused: state.settings?.isPaused
-  # gameState = assign {}, state?.game,
-  #   isPaused: state?.settings?.isPaused
+  if state?.game then gameState = assign {}, state.game,
+    isPaused: state.settings?.isPaused
+    shouldAllowQueue: state.settings?.shouldAllowQueue
   settings: settingsReducer(state?.settings, action)
   game: gameReducer(gameState, action)
 

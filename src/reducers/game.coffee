@@ -92,6 +92,7 @@ Helper =
     return nextYIndex - 1
 
 initialState =
+  canQueuePiece: true
   level: 0
   yIndex: Settings.initialY
   xIndex: Settings.initialX
@@ -132,6 +133,23 @@ game = (state, action) ->
       if Helper.isCollisionFree({ xIndex: state.xIndex, yIndex: state.yIndex }, rotation, state)
         state = assign({}, state, rotation: rotation)
       assign({}, state, ghostYIndex: Helper.ghostPosition(state))
+    when Constants.QUEUE_PIECE
+      if state.canQueuePiece && state.shouldAllowQueue
+        state = assign {}, state,
+          yIndex: Settings.initialY
+          xIndex: Settings.initialX
+          rotation: 0
+        if state.queuePieceType
+          state = assign {}, state,
+            queuePieceType: state.currentPieceType
+            currentPieceType: state.queuePieceType
+        else
+          state = assign {}, state,
+            queuePieceType: state.currentPieceType
+            currentPieceType: state.nextPieceType
+            nextPieceType: Helper.randomPiece()
+        state = assign({}, state, canQueuePiece: false, ghostYIndex: Helper.ghostPosition(state))
+      state
     when Constants.NEXT_TURN
       return state if state.isPaused
       if Helper.isCollisionFree({xIndex: state.xIndex, yIndex: state.yIndex + 1}, state.rotation, state)

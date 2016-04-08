@@ -3,12 +3,14 @@ NEXT_TURN = 'NEXT_TURN'
 SET_PIECE_INDECES = 'SET_PIECE_INDECES'
 DROP_PIECE = 'DROP_PIECE'
 ROTATE_PIECE = 'ROTATE_PIECE'
+QUEUE_PIECE = 'QUEUE_PIECE'
 
 module.exports.START_GAME = START_GAME
 module.exports.NEXT_TURN = NEXT_TURN
 module.exports.SET_PIECE_INDECES = SET_PIECE_INDECES
 module.exports.DROP_PIECE = DROP_PIECE
 module.exports.ROTATE_PIECE = ROTATE_PIECE
+module.exports.QUEUE_PIECE = QUEUE_PIECE
 
 module.exports.Constants =
   START_GAME: START_GAME
@@ -16,6 +18,7 @@ module.exports.Constants =
   SET_PIECE_INDECES: SET_PIECE_INDECES
   DROP_PIECE: DROP_PIECE
   ROTATE_PIECE: ROTATE_PIECE
+  QUEUE_PIECE: QUEUE_PIECE
 
 GameAction =
   start: ->
@@ -45,6 +48,6 @@ GameAction =
     type: DROP_PIECE
 
   queuePiece: ->
-    type: 'game:queuePiece'
+    type: QUEUE_PIECE
 
 module.exports.creators = GameAction

@@ -88,7 +88,7 @@ Game = React.createClass
       when 38,87 then @props.dropPiece()
       when 69 then @props.rotateClockwise()
       when 81 then @props.rotateCounterClockwise()
-      # when 13 then @props.queuePiece()
+      when 13 then @props.queuePiece()
 
   # Render functions #
   componentDidMount: ->
@@ -130,10 +130,10 @@ Game = React.createClass
               <div className="row">
                 <div className="columns callout panel radius">
                   <div className="row">
-                    <NextPiece {...@nextPieceProps()} />
+                    <NextPiece />
                   </div>
                   <div className="row">
-                    <QueuePiece {...@queuePieceProps()} />
+                    <QueuePiece />
                   </div>
                 </div>
               </div>
@@ -149,14 +149,6 @@ Game = React.createClass
     </div>
 
   # TODO: delete dependance on state
-  nextPieceProps: ->
-    pieceType: @state.nextPieceType
-    isDisabled: !@state.hasGameBegun
-
-  queuePieceProps: ->
-    pieceType: @state.queuePieceType
-    canQueuePiece: @state.canQueuePiece
-
   legendProps: ->
     level: @props.level
     linesCleared: @props.linesCleared
