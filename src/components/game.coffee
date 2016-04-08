@@ -83,12 +83,12 @@ Game = React.createClass
   # 81 e
   # 13 enter
   handleKeyUp: (e) ->
-    return if @props.isPaused || !@state.hasGameBegun
+    return if @props.isPaused || !@props.hasGameBegun
     switch e.which
       when 38,87 then @props.dropPiece()
-      # when 69 then Action.rotateClockwise()
-      # when 81 then Action.rotateCounterClockwise()
-      # when 13 then Action.queuePiece()
+      when 69 then @props.rotateClockwise()
+      when 81 then @props.rotateCounterClockwise()
+      # when 13 then @props.queuePiece()
 
   # Render functions #
   componentDidMount: ->

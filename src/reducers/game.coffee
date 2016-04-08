@@ -11,7 +11,7 @@ Helper =
       cells[Settings.boardWidth * i...Settings.boardWidth * (i + 1)]
 
   isAnyRowFrozen: (cells) ->
-    getRows(cells).some Helper.isRowFrozen
+    Helper.getRows(cells).some Helper.isRowFrozen
 
   isRowFrozen: (row) ->
     row.every (cell) -> cell.isFrozen
@@ -37,7 +37,7 @@ Helper =
   calculateScoreThisTurn: (linesClearedThisTurn, totalLinesCleared) ->
     Calculate.scoreThisTurn(linesClearedThisTurn, Helper.level(totalLinesCleared))
 
-  scoreRows: (cells, linesCleared) ->
+  scoreRows: (cells, totalLinesCleared) ->
     linesClearedThisTurn = 0
     while Helper.isAnyRowFrozen(cells)
       linesClearedThisTurn++
@@ -46,7 +46,7 @@ Helper =
     {scoreThisTurn, linesClearedThisTurn}
 
   didPlayerLose: (cells) ->
-    cells.some (cell) => cell.isFrozen && cell.id in [0...(Settings.boardWidth * Settings.boardHeight)]
+    cells.some (cell) => cell.isFrozen && cell.id in [0...(Settings.boardWidth * Settings.hiddenRows)]
 
   randomPiece: ->
     possiblePieces = ['I', 'Z', 'S', 'O', 'J', 'L', 'T']
@@ -119,6 +119,20 @@ game = (state, action) ->
       if Helper.isCollisionFree({xIndex: action.value.xIndex, yIndex: action.value.yIndex}, state)
         state = assign({}, state, xIndex: action.value.xIndex, yIndex: action.value.yIndex)
       assign({}, state, ghostYIndex: Helper.ghostPosition(state))
+    when Constants.DROP_PIECE
+      scoreThisTurn = 0
+      while Helper.isCollisionFree({xIndex: state.xIndex, yIndex: state.yIndex + 1}, state)
+        scoreThisTurn++
+        state = assign({}, state, yIndex: state.yIndex + 1)
+      if scoreThisTurn
+        state = assign({}, state, score: state.score + scoreThisTurn, scoreThisTurn: scoreThisTurn)
+      state
+    when 'xgame:rotatePiece'
+      rotation = gameData.calculateRotation(payload.value)
+      if Store.isCollisionFree({ xIndex: gameData.xIndex, yIndex: gameData.yIndex }, rotation)
+        gameData.updateAttribs(rotation: rotation)
+        gameData.drawGhost()
+        Store.triggerChange()
     when Constants.NEXT_TURN
       return state if state.isPaused
       if Helper.isCollisionFree({xIndex: state.xIndex, yIndex: state.yIndex + 1}, state)

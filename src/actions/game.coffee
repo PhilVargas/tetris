@@ -1,45 +1,50 @@
-Dispatcher = require('dispatcher')
+START_GAME = 'START_GAME'
+NEXT_TURN = 'NEXT_TURN'
+SET_PIECE_INDECES = 'SET_PIECE_INDECES'
+DROP_PIECE = 'DROP_PIECE'
+ROTATE_PIECE = 'ROTATE_PIECE'
+
+module.exports.START_GAME = START_GAME
+module.exports.NEXT_TURN = NEXT_TURN
+module.exports.SET_PIECE_INDECES = SET_PIECE_INDECES
+module.exports.DROP_PIECE = DROP_PIECE
+module.exports.ROTATE_PIECE = ROTATE_PIECE
+
+module.exports.Constants =
+  START_GAME: START_GAME
+  NEXT_TURN: NEXT_TURN
+  SET_PIECE_INDECES: SET_PIECE_INDECES
+  DROP_PIECE: DROP_PIECE
+  ROTATE_PIECE: ROTATE_PIECE
 
 GameAction =
-  init: ->
-    Dispatcher.dispatch
-      eventName: 'game:init'
-
-  startGame: ->
-    Dispatcher.dispatch
-      eventName: 'game:startGame'
+  start: ->
+    type: START_GAME
 
   restartGame: ->
-    Dispatcher.dispatch
-      eventName: 'game:restartGame'
+    type: 'game:restartGame'
 
   setPieceIndeces: (indeces)->
-    Dispatcher.dispatch
-      eventName: 'game:setPieceIndeces'
-      value:
-        xIndex: indeces.xIndex
-        yIndex: indeces.yIndex
+    type: SET_PIECE_INDECES
+    value:
+      xIndex: indeces.xIndex
+      yIndex: indeces.yIndex
 
   nextTurn: ->
-    Dispatcher.dispatch
-      eventName: 'game:nextTurn'
+    type: NEXT_TURN
 
   rotateClockwise: ->
-    Dispatcher.dispatch
-      eventName: 'game:rotatePiece'
-      value: 1
+    type: ROTATE_PIECE
+    value: 1
 
   rotateCounterClockwise: ->
-    Dispatcher.dispatch
-      eventName: 'game:rotatePiece'
-      value: -1
+    type: ROTATE_PIECE
+    value: -1
 
   dropPiece: ->
-    Dispatcher.dispatch
-      eventName: 'game:dropPiece'
+    type: DROP_PIECE
 
   queuePiece: ->
-    Dispatcher.dispatch
-      eventName: 'game:queuePiece'
+    type: 'game:queuePiece'
 
-module.exports = GameAction
+module.exports.creators = GameAction

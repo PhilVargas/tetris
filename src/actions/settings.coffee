@@ -69,6 +69,6 @@ Action =
 
   setBoardDisplaySize: (size) ->
     type: SET_BOARD_DISPLAY_SIZE
-    value: size
+    payload: size
 
 module.exports.creators = Action
