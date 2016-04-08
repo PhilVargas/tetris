@@ -69,8 +69,8 @@ Helper =
       nextPosition.yIndex + cell.y >= Settings.boardHeight ||
       cells[cellIndex].isFrozen
 
-  isCollisionFree: (nextPosition, state) ->
-    !PieceMap[state.currentPieceType].shapes[state.rotation].some (cell) =>
+  isCollisionFree: (nextPosition, rotation, state) ->
+    !PieceMap[state.currentPieceType].shapes[rotation].some (cell) =>
       Helper.hasCollision(nextPosition, cell, state.cells)
 
   freezeCells: (state) ->
@@ -87,7 +87,7 @@ Helper =
 
   ghostPosition: (state) ->
     nextYIndex = state.yIndex + 1
-    while Helper.isCollisionFree({xIndex: state.xIndex, yIndex: nextYIndex}, state)
+    while Helper.isCollisionFree({xIndex: state.xIndex, yIndex: nextYIndex}, state.rotation, state)
       nextYIndex++
     return nextYIndex - 1
 
@@ -116,26 +116,25 @@ game = (state, action) ->
     when Constants.START_GAME
       assign({}, state, hasGameBegun: true, ghostYIndex: Helper.ghostPosition(state))
     when Constants.SET_PIECE_INDECES
-      if Helper.isCollisionFree({xIndex: action.value.xIndex, yIndex: action.value.yIndex}, state)
+      if Helper.isCollisionFree({xIndex: action.value.xIndex, yIndex: action.value.yIndex}, state.rotation, state)
         state = assign({}, state, xIndex: action.value.xIndex, yIndex: action.value.yIndex)
       assign({}, state, ghostYIndex: Helper.ghostPosition(state))
     when Constants.DROP_PIECE
       scoreThisTurn = 0
-      while Helper.isCollisionFree({xIndex: state.xIndex, yIndex: state.yIndex + 1}, state)
+      while Helper.isCollisionFree({xIndex: state.xIndex, yIndex: state.yIndex + 1}, state.rotation, state)
         scoreThisTurn++
         state = assign({}, state, yIndex: state.yIndex + 1)
       if scoreThisTurn
         state = assign({}, state, score: state.score + scoreThisTurn, scoreThisTurn: scoreThisTurn)
       state
-    when 'xgame:rotatePiece'
-      rotation = gameData.calculateRotation(payload.value)
-      if Store.isCollisionFree({ xIndex: gameData.xIndex, yIndex: gameData.yIndex }, rotation)
-        gameData.updateAttribs(rotation: rotation)
-        gameData.drawGhost()
-        Store.triggerChange()
+    when Constants.ROTATE_PIECE
+      rotation = Calculate.rotation(state.rotation, action.value)
+      if Helper.isCollisionFree({ xIndex: state.xIndex, yIndex: state.yIndex }, rotation, state)
+        state = assign({}, state, rotation: rotation)
+      assign({}, state, ghostYIndex: Helper.ghostPosition(state))
     when Constants.NEXT_TURN
       return state if state.isPaused
-      if Helper.isCollisionFree({xIndex: state.xIndex, yIndex: state.yIndex + 1}, state)
+      if Helper.isCollisionFree({xIndex: state.xIndex, yIndex: state.yIndex + 1}, state.rotation, state)
         return assign({}, state, yIndex: state.yIndex + 1)
       else
         state = assign {}, state, Helper.freezeCells(state)
