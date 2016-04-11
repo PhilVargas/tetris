@@ -1,11 +1,13 @@
 redux = require 'react-redux'
 
 Board = require 'components/board'
+GameAction = require 'actions/game'
+SettingsActions = require 'actions/settings'
 
 assign = require 'object-assign'
 
-mapStateToProps = (state, ownProps) ->
-  assign {}, state.game, ownProps,
+mapStateToProps = (state) ->
+  assign {}, state.game,
     isPaused: state?.settings?.isPaused
     isGhostVisible: state?.settings?.isGhostVisible
     isMuted: state?.settings?.isMuted
@@ -13,7 +15,10 @@ mapStateToProps = (state, ownProps) ->
     cellEdgeLength: state?.settings?.boardDisplaySize
 
 Container = redux.connect(
-  mapStateToProps
+  mapStateToProps,
+  startGame: GameAction.creators.startGame
+  restartGame: GameAction.creators.restartGame
+  nextTurn: GameAction.creators.nextTurn
 )(Board)
 
 module.exports = Container

@@ -24,7 +24,7 @@ module.exports.Constants =
   RESTART_GAME: RESTART_GAME
 
 GameAction =
-  start: ->
+  startGame: ->
     type: START_GAME
 
   restartGame: ->

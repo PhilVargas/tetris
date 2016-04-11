@@ -6,12 +6,22 @@ GameAction = require 'actions/game'
 assign = require 'object-assign'
 
 mapStateToProps = (state) ->
-  assign {}, state.game, state.settings
+  assign {},
+    hasGameBegun: state.game.hasGameBegun
+    isGameOver: state.game.isGameOver
+    isPaused: state.settings.isPaused
+    xIndex: state.game.xIndex
+    yIndex: state.game.yIndex
 
 
 Container = redux.connect(
   mapStateToProps,
-  assign({}, SettingsActions.creators, GameAction.creators)
+  dropPiece: GameAction.creators.dropPiece
+  setPieceIndeces: GameAction.creators.setPieceIndeces
+  togglePause: SettingsActions.creators.togglePause
+  rotateClockwise: GameAction.creators.rotateClockwise
+  rotateCounterClockwise: GameAction.creators.rotateCounterClockwise
+  queuePiece: GameAction.creators.queuePiece
 )(Game)
 
 module.exports = Container

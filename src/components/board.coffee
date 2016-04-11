@@ -22,12 +22,28 @@ Board = React.createClass
     isGhostVisible: React.PropTypes.bool.isRequired
     isMuted: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
+    nextTurn: React.PropTypes.func.isRequired
     restartGame: React.PropTypes.func.isRequired
     rotation: React.PropTypes.number.isRequired
     score: React.PropTypes.number.isRequired
     startGame: React.PropTypes.func.isRequired
     xIndex: React.PropTypes.number.isRequired
     yIndex: React.PropTypes.number.isRequired
+
+  startGame: ->
+    unless @props.hasGameBegun
+      @props.startGame()
+    setTimeout(@nextTick, Settings.initialTurnDelay)
+
+  nextTick: ->
+    delay = Calculate.turnDelay(@props.level)
+    unless @props.isGameOver
+      @props.nextTurn()
+      setTimeout(@nextTick, delay)
+
+  restartGame: ->
+    @props.restartGame()
+    setTimeout(@nextTick, Settings.initialTurnDelay)
 
   render: ->
     <div id='board' className='columns large-6'>
@@ -51,8 +67,8 @@ Board = React.createClass
     isPaused: @props.isPaused
     isMuted: @props.isMuted
     hasGameBegun: @props.hasGameBegun
-    startGame: @props.startGame
-    restartGame: @props.restartGame
+    startGame: @startGame
+    restartGame: @restartGame
     score: @props.score
     isGameOver: @props.isGameOver
 

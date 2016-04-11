@@ -2,7 +2,7 @@ React = require 'react'
 redux = require 'react-redux'
 
 Board = require 'containers/board'
-LegendPanel = require 'containers/legend'
+LegendPanel = require 'containers/legend-panel'
 SettingsPanel = require 'containers/settings-panel'
 NextPiece = require 'containers/next-piece'
 QueuePiece = require 'containers/queue-piece'
@@ -19,10 +19,15 @@ Game = React.createClass
   displayName: 'Game'
 
   propTypes:
+    dropPiece: React.PropTypes.func.isRequired
     hasGameBegun: React.PropTypes.bool.isRequired
     isGameOver: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
-    level: React.PropTypes.number.isRequired
+    queuePiece: React.PropTypes.func.isRequired
+    rotateClockwise: React.PropTypes.func.isRequired
+    rotateCounterClockwise: React.PropTypes.func.isRequired
+    setPieceIndeces: React.PropTypes.func.isRequired
+    togglePause: React.PropTypes.func.isRequired
     xIndex: React.PropTypes.number.isRequired
     yIndex: React.PropTypes.number.isRequired
 
@@ -41,35 +46,19 @@ Game = React.createClass
   # 81 e
   # 13 enter
   handleKeyUp: (e) ->
-    return if @props.isPaused || !@props.hasGameBegun
-    switch e.which
-      when 38,87 then @props.dropPiece()
-      when 69 then @props.rotateClockwise()
-      when 81 then @props.rotateCounterClockwise()
-      when 13 then @props.queuePiece()
+    if !@props.isPaused || !@props.hasGameBegun
+      switch e.which
+        when 38,87 then @props.dropPiece()
+        when 69 then @props.rotateClockwise()
+        when 81 then @props.rotateCounterClockwise()
+        when 13 then @props.queuePiece()
+    @props.togglePause() if e.which == 32 && !@props.isGameOver && @props.hasGameBegun
 
   # Render functions #
   componentDidMount: ->
     $(document).on
       keydown: @handleKeyDown
       keyup: @handleKeyUp
-
-  startGame: ->
-    unless @props.hasGameBegun
-      @props.start()
-      $(document).on 'keyup', (e) =>
-        @props.togglePause() if e.which == 32 && !@props.isGameOver
-    setTimeout(@nextTick, Settings.initialTurnDelay)
-
-  nextTick: ->
-    delay = Calculate.turnDelay(@props.level)
-    unless @props.isGameOver
-      @props.nextTurn()
-      setTimeout(@nextTick, delay)
-
-  restartGame: ->
-    @props.restartGame()
-    setTimeout(@nextTick, Settings.initialTurnDelay)
 
   componentWillUnmount: ->
     $(document).off 'keyup'
@@ -83,7 +72,7 @@ Game = React.createClass
               <LegendPanel />
               <SettingsPanel />
             </div>
-            <Board {...@boardProps()} />
+            <Board />
             <div className="columns large-3 end">
               <div className="row">
                 <div className="columns callout panel radius">
@@ -105,10 +94,5 @@ Game = React.createClass
         </div>
       </div>
     </div>
-
-  # TODO: delete dependance on state
-  boardProps: ->
-    restartGame: @restartGame
-    startGame: @startGame
 
 module.exports = Game
