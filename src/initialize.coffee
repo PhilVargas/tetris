@@ -13,7 +13,7 @@ redux = require 'react-redux'
 Provider = redux.Provider
 
 $(document).on 'ready', ->
-  ReactDOM.render <Provider store={store}><Tetris {...SettingsStore.getAll()} /></Provider>, document.getElementById 'tetris-anchor'
+  ReactDOM.render <Provider store={store}><Tetris /></Provider>, document.getElementById 'tetris-anchor'
   # ReactDOM.render(
   #   React.createElement(ThemeSong,
   #     isMuted: SettingsStore.get('isMuted')

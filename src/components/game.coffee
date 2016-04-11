@@ -25,48 +25,15 @@ Game = React.createClass
   displayName: 'Game'
 
   propTypes:
-    boardDisplaySize: React.PropTypes.number.isRequired
-    cells: React.PropTypes.array.isRequired
-    currentPieceType: React.PropTypes.string.isRequired
-    ghostYIndex: React.PropTypes.number.isRequired
     hasGameBegun: React.PropTypes.bool.isRequired
-    isColorblindActive: React.PropTypes.bool.isRequired
     isGameOver: React.PropTypes.bool.isRequired
-    isGhostVisible: React.PropTypes.bool.isRequired
-    isMuted: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
+    level: React.PropTypes.number.isRequired
     linesCleared: React.PropTypes.number.isRequired
-    nextPieceType: React.PropTypes.string.isRequired
-    queuePieceType: React.PropTypes.string.isRequired
-    rotation: React.PropTypes.number.isRequired
     score: React.PropTypes.number.isRequired
     scoreThisTurn: React.PropTypes.number.isRequired
-    shouldAllowQueue: React.PropTypes.bool.isRequired
-    turnCount: React.PropTypes.number.isRequired
     xIndex: React.PropTypes.number.isRequired
     yIndex: React.PropTypes.number.isRequired
-
-  getInitialState: ->
-    boardDisplaySize: @props.boardDisplaySize
-    cells: @props.cells
-    currentPieceType: @props.currentPieceType
-    ghostYIndex: @props.ghostYIndex
-    hasGameBegun: @props.hasGameBegun
-    isColorblindActive: @props.isColorblindActive
-    isGameOver: @props.isGameOver
-    isGhostVisible: @props.isGhostVisible
-    isMuted: @props.isMuted
-    isPaused: @props.isPaused
-    linesCleared: @props.linesCleared
-    nextPieceType: @props.nextPieceType
-    queuePieceType: @props.queuePieceType
-    rotation: @props.rotation
-    score: @props.score
-    scoreThisTurn: @props.scoreThisTurn
-    shouldAllowQueue: @props.shouldAllowQueue
-    turnCount: @props.turnCount
-    xIndex: @props.xIndex
-    yIndex: @props.yIndex
 
   # 37, 65 left
   # 39, 68 right
@@ -156,16 +123,7 @@ Game = React.createClass
     scoreThisTurn: @props.scoreThisTurn
 
   boardProps: ->
-    # cells: @state.cells
-    # currentPieceType: @state.currentPieceType
-    # ghostYIndex: @state.ghostYIndex
-    # hasGameBegun: @state.hasGameBegun
-    # isGameOver: @state.isGameOver
     restartGame: @restartGame
-    # rotation: @state.rotation
-    # score: @state.score
     startGame: @startGame
-    # xIndex: @state.xIndex
-    # yIndex: @state.yIndex
 
 module.exports = Game
