@@ -2,8 +2,7 @@ React = require 'react'
 redux = require 'react-redux'
 
 Board = require 'containers/board'
-Cell = require 'components/cell'
-Legend = require 'components/legend'
+LegendPanel = require 'containers/legend'
 SettingsPanel = require 'containers/settings-panel'
 NextPiece = require 'containers/next-piece'
 QueuePiece = require 'containers/queue-piece'
@@ -11,15 +10,10 @@ Attribution = require 'components/attribution'
 
 Calculate = require 'helpers/calculator'
 Store = require 'stores/game'
-Action = require 'actions/game'
-SettingsStore = require 'stores/settings'
-SettingsAction = require 'actions/settings'
 
 Settings = require 'helpers/settings'
-Calculate = require 'helpers/calculator'
 
 $ = require('jquery')
-cx = require 'classnames'
 
 Game = React.createClass
   displayName: 'Game'
@@ -29,9 +23,6 @@ Game = React.createClass
     isGameOver: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
     level: React.PropTypes.number.isRequired
-    linesCleared: React.PropTypes.number.isRequired
-    score: React.PropTypes.number.isRequired
-    scoreThisTurn: React.PropTypes.number.isRequired
     xIndex: React.PropTypes.number.isRequired
     yIndex: React.PropTypes.number.isRequired
 
@@ -89,7 +80,7 @@ Game = React.createClass
         <div className="large-11 columns large-centered">
           <div className="row">
             <div className="columns large-3">
-              <Legend {...@legendProps()} />
+              <LegendPanel />
               <SettingsPanel />
             </div>
             <Board {...@boardProps()} />
@@ -116,12 +107,6 @@ Game = React.createClass
     </div>
 
   # TODO: delete dependance on state
-  legendProps: ->
-    level: @props.level
-    linesCleared: @props.linesCleared
-    score: @props.score
-    scoreThisTurn: @props.scoreThisTurn
-
   boardProps: ->
     restartGame: @restartGame
     startGame: @startGame
