@@ -12,11 +12,7 @@ mapStateToProps = (state) ->
   hasGameBegun: state.game.hasGameBegun
   isColorblindActive: state?.settings?.isColorblindActive
   isGameOver: state.game.isGameOver
-  isMuted: state.settings.isMuted
-  isPaused: state.settings.isPaused
   level: state.game.level
-  score: state.game.score
-  currentPieceType: state.game.currentPieceType
   rotation: state.game.rotation
   xIndex: state.game.xIndex
   yIndex: state.game.yIndex

@@ -18,12 +18,9 @@ Board = React.createClass
     hasGameBegun: React.PropTypes.bool.isRequired
     isColorblindActive: React.PropTypes.bool.isRequired
     isGameOver: React.PropTypes.bool.isRequired
-    isMuted: React.PropTypes.bool.isRequired
-    isPaused: React.PropTypes.bool.isRequired
     level: React.PropTypes.number.isRequired
     nextTurn: React.PropTypes.func.isRequired
     restartGame: React.PropTypes.func.isRequired
-    score: React.PropTypes.number.isRequired
     startGame: React.PropTypes.func.isRequired
 
   startGame: ->
