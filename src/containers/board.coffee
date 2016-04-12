@@ -7,12 +7,19 @@ SettingsActions = require 'actions/settings'
 assign = require 'object-assign'
 
 mapStateToProps = (state) ->
-  assign {}, state.game,
-    isPaused: state?.settings?.isPaused
-    isGhostVisible: state?.settings?.isGhostVisible
-    isMuted: state?.settings?.isMuted
-    isColorblindActive: state?.settings?.isColorblindActive
-    cellEdgeLength: state?.settings?.boardDisplaySize
+  cellEdgeLength: state.settings.boardDisplaySize
+  cells: state.game.cells
+  hasGameBegun: state.game.hasGameBegun
+  isColorblindActive: state?.settings?.isColorblindActive
+  isGameOver: state.game.isGameOver
+  isMuted: state.settings.isMuted
+  isPaused: state.settings.isPaused
+  level: state.game.level
+  score: state.game.score
+  currentPieceType: state.game.currentPieceType
+  rotation: state.game.rotation
+  xIndex: state.game.xIndex
+  yIndex: state.game.yIndex
 
 Container = redux.connect(
   mapStateToProps,

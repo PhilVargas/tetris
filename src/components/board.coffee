@@ -1,7 +1,8 @@
 React = require 'react'
 Action = require 'actions/game'
 Cell = require 'components/cell'
-Piece = require 'components/piece'
+BoardPiece = require 'containers/board-piece'
+GhostPiece = require 'containers/ghost-piece'
 Overlay = require 'components/board-overlay'
 Settings = require 'helpers/settings'
 Calculate = require 'helpers/calculator'
@@ -14,22 +15,16 @@ Board = React.createClass
   propTypes:
     cellEdgeLength: React.PropTypes.number.isRequired
     cells: React.PropTypes.array.isRequired
-    currentPieceType: React.PropTypes.string.isRequired
-    ghostYIndex: React.PropTypes.number.isRequired
     hasGameBegun: React.PropTypes.bool.isRequired
     isColorblindActive: React.PropTypes.bool.isRequired
     isGameOver: React.PropTypes.bool.isRequired
-    isGhostVisible: React.PropTypes.bool.isRequired
     isMuted: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
     level: React.PropTypes.number.isRequired
     nextTurn: React.PropTypes.func.isRequired
     restartGame: React.PropTypes.func.isRequired
-    rotation: React.PropTypes.number.isRequired
     score: React.PropTypes.number.isRequired
     startGame: React.PropTypes.func.isRequired
-    xIndex: React.PropTypes.number.isRequired
-    yIndex: React.PropTypes.number.isRequired
 
   startGame: ->
     unless @props.hasGameBegun
@@ -53,8 +48,8 @@ Board = React.createClass
           <div id='board-rows'>
             { @generateRows() }
           </div>
-          <Piece {...@pieceProps()} />
-          <Piece {...@ghostProps()} />
+          <BoardPiece />
+          <GhostPiece />
           <Overlay {...@overlayProps()} />
         </div>
       </div>
@@ -72,28 +67,6 @@ Board = React.createClass
     restartGame: @restartGame
     score: @props.score
     isGameOver: @props.isGameOver
-
-  pieceProps: ->
-    cellClass: 'piece-cell'
-    cellEdgeLength: @props.cellEdgeLength
-    containerClass: 'piece-container'
-    isVisible: @props.hasGameBegun
-    isColorblindActive: @props.isColorblindActive
-    pieceType: @props.currentPieceType
-    rotation: @props.rotation
-    xIndex: @props.xIndex
-    yIndex: @props.yIndex
-
-  ghostProps: ->
-    cellClass: 'ghost-cell'
-    cellEdgeLength: @props.cellEdgeLength
-    containerClass: 'ghost-container'
-    isVisible: @props.isGhostVisible && @props.hasGameBegun
-    isColorblindActive: @props.isColorblindActive
-    pieceType: @props.currentPieceType
-    rotation: @props.rotation
-    xIndex: @props.xIndex
-    yIndex: @props.ghostYIndex
 
   rowClass: (i) ->
     cx "row collapse cell-container", { 'hidden-row': i < Settings.hiddenRows }
