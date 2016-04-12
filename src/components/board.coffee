@@ -3,7 +3,7 @@ Action = require 'actions/game'
 Cell = require 'components/cell'
 BoardPiece = require 'containers/board-piece'
 GhostPiece = require 'containers/ghost-piece'
-Overlay = require 'components/board-overlay'
+Overlay = require 'containers/board-overlay'
 Settings = require 'helpers/settings'
 Calculate = require 'helpers/calculator'
 PieceMap = require 'helpers/piece-map'
@@ -50,7 +50,7 @@ Board = React.createClass
           </div>
           <BoardPiece />
           <GhostPiece />
-          <Overlay {...@overlayProps()} />
+          <Overlay startGame={ @startGame } restartGame={ @restartGame } />
         </div>
       </div>
     </div>
@@ -58,15 +58,6 @@ Board = React.createClass
   innerBoardStyles: ->
     width: @props.cellEdgeLength * Settings.boardWidth + 2*Settings.innerBoardBorderWidth
     border: "#{Settings.innerBoardBorderWidth}px solid black"
-
-  overlayProps: ->
-    isPaused: @props.isPaused
-    isMuted: @props.isMuted
-    hasGameBegun: @props.hasGameBegun
-    startGame: @startGame
-    restartGame: @restartGame
-    score: @props.score
-    isGameOver: @props.isGameOver
 
   rowClass: (i) ->
     cx "row collapse cell-container", { 'hidden-row': i < Settings.hiddenRows }
