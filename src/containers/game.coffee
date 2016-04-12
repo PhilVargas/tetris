@@ -6,12 +6,11 @@ GameAction = require 'actions/game'
 assign = require 'object-assign'
 
 mapStateToProps = (state) ->
-  assign {},
-    hasGameBegun: state.game.hasGameBegun
-    isGameOver: state.game.isGameOver
-    isPaused: state.settings.isPaused
-    xIndex: state.game.xIndex
-    yIndex: state.game.yIndex
+  hasGameBegun: state.game.hasGameBegun
+  isGameOver: state.game.isGameOver
+  isPaused: state.settings.isPaused
+  xIndex: state.game.xIndex
+  yIndex: state.game.yIndex
 
 
 Container = redux.connect(

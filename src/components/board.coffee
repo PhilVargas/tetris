@@ -22,6 +22,7 @@ Board = React.createClass
     isGhostVisible: React.PropTypes.bool.isRequired
     isMuted: React.PropTypes.bool.isRequired
     isPaused: React.PropTypes.bool.isRequired
+    level: React.PropTypes.number.isRequired
     nextTurn: React.PropTypes.func.isRequired
     restartGame: React.PropTypes.func.isRequired
     rotation: React.PropTypes.number.isRequired
