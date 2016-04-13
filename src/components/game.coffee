@@ -9,7 +9,6 @@ QueuePiece = require 'containers/queue-piece'
 Attribution = require 'components/attribution'
 
 Calculate = require 'helpers/calculator'
-Store = require 'stores/game'
 
 Settings = require 'helpers/settings'
 

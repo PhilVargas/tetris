@@ -1,6 +1,4 @@
 React = require 'react'
-SettingsStore = require 'stores/settings'
-TetrisStore = require 'stores/game'
 
 ThemeSong = React.createClass
   displayName: 'ThemeSong'
