@@ -1,6 +1,4 @@
 React = require 'react'
-SettingsStore = require 'stores/settings'
-TetrisStore = require 'stores/game'
 
 ThemeSong = React.createClass
   displayName: 'ThemeSong'
@@ -10,30 +8,11 @@ ThemeSong = React.createClass
     isPaused: React.PropTypes.bool.isRequired
     hasGameBegun: React.PropTypes.bool.isRequired
 
-  getInitialState: ->
-    isMuted: @props.isMuted
-    isPaused: @props.isPaused
-    hasGameBegun: @props.hasGameBegun
-
-  componentDidMount: ->
-    SettingsStore.bindChange @stateChange
-    TetrisStore.bindChange @stateChange
-
-  stateChange: ->
-    @setState
-      isMuted: SettingsStore.get('isMuted')
-      isPaused: SettingsStore.get('isPaused')
-      hasGameBegun: TetrisStore.get('hasGameBegun')
-
   componentDidUpdate: ->
-    if @state.isMuted || @state.isPaused || !@state.hasGameBegun
-      @refs.themeSong.getDOMNode().pause()
+    if @props.isMuted || @props.isPaused || !@props.hasGameBegun
+      @refs.themeSong.pause()
     else
-      @refs.themeSong.getDOMNode().play()
-
-  componentWillUnmount: ->
-    SettingsStore.unbindChange @stateChange
-    TetrisStore.unbindChange @stateChange
+      @refs.themeSong.play()
 
   render: ->
     <div className="theme-song-container">

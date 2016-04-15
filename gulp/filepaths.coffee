@@ -8,7 +8,7 @@ SASS_BASE_DIR = 'styles/sass'
 VENDOR_ROOT = 'node_modules'
 
 displayError = (error) ->
-  console.log(error.annotated)
+  console.log error.message
 
 module.exports =
   build: BASE_DIR
@@ -20,6 +20,10 @@ module.exports =
   stylesRoot: STYLES_BASE_DIR
   sassRoot: SASS_BASE_DIR
   sassFiles: "#{SASS_BASE_DIR}/**/*.scss"
+  jsFiles: [
+    "#{BASE_DIR}/**/*.coffee",
+    "!#{BASE_DIR}/bundle.js"
+  ]
   jsRoot: BASE_DIR
   jsVendor: VENDOR_ROOT
   root: BASE_DIR

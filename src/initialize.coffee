@@ -1,19 +1,14 @@
 React = require 'react'
+ReactDOM = require 'react-dom'
 window.$ = require 'jquery'
-Tetris = require 'components/game'
-ThemeSong = require 'components/theme-song'
-TetrisStore = require 'stores/game'
-TetrisAction = require 'actions/game'
-SettingsStore = require 'stores/settings'
+Tetris = require 'containers/game'
+ThemeSong = require 'containers/theme-song'
 assign = require 'object-assign'
 
+store = require 'reducers/store'
+redux = require 'react-redux'
+Provider = redux.Provider
+
 $(document).on 'ready', ->
-  TetrisAction.init()
-  React.render React.createElement(Tetris, assign {}, SettingsStore.getAll(), TetrisStore.getAll()), document.getElementById 'tetris-anchor'
-  React.render(
-    React.createElement(ThemeSong,
-      isMuted: SettingsStore.get('isMuted')
-      isPaused: SettingsStore.get('isPaused')
-      hasGameBegun: TetrisStore.get('hasGameBegun')
-    ), document.getElementById 'audio-anchor'
-  )
+  ReactDOM.render <Provider store={store}><Tetris /></Provider>, document.getElementById 'tetris-anchor'
+  ReactDOM.render <Provider store={store}><ThemeSong /></Provider>, document.getElementById 'audio-anchor'
