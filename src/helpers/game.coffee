@@ -50,7 +50,6 @@ Helper =
     randomInt = (Math.random() * possiblePieces.length) // 1
     possiblePieces[randomInt]
 
-
   generateCells: ->
     cells = []
     count = 0
@@ -88,3 +87,4 @@ Helper =
       nextYIndex++
     return nextYIndex - 1
 
+module.exports = Helper

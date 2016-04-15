@@ -1,5 +1,6 @@
 Settings = require 'helpers/settings'
 Calculate = require 'helpers/calculator'
+Helper = require 'helpers/game'
 Constants = require('actions/game').Constants
 
 assign = require 'object-assign'
