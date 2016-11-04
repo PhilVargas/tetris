@@ -1,5 +1,5 @@
 # Tetris
-Coffeescript tetris using React + Flux with Jest testing
+Coffeescript tetris using React + Redux
 
 http://philvargas.github.io/tetris/
 
@@ -29,11 +29,6 @@ http://philvargas.github.io/tetris/
 npm install
 gulp build:assets
 open index.html
-```
-
-## Testing
-```
-npm test
 ```
 
 ## Versions
