@@ -26,7 +26,7 @@ http://philvargas.github.io/tetris/
 
 ## Installation
 ```
-npm install
+yarn install
 gulp build:assets
 open index.html
 ```
