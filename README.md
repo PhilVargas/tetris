@@ -33,6 +33,6 @@ open index.html
 
 ## Versions
 
- - React v0.13.3
- - npm v2.13.3
- - node v0.10.38
+ - React v0.14.8
+ - yarn v0.21.3
+ - node v8.9.3
