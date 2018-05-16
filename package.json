@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Coffeescript tetris game using React + Flux",
   "main": "index.js",
+  "engines": {
+    "node": "8.9.3"
+  },
   "scripts": {
     "test": "NODE_PATH=./src:./node_modules ./node_modules/jest-cli/bin/jest.js --verbose"
   },
