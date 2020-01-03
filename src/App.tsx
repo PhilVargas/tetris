@@ -12,14 +12,13 @@ const App: FC = () => {
     gameStore.init()
   }, [setgameState])
 
-  const { yCoord, xCoord, cells } = gameState
-  const boardProps: IBoardProps = { yCoord, xCoord, cells }
-
+  const { yCoord, xCoord, cells, currentPieceType, pieceIds } = gameState
+  const boardProps: IBoardProps = { yCoord, xCoord, cells, currentPieceType, pieceIds }
   return (
     <div className="App">
       <div className="flex">
         <div>
-          <button className="btn">Start</button>
+          <button className="btn" onClick={gameStore.onGenerateRandomPiece}>Start</button>
         </div>
       </div>
       <Board {...boardProps} />

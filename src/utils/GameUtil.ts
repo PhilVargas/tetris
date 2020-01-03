@@ -1,6 +1,7 @@
-import { IBoardCell, CellType, IGameState } from '../typings'
+import { IBoardCell, CellType, IGameState, PieceType } from '../typings'
 import { BoardSettings, GameSettings } from '../constants/Settings'
 import Calculator from './Calculator'
+import { Pieces } from '../constants/Settings/GameSettings'
 
 const generateDefaultCells = (): Array<IBoardCell> => {
   return [...Array(BoardSettings.height)].reduce((cells: Array<IBoardCell>, _, yCoord: number) => {
@@ -17,13 +18,20 @@ const generateDefaultCells = (): Array<IBoardCell> => {
   }, [])
 }
 
+const generateRandomPieceType = (): PieceType => {
+  const randomIndex = Math.floor(Math.random() * Pieces.length)
+  return Pieces[randomIndex]
+}
+
 const GameUtil = {
   generateDefaultCells,
+  generateRandomPieceType,
   generateInitialState: (): IGameState => {
     return {
       ...GameSettings,
       ...BoardSettings,
-      cells: generateDefaultCells()
+      cells: generateDefaultCells(),
+      currentPieceType: generateRandomPieceType()
     }
   }
 }

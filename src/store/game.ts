@@ -2,7 +2,8 @@ import { Subject } from 'rxjs'
 import { Dispatch, SetStateAction } from 'react'
 
 import GameUtil from '../utils/GameUtil'
-import { CellType, IGameState } from '../typings'
+import { IGameState, IBoardCell } from '../typings'
+import Calculate from '../utils/Calculator'
 
 const subject = new Subject<IGameState>()
 
@@ -12,12 +13,16 @@ const gameStore = {
   generateInitialState: GameUtil.generateInitialState,
   init: () => subject.next(state),
   subscribe: (setState: Dispatch<SetStateAction<IGameState>>) => subject.subscribe(setState),
-  onHover: (cellId: number) => {
-    let cells = state.cells.map((cell) => {
-      if (cell.id === cellId) { cell.cellType = CellType.I }
-      return cell
+  onGenerateRandomPiece: () => {
+    const pieceType = GameUtil.generateRandomPieceType()
+    const pieceIds = Calculate.getCellIdsForPiece(5, 0, pieceType)
+    const cells = state.cells.map((boardCell: IBoardCell) => {
+      if (pieceIds.includes(boardCell.id)) {
+        boardCell.pieceType = pieceType
+      }
+      return boardCell
     })
-    subject.next({ ...state, cells })
+    subject.next({ ...state, cells, currentPieceType: pieceType, xCoord: 5, pieceIds })
   }
 }
 
