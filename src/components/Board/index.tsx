@@ -8,11 +8,11 @@ import Cell from '../../components/Cell'
 import { BoardCells, IBoardProps, CellType } from '../../typings'
 import Calculate from '../../utils/Calculator'
 
-const generateCells = (yCoord: number, cells: BoardCells, pieceIds: ReadonlyArray<number>) => {
+const generateCells = (yCoord: number, cells: BoardCells) => {
   return [...Array(BoardSettings.width)].map((_, xCoord: number) => {
-    let cellId = Calculate.cellIndexFromCoords(xCoord, yCoord)
-    let cell = cells[cellId]
-    let className = yCoord < BoardSettings.hiddenRows ? styles.hiddenRow : undefined
+    const cellId = Calculate.cellIndexFromCoords(xCoord, yCoord)
+    const cell = cells[cellId]
+    const className = yCoord < BoardSettings.hiddenRows ? styles.hiddenRow : undefined
     const cellColorType: CellType = cell.pieceType || cell.cellType
 
     return <Cell key={cell.id}
@@ -23,20 +23,20 @@ const generateCells = (yCoord: number, cells: BoardCells, pieceIds: ReadonlyArra
   })
 }
 
-const generateRows = (cells: BoardCells, pieceIds: ReadonlyArray<number>) => {
+const generateRows = (cells: BoardCells) => {
   return [...Array(BoardSettings.height)].map((_, yCoord: number) => {
     return (
       <div key={yCoord} className={cn(styles.rows, {})} style={{ maxHeight: CellSettings.edgeLength }}>
-        {generateCells(yCoord, cells, pieceIds)}
+        {generateCells(yCoord, cells)}
       </div>
     )
   })
 }
 
-const Board: FC<IBoardProps> = ({ cells, pieceIds }) => {
+const Board: FC<IBoardProps> = ({ cells }) => {
   return (
     <div className={cn(styles.wrapper)}>
-      {generateRows(cells, pieceIds)}
+      {generateRows(cells)}
     </div>)
 }
 

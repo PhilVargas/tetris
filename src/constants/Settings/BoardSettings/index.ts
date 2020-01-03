@@ -5,7 +5,7 @@ const BoardSettings: IBoardSettings = {
   width: 10,
   hiddenRows: 1,
   yCoord: 0,
-  xCoord: 0,
+  xCoord: 5,
   pieceIds: [],
 }
 

@@ -18,6 +18,11 @@ export interface PieceOffset {
   readonly y: 0 | 1 | 2 | 3
 }
 
+export interface Coordinate {
+  readonly xCoord: number
+  readonly yCoord: number
+}
+
 export type PieceShape = ReadonlyArray<PieceOffset>
 export type PieceRotations = ReadonlyArray<PieceShape>
 export type PieceMap = {
@@ -30,7 +35,7 @@ export interface IBoardSettings {
   hiddenRows: number
   yCoord: number
   xCoord: number
-  pieceIds: ReadonlyArray<number>
+  pieceIds: Array<number>
 }
 
 export interface ICellSettings {
@@ -66,14 +71,13 @@ export interface IBoardCell {
 export type BoardCells = Array<IBoardCell>
 
 export interface IBoardProps {
-  currentPieceType: PieceType
   cells: BoardCells
-  xCoord: number
-  yCoord: number
-  pieceIds: ReadonlyArray<number>
 }
 
-export interface IGameState extends IGameSettings, IBoardProps {
-  currentPieceType: PieceType
+export interface IGameState {
+  xCoord: number
+  yCoord: number
   cells: BoardCells
+  currentPieceType?: PieceType
+  pieceIds: Array<number>
 }

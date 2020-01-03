@@ -31,7 +31,6 @@ const GameUtil = {
       ...GameSettings,
       ...BoardSettings,
       cells: generateDefaultCells(),
-      currentPieceType: generateRandomPieceType()
     }
   }
 }

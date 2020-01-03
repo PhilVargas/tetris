@@ -6,7 +6,8 @@ const cellIndexFromCoords = (xIndex: number, yIndex: number): number => {
   return xIndex + (BoardSettings.width * yIndex)
 }
 
-const getCellIdsForPiece = (xCoord: number, yCoord: number, currentPieceType: PieceType): Array<number> => {
+const getCellIdsForPiece = (xCoord: number, yCoord: number, currentPieceType?: PieceType): Array<number> => {
+  if (currentPieceType == null) { return [] }
   const shape: PieceShape = PieceShapeMap[currentPieceType]
   return shape.reduce((cellIds: Array<number>, pieceOffset: PieceOffset): Array<number> => {
     let offsetXCoord = xCoord + pieceOffset.x
