@@ -9,14 +9,16 @@ export enum CellType {
   L = "L"
 }
 
-
 export type PieceType = CellType.I | CellType.O | CellType.Z | CellType.S | CellType.T | CellType.J | CellType.L
 export type PieceTypes = ReadonlyArray<PieceType>
 
 export interface PieceOffset {
   readonly x: -2 | -1 | 0 | 1
-  readonly y: 0 | 1 | 2 | 3
+  readonly y: -1 | 0 | 1 | 2
 }
+
+export type Rotation = 0 | 1 | 2 | 3
+export type RotationDirection = -1 | 1
 
 export interface Coordinate {
   readonly xCoord: number
@@ -26,7 +28,7 @@ export interface Coordinate {
 export type PieceShape = ReadonlyArray<PieceOffset>
 export type PieceRotations = ReadonlyArray<PieceShape>
 export type PieceMap = {
-  [key in PieceType]: PieceShape
+  [key in PieceType]: PieceRotations
 }
 
 export interface IBoardSettings {
@@ -36,6 +38,7 @@ export interface IBoardSettings {
   yCoord: number
   xCoord: number
   pieceIds: Array<number>
+  rotation: Rotation
 }
 
 export interface ICellSettings {
@@ -80,4 +83,5 @@ export interface IGameState {
   cells: BoardCells
   currentPieceType?: PieceType
   pieceIds: Array<number>
+  rotation: Rotation
 }

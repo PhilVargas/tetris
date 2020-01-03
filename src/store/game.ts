@@ -2,9 +2,8 @@ import { Subject } from 'rxjs'
 import { Dispatch, SetStateAction } from 'react'
 
 import GameUtil from '../utils/GameUtil'
-import { IGameState, IBoardCell, PieceOffset, BoardCells, PieceType } from '../typings'
+import { IGameState, IBoardCell, PieceOffset, BoardCells, PieceType, Coordinate, RotationDirection } from '../typings'
 import Calculate from '../utils/Calculator'
-import { BoardSettings } from '../constants/Settings'
 
 const subject = new Subject<IGameState>()
 
@@ -29,21 +28,42 @@ const gameStore = {
   subscribe: (setState: Dispatch<SetStateAction<IGameState>>) => subject.subscribe(setState),
   unsubcribe: () => { subject.unsubscribe() },
   onGenerateRandomPiece: () => {
-    const { xCoord, yCoord } = BoardSettings
+    const { xCoord, yCoord, rotation } = state
     const currentPieceType = GameUtil.generateRandomPieceType()
-    const pieceIds = Calculate.getCellIdsForPiece(xCoord, yCoord, currentPieceType)
+    const pieceIds = Calculate.getCellIdsForPiece(xCoord, yCoord, rotation, currentPieceType)
     const cells = updateCells(state.cells, pieceIds, currentPieceType)
     state = { ...state, cells, currentPieceType, xCoord: xCoord, yCoord: yCoord }
     subject.next(state)
   },
   updatePieceCoordinates: (offset: PieceOffset) => {
     const { x: xOffset, y: yOffset } = offset
-    const { xCoord, yCoord, currentPieceType } = state
+    const { xCoord, yCoord, currentPieceType, rotation } = state
+    if (currentPieceType == null) { return }
     const nextXCoord = xOffset + xCoord
     const nextYCoord = yOffset + yCoord
-    const pieceIds = Calculate.getCellIdsForPiece(nextXCoord, nextYCoord, currentPieceType)
+
+    const nextCoord: Coordinate = { xCoord: nextXCoord, yCoord: nextYCoord }
+    const hasCollision = Calculate.hasCollision(nextCoord, rotation, currentPieceType)
+
+    if (hasCollision) { return }
+
+    const pieceIds = Calculate.getCellIdsForPiece(nextXCoord, nextYCoord, rotation, currentPieceType)
     const cells = updateCells(state.cells, pieceIds, currentPieceType)
     state = { ...state, xCoord: nextXCoord, yCoord: nextYCoord, cells }
+    subject.next(state)
+  },
+  rotatePiece: (rotationDirection: RotationDirection) => {
+    const { xCoord, yCoord, currentPieceType, rotation } = state
+    if (currentPieceType == null) { return }
+    const nextRotation = Calculate.rotation(rotation, rotationDirection)
+    const nextCoord = { xCoord, yCoord }
+    const hasCollision = Calculate.hasCollision(nextCoord, nextRotation, currentPieceType)
+
+    if (hasCollision) { return }
+
+    const pieceIds = Calculate.getCellIdsForPiece(xCoord, yCoord, nextRotation, currentPieceType)
+    const cells = updateCells(state.cells, pieceIds, currentPieceType)
+    state = { ...state, rotation: nextRotation, cells }
     subject.next(state)
   }
 }

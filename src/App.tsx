@@ -32,6 +32,12 @@ const App: FC = () => {
         case 'w':
           // todo
           break
+        case 'q':
+          gameStore.rotatePiece(1)
+          break
+        case 'e':
+          gameStore.rotatePiece(-1)
+          break
       }
     })
 
