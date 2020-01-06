@@ -11,6 +11,10 @@ const App: FC = () => {
     gameStore.subscribe(setgameState)
     gameStore.init()
 
+    const interval = setInterval(() => {
+      gameStore.nextTurn()
+    }, gameState.turnDelay)
+
     window.addEventListener('keydown', (e) => {
       switch (e.key) {
         case 'Enter':
@@ -30,7 +34,7 @@ const App: FC = () => {
           break
         case 'ArrowUp':
         case 'w':
-          // todo
+          gameStore.dropPiece()
           break
         case 'q':
           gameStore.rotatePiece(1)
@@ -41,8 +45,11 @@ const App: FC = () => {
       }
     })
 
-    return () => { gameStore.unsubcribe() }
-  }, [setgameState])
+    return () => {
+      gameStore.unsubcribe()
+      clearInterval(interval)
+    }
+  }, [gameState.turnDelay, setgameState])
 
   const { cells } = gameState
   const boardProps: IBoardProps = { cells }

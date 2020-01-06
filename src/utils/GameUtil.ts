@@ -7,7 +7,7 @@ const generateDefaultCells = (): Array<IBoardCell> => {
   return [...Array(BoardSettings.height)].reduce((cells: Array<IBoardCell>, _, yCoord: number) => {
     return [...Array(BoardSettings.width)].reduce((cells: Array<IBoardCell>, _, xCoord: number) => {
       cells.push({
-        id: Calculator.cellIndexFromCoords(xCoord, yCoord),
+        id: Calculator.cellIndexFromCoords({ xCoord, yCoord }),
         yCoord,
         xCoord,
         isFrozen: false,
@@ -31,7 +31,6 @@ const GameUtil = {
       ...GameSettings,
       ...BoardSettings,
       cells: generateDefaultCells(),
-
     }
   }
 }

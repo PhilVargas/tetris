@@ -197,6 +197,7 @@ export const PieceShapeMap: PieceMap = {
 
 const GameSettings: IGameSettings = {
   hasGameBegun: false,
+  turnDelay: 500,
 }
 
 export default GameSettings

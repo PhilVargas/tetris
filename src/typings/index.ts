@@ -54,6 +54,7 @@ export interface ICellProps {
 
 export interface IGameSettings {
   hasGameBegun: boolean
+  turnDelay: number
 }
 
 export interface ISettings {
@@ -84,4 +85,5 @@ export interface IGameState {
   currentPieceType?: PieceType
   pieceIds: Array<number>
   rotation: Rotation
+  turnDelay: number
 }

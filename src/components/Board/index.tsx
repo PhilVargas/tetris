@@ -10,7 +10,7 @@ import Calculate from '../../utils/Calculator'
 
 const generateCells = (yCoord: number, cells: BoardCells) => {
   return [...Array(BoardSettings.width)].map((_, xCoord: number) => {
-    const cellId = Calculate.cellIndexFromCoords(xCoord, yCoord)
+    const cellId = Calculate.cellIndexFromCoords({ xCoord, yCoord })
     const cell = cells[cellId]
     const className = yCoord < BoardSettings.hiddenRows ? styles.hiddenRow : undefined
     const cellColorType: CellType = cell.pieceType || cell.cellType
