@@ -41,12 +41,15 @@ export interface IBoardSettings {
   rotation: Rotation
 }
 
+// Depracated
 export interface ICellSettings {
   color: (cellType: CellType, isColorBlindActive: boolean) => string
   edgeLength: number
 }
 export interface ICellProps {
   className?: string
+  isHidden: boolean
+  isGhost: boolean
   backgroundColor: string
   width: number
   height: number
@@ -71,6 +74,7 @@ export interface IBoardCell {
   isFrozen: boolean
   cellType: CellType
   pieceType?: PieceType
+  ghostType?: PieceType
 }
 
 export type BoardCells = Array<IBoardCell>

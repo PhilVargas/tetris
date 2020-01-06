@@ -10,12 +10,18 @@ const subject = new Subject<IGameState>()
 
 let state = GameUtil.generateInitialState()
 
-const updateCells = (cells: BoardCells, pieceIds: Array<number>, currentPieceType: PieceType): BoardCells => {
+const updateCells = (cells: BoardCells, currentPieceType: PieceType, pieceIds: Array<number>, ghostPieceIds: Array<number>): BoardCells => {
   return cells.map((boardCell: IBoardCell) => {
     if (pieceIds.includes(boardCell.id)) {
       boardCell.pieceType = currentPieceType
     } else {
       boardCell.pieceType = undefined
+    }
+
+    if (ghostPieceIds.includes(boardCell.id)) {
+      boardCell.ghostType = currentPieceType
+    } else {
+      boardCell.ghostType = undefined
     }
     return boardCell
   })
@@ -43,7 +49,8 @@ const updatePieceCoordinates = (offset: PieceOffset) => {
   if (hasCollision) { return }
 
   const pieceIds = Calculate.getCellIdsForPiece(nextXCoord, nextYCoord, rotation, currentPieceType)
-  const cells = updateCells(state.cells, pieceIds, currentPieceType)
+  const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, currentPieceType, nextCoord)
+  const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
   state = { ...state, xCoord: nextXCoord, yCoord: nextYCoord, cells }
   subject.next(state)
 }
@@ -53,7 +60,8 @@ const startGame = () => {
   const { xCoord, yCoord, rotation } = state
   const currentPieceType = GameUtil.generateRandomPieceType()
   const pieceIds = Calculate.getCellIdsForPiece(xCoord, yCoord, rotation, currentPieceType)
-  const cells = updateCells(state.cells, pieceIds, currentPieceType)
+  const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, currentPieceType, { xCoord, yCoord })
+  const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
   state = { ...state, cells, currentPieceType, xCoord: xCoord, yCoord: yCoord, hasGameBegun: true, isPaused: false }
   subject.next(state)
 }
@@ -71,7 +79,8 @@ const nextTurn = () => {
 
   if (!Calculate.hasCollision({ xCoord, yCoord: nextYCoord }, rotation, currentPieceType, state.cells)) {
     const pieceIds = Calculate.getCellIdsForPiece(xCoord, nextYCoord, rotation, currentPieceType)
-    const cells = updateCells(state.cells, pieceIds, currentPieceType)
+    const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, currentPieceType, { xCoord, yCoord: nextYCoord })
+    const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
     state = { ...state, xCoord: xCoord, yCoord: nextYCoord, cells }
     subject.next(state)
   } else {
@@ -79,8 +88,9 @@ const nextTurn = () => {
     const randomPieceType = GameUtil.generateRandomPieceType()
     const { xCoord: defaultXCoord, yCoord: defaultYCoord, rotation: defaultRotation } = BoardSettings
     const pieceIds = Calculate.getCellIdsForPiece(defaultXCoord, defaultYCoord, defaultRotation, randomPieceType)
+    const ghostPieceIds = Calculate.getCellIdsForGhost(frozenCells, defaultRotation, randomPieceType, { xCoord: defaultXCoord, yCoord: defaultYCoord })
     // TODO check if player will lose
-    const cells = updateCells(frozenCells, pieceIds, randomPieceType)
+    const cells = updateCells(frozenCells, randomPieceType, pieceIds, ghostPieceIds)
     state = { ...state, xCoord: defaultXCoord, yCoord: defaultYCoord, currentPieceType: randomPieceType, cells, rotation: defaultRotation }
     subject.next(state)
   }
@@ -98,13 +108,10 @@ const gameStore = {
   dropPiece: () => {
     const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
     if (!hasGameBegun || isPaused) { return }
-    let nextYCoord = yCoord + 1
-    while (!Calculate.hasCollision({ xCoord, yCoord: nextYCoord }, rotation, currentPieceType, state.cells)) {
-      let pieceIds = Calculate.getCellIdsForPiece(xCoord, nextYCoord, rotation, currentPieceType)
-      let cells = updateCells(state.cells, pieceIds, currentPieceType)
-      state = { ...state, yCoord: nextYCoord, cells }
-      nextYCoord++
-    }
+    const { yCoord: finalYCoord } = Calculate.dropCoordinate(state.cells, rotation, currentPieceType, { xCoord, yCoord })
+    let pieceIds = Calculate.getCellIdsForPiece(xCoord, finalYCoord, rotation, currentPieceType)
+    let cells = updateCells(state.cells, currentPieceType, pieceIds, pieceIds)
+    state = { ...state, yCoord: finalYCoord, cells }
     subject.next(state)
   },
   rotatePiece: (rotationDirection: RotationDirection) => {
@@ -117,7 +124,8 @@ const gameStore = {
     if (hasCollision) { return }
 
     const pieceIds = Calculate.getCellIdsForPiece(xCoord, yCoord, nextRotation, currentPieceType)
-    const cells = updateCells(state.cells, pieceIds, currentPieceType)
+    const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, nextRotation, currentPieceType, { xCoord, yCoord })
+    const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
     state = { ...state, rotation: nextRotation, cells }
     subject.next(state)
   },

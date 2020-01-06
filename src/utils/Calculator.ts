@@ -42,9 +42,26 @@ const rotation = (currentRotation: Rotation, rotationDirection: RotationDirectio
   return Math.abs((4 + currentRotation + rotationDirection) % 4) as Rotation
 }
 
+const dropCoordinate = (cells: BoardCells, rotation: Rotation, currentPieceType: PieceType, currentCoordinate: Coordinate): Coordinate => {
+  const { xCoord, yCoord } = currentCoordinate
+  let nextYCoord = yCoord
+  while (!hasCollision({ xCoord, yCoord: nextYCoord + 1 }, rotation, currentPieceType, cells)) {
+    nextYCoord++
+  }
+  return { xCoord, yCoord: nextYCoord }
+}
+
+const getCellIdsForGhost = (cells: BoardCells, rotation: Rotation, currentPieceType: PieceType, currentCoordinate: Coordinate): Array<number> => {
+  const { xCoord } = currentCoordinate
+  const { yCoord } = dropCoordinate(cells, rotation, currentPieceType, currentCoordinate)
+  return getCellIdsForPiece(xCoord, yCoord, rotation, currentPieceType)
+}
+
 const Calculate = {
   cellIndexFromCoords,
+  dropCoordinate,
   getCellIdsForPiece,
+  getCellIdsForGhost,
   hasCollision,
   rotation,
 }

@@ -1,3 +1,14 @@
 .wrapper {
   border: 1px solid black;
 }
+
+.hiddenRow {
+  border-top: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-left: 1px solid transparent;
+  border-bottom: 1px solid black;
+}
+
+.ghost {
+  opacity: 0.5;
+}
