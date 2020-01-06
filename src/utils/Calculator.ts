@@ -7,8 +7,7 @@ const cellIndexFromCoords = (coordinate: Coordinate): number => {
   return xCoord + (BoardSettings.width * yCoord)
 }
 
-const getCellIdsForPiece = (xCoord: number, yCoord: number, rotation: Rotation, currentPieceType?: PieceType): Array<number> => {
-  if (currentPieceType == null) { return [] }
+const getCellIdsForPiece = (xCoord: number, yCoord: number, rotation: Rotation, currentPieceType: PieceType): Array<number> => {
   const shape: PieceShape = PieceShapeMap[currentPieceType][rotation]
   return shape.reduce((cellIds: Array<number>, pieceOffset: PieceOffset): Array<number> => {
     let offsetXCoord = xCoord + pieceOffset.x
@@ -33,7 +32,8 @@ const hasCellCollision = (nextPieceCoordinate: Coordinate, cells: BoardCells): b
   const { xCoord: nextXCoordinate, yCoord: nextYCoordinate } = nextPieceCoordinate
   const willEncounterXBoundary = nextXCoordinate < 0 || nextXCoordinate >= BoardSettings.width
   const willEncounterYBoundary = nextYCoordinate >= BoardSettings.height
-  const nextPieceCell = cells[cellIndexFromCoords(nextPieceCoordinate)]
+  // const nextPieceCell = cells[cellIndexFromCoords(nextPieceCoordinate)] as IBoardCell?
+  const nextPieceCell = cells[cellIndexFromCoords(nextPieceCoordinate)] as IBoardCell | null
   const willEncounterFrozenPiece = nextPieceCell != null && nextPieceCell.cellType !== CellType.E
   return willEncounterXBoundary || willEncounterYBoundary || willEncounterFrozenPiece
 }

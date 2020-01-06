@@ -15,11 +15,18 @@ const App: FC = () => {
       gameStore.nextTurn()
     }, gameState.turnDelay)
 
+    window.addEventListener('keyup', (e) => {
+      e.preventDefault()
+
+      switch (e.key) {
+        case ' ':
+          gameStore.togglePause()
+          break
+      }
+    })
+
     window.addEventListener('keydown', (e) => {
       switch (e.key) {
-        case 'Enter':
-          gameStore.onGenerateRandomPiece()
-          break
         case 'ArrowDown':
         case 's':
           gameStore.updatePieceCoordinates({ x: 0, y: 1 })
@@ -57,7 +64,12 @@ const App: FC = () => {
     <div className="App">
       <div className="flex">
         <div>
-          <button className="btn" onClick={gameStore.onGenerateRandomPiece}>Start</button>
+          <button className="btn" onClick={(e) => {
+            e.preventDefault()
+            gameStore.startGame()
+          }}>
+            Start Game
+          </button>
         </div>
       </div>
       <Board {...boardProps} />
