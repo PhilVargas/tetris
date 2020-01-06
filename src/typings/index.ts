@@ -50,6 +50,7 @@ export interface ICellProps {
   className?: string
   isHidden: boolean
   isGhost: boolean
+  isPiece: boolean
   backgroundColor: string
   width: number
   height: number

@@ -4,10 +4,11 @@ import cn from 'classnames'
 import styles from './Cell.module.scss'
 import { ICellProps } from '../../typings'
 
-const Cell: FC<ICellProps> = ({ className, isHidden, isGhost, ...styleProps }) => {
+const Cell: FC<ICellProps> = ({ className, isHidden, isGhost, isPiece, ...styleProps }) => {
   const computedClassName = cn(className, styles.wrapper, {
     [styles.hiddenRow]: isHidden,
-    [styles.ghost]: isGhost
+    [styles.ghost]: isGhost,
+    [styles.piece]: isPiece
   })
   return (
     <div style={{ ...styleProps }} className={computedClassName}></div>

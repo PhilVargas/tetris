@@ -15,10 +15,12 @@ const generateCells = (yCoord: number, cells: BoardCells) => {
     const cellColorType: CellType = cell.pieceType || cell.ghostType || cell.cellType
     const isHidden = yCoord < BoardSettings.hiddenRows
     const isGhost = cell.ghostType != null && cell.pieceType == null
+    const isPiece = cell.pieceType != null
 
     return <Cell key={cell.id}
       isHidden={isHidden}
       isGhost={isGhost}
+      isPiece={isPiece}
       backgroundColor={CellSettings.color(cellColorType, false)}
       width={CellSettings.edgeLength}
       height={CellSettings.edgeLength} />
