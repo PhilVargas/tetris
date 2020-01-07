@@ -1,31 +1,28 @@
-import React, { FC, useState, useLayoutEffect, useEffect, useRef } from 'react';
+import React, { FC, useState, useLayoutEffect, useEffect } from 'react';
 import './App.scss';
 import Board from './components/Board'
 import gameStore from './store/game';
 import { IBoardProps } from './typings';
 import Overlay from './components/Overlay';
+import DisplayPiece from './components/DisplayPiece';
 
 const App: FC = () => {
   const [gameState, setgameState] = useState(gameStore.generateInitialState())
-
-  const savedCallback = useRef(gameStore.nextTurn)
-
-  useEffect(() => {
-    savedCallback.current = gameStore.nextTurn
-  })
 
   useEffect(() => {
     let id: NodeJS.Timeout
 
     function tick() {
-      savedCallback.current()
+      if (gameState.hasGameBegun && !gameState.isGameOver) {
+        gameStore.nextTurn()
+      }
       id = setTimeout(tick, gameState.turnDelay)
     }
     id = setTimeout(tick, gameState.turnDelay)
     return () => {
       clearTimeout(id)
     }
-  }, [gameState.turnDelay])
+  }, [gameState.turnDelay, gameState.hasGameBegun, gameState.isGameOver])
 
   useLayoutEffect(() => {
     gameStore.subscribe(setgameState)
