@@ -95,3 +95,10 @@ export interface IGameState {
   isPaused: boolean
   hasGameBegun: boolean
 }
+
+export interface IOverlayProps {
+  isPaused: boolean
+  hasGameBegun: boolean
+  startGame: () => void
+  resumeGame: () => void
+}

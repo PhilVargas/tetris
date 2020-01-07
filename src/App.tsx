@@ -3,6 +3,9 @@ import './App.scss';
 import Board from './components/Board'
 import gameStore from './store/game';
 import { IBoardProps } from './typings';
+import Overlay from './components/Overlay';
+import Calculate from './utils/Calculator';
+import GameUtil from './utils/GameUtil';
 
 const App: FC = () => {
   const [gameState, setgameState] = useState(gameStore.generateInitialState())
@@ -58,21 +61,15 @@ const App: FC = () => {
     }
   }, [gameState.turnDelay, setgameState])
 
-  const { cells } = gameState
+  const { cells, isPaused, hasGameBegun } = gameState
   const boardProps: IBoardProps = { cells }
   return (
     <div className="App">
-      <div className="flex">
-        <div>
-          <button className="btn" onClick={(e) => {
-            e.preventDefault()
-            gameStore.startGame()
-          }}>
-            Start Game
-          </button>
-        </div>
+      <div className="flex"></div>
+      <div className="board-anchor">
+        <Overlay isPaused={isPaused} hasGameBegun={hasGameBegun} startGame={gameStore.startGame} resumeGame={gameStore.togglePause}></Overlay>
+        <Board {...boardProps} />
       </div>
-      <Board {...boardProps} />
       <div className="flex"></div>
     </div>
   );

@@ -7,7 +7,8 @@ const cellIndexFromCoords = (coordinate: Coordinate): number => {
   return xCoord + (BoardSettings.width * yCoord)
 }
 
-const getCellIdsForPiece = (xCoord: number, yCoord: number, rotation: Rotation, currentPieceType: PieceType): Array<number> => {
+const getCellIdsForPiece = (coordinate: Coordinate, rotation: Rotation, currentPieceType: PieceType): Array<number> => {
+  const { xCoord, yCoord } = coordinate
   const shape: PieceShape = PieceShapeMap[currentPieceType][rotation]
   return shape.reduce((cellIds: Array<number>, pieceOffset: PieceOffset): Array<number> => {
     let offsetXCoord = xCoord + pieceOffset.x
@@ -16,6 +17,29 @@ const getCellIdsForPiece = (xCoord: number, yCoord: number, rotation: Rotation, 
     cellIds.push(cellIndexFromCoords(coordinate))
     return cellIds
   }, [])
+}
+
+const getCellRows = (cells: BoardCells): Array<BoardCells> => {
+  return [...Array(BoardSettings.height)].reduce((rows: Array<BoardCells>, _, rowStart: number) => {
+    rows.push(cells.slice(rowStart * BoardSettings.width, (rowStart + 1) * BoardSettings.width))
+    return rows
+  }, [])
+}
+
+const isAnyRowFrozen = (cells: BoardCells): boolean => {
+  return getCellRows(cells).some(isRowFrozen)
+}
+
+const getFrozenRowIndices = (cells: BoardCells): Array<number> => {
+  return getCellRows(cells).map((cellRow: BoardCells, index: number): number => {
+    return isRowFrozen(cellRow) ? index : -1
+  }).filter((rowIndex: number) => rowIndex >= 0)
+}
+
+const isRowFrozen = (row: BoardCells): boolean => {
+  return row.every((cell: IBoardCell) => {
+    return cell.cellType !== CellType.E
+  })
 }
 
 const hasCollision = (nextPieceCoordinate: Coordinate, rotation: Rotation, currentPieceType: PieceType, cells: BoardCells): boolean => {
@@ -54,7 +78,7 @@ const dropCoordinate = (cells: BoardCells, rotation: Rotation, currentPieceType:
 const getCellIdsForGhost = (cells: BoardCells, rotation: Rotation, currentPieceType: PieceType, currentCoordinate: Coordinate): Array<number> => {
   const { xCoord } = currentCoordinate
   const { yCoord } = dropCoordinate(cells, rotation, currentPieceType, currentCoordinate)
-  return getCellIdsForPiece(xCoord, yCoord, rotation, currentPieceType)
+  return getCellIdsForPiece({ xCoord, yCoord }, rotation, currentPieceType)
 }
 
 const Calculate = {
@@ -64,6 +88,9 @@ const Calculate = {
   getCellIdsForGhost,
   hasCollision,
   rotation,
+  getCellRows,
+  isAnyRowFrozen,
+  getFrozenRowIndices,
 }
 
 export default Calculate

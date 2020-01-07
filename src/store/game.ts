@@ -48,7 +48,7 @@ const updatePieceCoordinates = (offset: PieceOffset) => {
 
   if (hasCollision) { return }
 
-  const pieceIds = Calculate.getCellIdsForPiece(nextXCoord, nextYCoord, rotation, currentPieceType)
+  const pieceIds = Calculate.getCellIdsForPiece({ xCoord: nextXCoord, yCoord: nextYCoord }, rotation, currentPieceType)
   const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, currentPieceType, nextCoord)
   const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
   state = { ...state, xCoord: nextXCoord, yCoord: nextYCoord, cells }
@@ -59,7 +59,7 @@ const startGame = () => {
   state = GameUtil.generateInitialState()
   const { xCoord, yCoord, rotation } = state
   const currentPieceType = GameUtil.generateRandomPieceType()
-  const pieceIds = Calculate.getCellIdsForPiece(xCoord, yCoord, rotation, currentPieceType)
+  const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord }, rotation, currentPieceType)
   const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, currentPieceType, { xCoord, yCoord })
   const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
   state = { ...state, cells, currentPieceType, xCoord: xCoord, yCoord: yCoord, hasGameBegun: true, isPaused: false }
@@ -78,19 +78,25 @@ const nextTurn = () => {
   const nextYCoord = yCoord + 1
 
   if (!Calculate.hasCollision({ xCoord, yCoord: nextYCoord }, rotation, currentPieceType, state.cells)) {
-    const pieceIds = Calculate.getCellIdsForPiece(xCoord, nextYCoord, rotation, currentPieceType)
+    const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord: nextYCoord }, rotation, currentPieceType)
     const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, currentPieceType, { xCoord, yCoord: nextYCoord })
     const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
     state = { ...state, xCoord: xCoord, yCoord: nextYCoord, cells }
     subject.next(state)
   } else {
-    const frozenCells = freezeCells(state.cells)
+    let boardCells = freezeCells(state.cells)
+    // TODO check if player will lose
+    while (Calculate.isAnyRowFrozen(boardCells)) {
+      let lowestFrozenRowIndex = Calculate.getFrozenRowIndices(boardCells).pop()
+      if (lowestFrozenRowIndex == null) { break }
+      boardCells = GameUtil.generateShiftedCells(lowestFrozenRowIndex, boardCells)
+    }
+
     const randomPieceType = GameUtil.generateRandomPieceType()
     const { xCoord: defaultXCoord, yCoord: defaultYCoord, rotation: defaultRotation } = BoardSettings
-    const pieceIds = Calculate.getCellIdsForPiece(defaultXCoord, defaultYCoord, defaultRotation, randomPieceType)
-    const ghostPieceIds = Calculate.getCellIdsForGhost(frozenCells, defaultRotation, randomPieceType, { xCoord: defaultXCoord, yCoord: defaultYCoord })
-    // TODO check if player will lose
-    const cells = updateCells(frozenCells, randomPieceType, pieceIds, ghostPieceIds)
+    const pieceIds = Calculate.getCellIdsForPiece({ xCoord: defaultXCoord, yCoord: defaultYCoord }, defaultRotation, randomPieceType)
+    const ghostPieceIds = Calculate.getCellIdsForGhost(boardCells, defaultRotation, randomPieceType, { xCoord: defaultXCoord, yCoord: defaultYCoord })
+    const cells = updateCells(boardCells, randomPieceType, pieceIds, ghostPieceIds)
     state = { ...state, xCoord: defaultXCoord, yCoord: defaultYCoord, currentPieceType: randomPieceType, cells, rotation: defaultRotation }
     subject.next(state)
   }
@@ -109,7 +115,7 @@ const gameStore = {
     const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
     if (!hasGameBegun || isPaused) { return }
     const { yCoord: finalYCoord } = Calculate.dropCoordinate(state.cells, rotation, currentPieceType, { xCoord, yCoord })
-    let pieceIds = Calculate.getCellIdsForPiece(xCoord, finalYCoord, rotation, currentPieceType)
+    let pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord: finalYCoord }, rotation, currentPieceType)
     let cells = updateCells(state.cells, currentPieceType, pieceIds, pieceIds)
     state = { ...state, yCoord: finalYCoord, cells }
     subject.next(state)
@@ -123,7 +129,7 @@ const gameStore = {
 
     if (hasCollision) { return }
 
-    const pieceIds = Calculate.getCellIdsForPiece(xCoord, yCoord, nextRotation, currentPieceType)
+    const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord }, nextRotation, currentPieceType)
     const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, nextRotation, currentPieceType, { xCoord, yCoord })
     const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
     state = { ...state, rotation: nextRotation, cells }
