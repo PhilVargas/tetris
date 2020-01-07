@@ -66,6 +66,7 @@ const GameUtil = {
   scoreRowsForTurn,
   generateInitialState: (): IGameState => {
     return {
+      isGameOver: GameSettings.isGameOver,
       xCoord: BoardSettings.xCoord,
       yCoord: BoardSettings.yCoord,
       pieceIds: BoardSettings.pieceIds,

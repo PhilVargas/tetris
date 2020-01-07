@@ -96,7 +96,14 @@ const turnDelay = (level: Level) => {
   return Math.max(GameSettings.minimumTurnDelay, GameSettings.initialTurnDelay - (50 * level))
 }
 
+const didPlayerLose = (cells: BoardCells): boolean => {
+  return cells.some((cell: IBoardCell) => {
+    return cell.pieceType != null && cell.id < BoardSettings.width * BoardSettings.hiddenRows
+  })
+}
+
 const Calculate = {
+  didPlayerLose,
   turnDelay,
   level,
   scoreThisTurn,

@@ -72,6 +72,7 @@ export interface IGameSettings {
   totalLinesCleared: number
   score: number
   minimumTurnDelay: number
+  isGameOver: boolean
 }
 
 export interface ISettings {
@@ -108,9 +109,11 @@ export interface IGameState {
   hasGameBegun: boolean
   totalLinesCleared: number
   score: number
+  isGameOver: boolean
 }
 
 export interface IOverlayProps {
+  isGameOver: boolean
   isPaused: boolean
   hasGameBegun: boolean
   score: number

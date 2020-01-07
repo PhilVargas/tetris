@@ -73,13 +73,14 @@ const App: FC = () => {
     }
   }, [setgameState])
 
-  const { cells, isPaused, hasGameBegun, score } = gameState
+  const { cells, isPaused, hasGameBegun, score, isGameOver } = gameState
   const boardProps: IBoardProps = { cells }
   return (
     <div className="App">
       <div className="flex"></div>
       <div className="board-anchor">
         <Overlay
+          isGameOver={isGameOver}
           isPaused={isPaused}
           hasGameBegun={hasGameBegun}
           startGame={gameStore.startGame}

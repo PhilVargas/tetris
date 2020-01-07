@@ -85,26 +85,30 @@ const nextTurn = () => {
     subject.next(state)
   } else {
     const frozenCells = freezeCells(state.cells)
-    // TODO check if player will lose
-    const { cells: boardCells, scoreThisTurn, linesClearedThisTurn } = GameUtil.scoreRowsForTurn(frozenCells, state.totalLinesCleared)
-    const randomPieceType = GameUtil.generateRandomPieceType()
-    const { xCoord: defaultXCoord, yCoord: defaultYCoord, rotation: defaultRotation } = BoardSettings
-    const pieceIds = Calculate.getCellIdsForPiece({ xCoord: defaultXCoord, yCoord: defaultYCoord }, defaultRotation, randomPieceType)
-    const ghostPieceIds = Calculate.getCellIdsForGhost(boardCells, defaultRotation, randomPieceType, { xCoord: defaultXCoord, yCoord: defaultYCoord })
-    const cells = updateCells(boardCells, randomPieceType, pieceIds, ghostPieceIds)
-    const totalLinesCleared = state.totalLinesCleared + linesClearedThisTurn
-    state = {
-      ...state,
-      xCoord: defaultXCoord,
-      yCoord: defaultYCoord,
-      currentPieceType: randomPieceType,
-      cells,
-      rotation: defaultRotation,
-      totalLinesCleared: totalLinesCleared,
-      turnDelay: Calculate.turnDelay(Calculate.level(totalLinesCleared)),
-      score: state.score + scoreThisTurn
+    if (Calculate.didPlayerLose(frozenCells)) {
+      state = { ...state, isGameOver: true, cells: frozenCells }
+      subject.next(state)
+    } else {
+      const { cells: boardCells, scoreThisTurn, linesClearedThisTurn } = GameUtil.scoreRowsForTurn(frozenCells, state.totalLinesCleared)
+      const randomPieceType = GameUtil.generateRandomPieceType()
+      const { xCoord: defaultXCoord, yCoord: defaultYCoord, rotation: defaultRotation } = BoardSettings
+      const pieceIds = Calculate.getCellIdsForPiece({ xCoord: defaultXCoord, yCoord: defaultYCoord }, defaultRotation, randomPieceType)
+      const ghostPieceIds = Calculate.getCellIdsForGhost(boardCells, defaultRotation, randomPieceType, { xCoord: defaultXCoord, yCoord: defaultYCoord })
+      const cells = updateCells(boardCells, randomPieceType, pieceIds, ghostPieceIds)
+      const totalLinesCleared = state.totalLinesCleared + linesClearedThisTurn
+      state = {
+        ...state,
+        xCoord: defaultXCoord,
+        yCoord: defaultYCoord,
+        currentPieceType: randomPieceType,
+        cells,
+        rotation: defaultRotation,
+        totalLinesCleared: totalLinesCleared,
+        turnDelay: Calculate.turnDelay(Calculate.level(totalLinesCleared)),
+        score: state.score + scoreThisTurn
+      }
+      subject.next(state)
     }
-    subject.next(state)
   }
 }
 

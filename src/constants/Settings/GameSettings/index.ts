@@ -204,6 +204,7 @@ const GameSettings: IGameSettings = {
   totalLinesCleared: 0,
   score: 0,
   minimumTurnDelay: 50,
+  isGameOver: false,
 }
 
 export default GameSettings
