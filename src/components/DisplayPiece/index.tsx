@@ -6,17 +6,21 @@ import { PieceType, CellType } from '../../typings'
 
 interface IDisplayPieceProps {
   nextPieceType: PieceType
+  hasGameBegun: boolean
 }
 
-const DisplayPiece: FC<IDisplayPieceProps> = ({ nextPieceType }) => {
-  const fakeType = CellType.L
-  const className = `pieceType${fakeType}`
+const DisplayPiece: FC<IDisplayPieceProps> = ({ nextPieceType, hasGameBegun }) => {
+  const className = `pieceType${nextPieceType}`
   return (
-    <div className={cn(styles.wrapper)}>
-      <div className={cn(styles.pieceCell, styles[className])}></div>
-      <div className={cn(styles.pieceCell, styles[className])}></div>
-      <div className={cn(styles.pieceCell, styles[className])}></div>
-      <div className={cn(styles.pieceCell, styles[className])}></div>
+    <div className={cn(styles.wrapper, { [styles.disabled]: !hasGameBegun })}>
+      {hasGameBegun &&
+        [
+          <div className={cn(styles.pieceCell, styles[className])}></div>,
+          <div className={cn(styles.pieceCell, styles[className])}></div>,
+          <div className={cn(styles.pieceCell, styles[className])}></div>,
+          <div className={cn(styles.pieceCell, styles[className])}></div>
+        ]
+      }
     </div>
   )
 }

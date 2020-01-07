@@ -18,3 +18,63 @@
   border-right: 1px solid black;
   border-left: 1px solid black;
 }
+
+.cellTypeE {
+  background-color: lightgrey;
+}
+
+.cellTypeI {
+  background-color: turquoise;
+
+  &.colorBlind {
+    background-color: #44AA99;
+  }
+}
+
+.cellTypeO {
+  background-color: yellow;
+
+  &.colorBlind {
+    background-color: #999933;
+  }
+}
+
+.cellTypeZ {
+  background-color: red;
+
+  &.colorBlind {
+    background-color: #882255;
+  }
+}
+
+.cellTypeS {
+  background-color: lime;
+
+  &.colorBlind {
+    background-color: #117733;
+  }
+}
+
+.cellTypeT {
+  background-color: purple;
+
+  &.colorBlind {
+    background-color: #332288;
+  }
+}
+
+.cellTypeJ {
+  background-color: blue;
+
+  &.colorBlind {
+    background-color: #3366AA;
+  }
+}
+
+.cellTypeL {
+  background-color: orange;
+
+  &.colorBlind {
+    background-color: #EE7722;
+  }
+}

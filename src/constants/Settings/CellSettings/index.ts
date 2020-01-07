@@ -24,7 +24,6 @@ const color = (cellType: CellType, isColorBlindActive = false): string => {
 const CellSettings: ICellSettings = {
   color,
   edgeLength: 25,
-  displayEdgeLength: 20,
 }
 
 export default CellSettings

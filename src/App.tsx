@@ -87,7 +87,7 @@ const App: FC = () => {
         <Board {...boardProps} />
       </div>
       <div className="flex">
-        <DisplayPiece nextPieceType={nextPieceType} />
+        <DisplayPiece nextPieceType={nextPieceType} hasGameBegun={hasGameBegun} />
       </div>
     </div>
   );

@@ -54,16 +54,15 @@ export interface IBoardSettings {
 export interface ICellSettings {
   color: (cellType: CellType, isColorBlindActive: boolean) => string
   edgeLength: number
-  displayEdgeLength: number
 }
 export interface ICellProps {
   className?: string
   isHidden: boolean
   isGhost: boolean
   isPiece: boolean
-  backgroundColor: string
   width: number
   height: number
+  cellType: CellType
 }
 
 export interface IGameSettings {

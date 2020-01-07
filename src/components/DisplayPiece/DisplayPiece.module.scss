@@ -4,7 +4,11 @@
   height: 100px;
   width: 100px;
   position: relative;
+}
 
+.disabled {
+  background-color: gray;
+  opacity: 0.25;
 }
 
 .pieceCell {

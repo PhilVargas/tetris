@@ -4,8 +4,9 @@ import cn from 'classnames'
 import styles from './Cell.module.scss'
 import { ICellProps } from '../../typings'
 
-const Cell: FC<ICellProps> = ({ className, isHidden, isGhost, isPiece, ...styleProps }) => {
-  const computedClassName = cn(className, styles.wrapper, {
+const Cell: FC<ICellProps> = ({ className, isHidden, isGhost, isPiece, cellType, ...styleProps }) => {
+  const computedClassName = cn(className, styles.wrapper, styles[`cellType${cellType}`], {
+    [styles.colorBlind]: true,
     [styles.hiddenRow]: isHidden,
     [styles.ghost]: isGhost,
     [styles.piece]: isPiece

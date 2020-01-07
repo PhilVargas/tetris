@@ -12,7 +12,7 @@ const generateCells = (yCoord: number, cells: BoardCells) => {
   return [...Array(BoardSettings.width)].map((_, xCoord: number) => {
     const cellId = Calculate.cellIndexFromCoords({ xCoord, yCoord })
     const cell = cells[cellId]
-    const cellColorType: CellType = cell.pieceType || cell.ghostType || cell.cellType
+    const cellType: CellType = cell.pieceType || cell.ghostType || cell.cellType
     const isHidden = yCoord < BoardSettings.hiddenRows
     const isGhost = cell.ghostType != null && cell.pieceType == null
     const isPiece = cell.pieceType != null
@@ -21,7 +21,7 @@ const generateCells = (yCoord: number, cells: BoardCells) => {
       isHidden={isHidden}
       isGhost={isGhost}
       isPiece={isPiece}
-      backgroundColor={CellSettings.color(cellColorType, false)}
+      cellType={cellType}
       width={CellSettings.edgeLength}
       height={CellSettings.edgeLength} />
   })
