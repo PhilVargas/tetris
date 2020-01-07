@@ -66,8 +66,15 @@ const GameUtil = {
   scoreRowsForTurn,
   generateInitialState: (): IGameState => {
     return {
-      ...GameSettings,
-      ...BoardSettings,
+      xCoord: BoardSettings.xCoord,
+      yCoord: BoardSettings.yCoord,
+      pieceIds: BoardSettings.pieceIds,
+      rotation: BoardSettings.rotation,
+      isPaused: GameSettings.isPaused,
+      hasGameBegun: GameSettings.hasGameBegun,
+      totalLinesCleared: GameSettings.totalLinesCleared,
+      score: GameSettings.score,
+      turnDelay: GameSettings.initialTurnDelay,
       cells: generateDefaultCells(),
       currentPieceType: generateRandomPieceType()
     }

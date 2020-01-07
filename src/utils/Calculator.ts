@@ -1,5 +1,5 @@
 import { PieceType, PieceShape, PieceOffset, Coordinate, Rotation, RotationDirection, BoardCells, CellType, IBoardCell, LinesCleared, Level } from '../typings'
-import { BoardSettings, PieceShapeMap, PossibleBaseScorePerTurn } from '../constants/Settings'
+import { GameSettings, BoardSettings, PieceShapeMap, PossibleBaseScorePerTurn } from '../constants/Settings'
 
 const cellIndexFromCoords = (coordinate: Coordinate): number => {
   const { xCoord, yCoord } = coordinate
@@ -92,7 +92,12 @@ const scoreThisTurn = (linesClearedThisTurn: LinesCleared, scoreMultiplier: Leve
   return PossibleBaseScorePerTurn[linesClearedThisTurn] * (1 + scoreMultiplier)
 }
 
+const turnDelay = (level: Level) => {
+  return Math.max(GameSettings.minimumTurnDelay, GameSettings.initialTurnDelay - (50 * level))
+}
+
 const Calculate = {
+  turnDelay,
   level,
   scoreThisTurn,
   cellIndexFromCoords,

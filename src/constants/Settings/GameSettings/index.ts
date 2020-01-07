@@ -200,9 +200,10 @@ export const PossibleBaseScorePerTurn: Array<BaseScorePerTurn> = [0, 40, 100, 30
 const GameSettings: IGameSettings = {
   hasGameBegun: false,
   isPaused: false,
-  turnDelay: 500,
+  initialTurnDelay: 500,
   totalLinesCleared: 0,
   score: 0,
+  minimumTurnDelay: 50,
 }
 
 export default GameSettings

@@ -1,4 +1,4 @@
-import React, { FC, useState, useLayoutEffect } from 'react';
+import React, { FC, useState, useLayoutEffect, useEffect, useRef } from 'react';
 import './App.scss';
 import Board from './components/Board'
 import gameStore from './store/game';
@@ -8,13 +8,28 @@ import Overlay from './components/Overlay';
 const App: FC = () => {
   const [gameState, setgameState] = useState(gameStore.generateInitialState())
 
+  const savedCallback = useRef(gameStore.nextTurn)
+
+  useEffect(() => {
+    savedCallback.current = gameStore.nextTurn
+  })
+
+  useEffect(() => {
+    let id: NodeJS.Timeout
+
+    function tick() {
+      savedCallback.current()
+      id = setTimeout(tick, gameState.turnDelay)
+    }
+    id = setTimeout(tick, gameState.turnDelay)
+    return () => {
+      clearTimeout(id)
+    }
+  }, [gameState.turnDelay])
+
   useLayoutEffect(() => {
     gameStore.subscribe(setgameState)
     gameStore.init()
-
-    const interval = setInterval(() => {
-      gameStore.nextTurn()
-    }, gameState.turnDelay)
 
     window.addEventListener('keyup', (e) => {
       e.preventDefault()
@@ -55,9 +70,8 @@ const App: FC = () => {
 
     return () => {
       gameStore.unsubcribe()
-      clearInterval(interval)
     }
-  }, [gameState.turnDelay, setgameState])
+  }, [setgameState])
 
   const { cells, isPaused, hasGameBegun, score } = gameState
   const boardProps: IBoardProps = { cells }

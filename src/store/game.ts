@@ -92,6 +92,7 @@ const nextTurn = () => {
     const pieceIds = Calculate.getCellIdsForPiece({ xCoord: defaultXCoord, yCoord: defaultYCoord }, defaultRotation, randomPieceType)
     const ghostPieceIds = Calculate.getCellIdsForGhost(boardCells, defaultRotation, randomPieceType, { xCoord: defaultXCoord, yCoord: defaultYCoord })
     const cells = updateCells(boardCells, randomPieceType, pieceIds, ghostPieceIds)
+    const totalLinesCleared = state.totalLinesCleared + linesClearedThisTurn
     state = {
       ...state,
       xCoord: defaultXCoord,
@@ -99,7 +100,8 @@ const nextTurn = () => {
       currentPieceType: randomPieceType,
       cells,
       rotation: defaultRotation,
-      totalLinesCleared: state.totalLinesCleared + linesClearedThisTurn,
+      totalLinesCleared: totalLinesCleared,
+      turnDelay: Calculate.turnDelay(Calculate.level(totalLinesCleared)),
       score: state.score + scoreThisTurn
     }
     subject.next(state)

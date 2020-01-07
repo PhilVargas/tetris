@@ -68,9 +68,10 @@ export interface ICellProps {
 export interface IGameSettings {
   hasGameBegun: boolean
   isPaused: boolean
-  turnDelay: number
+  initialTurnDelay: number
   totalLinesCleared: number
   score: number
+  minimumTurnDelay: number
 }
 
 export interface ISettings {
