@@ -6,7 +6,7 @@ import { ICellProps } from '../../typings'
 
 const Cell: FC<ICellProps> = ({ className, isHidden, isGhost, isPiece, cellType, ...styleProps }) => {
   const computedClassName = cn(className, styles.wrapper, styles[`cellType${cellType}`], {
-    [styles.colorBlind]: true,
+    [styles.colorBlind]: false,
     [styles.hiddenRow]: isHidden,
     [styles.ghost]: isGhost,
     [styles.piece]: isPiece
