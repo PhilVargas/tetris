@@ -54,6 +54,7 @@ export interface IBoardSettings {
 export interface ICellSettings {
   color: (cellType: CellType, isColorBlindActive: boolean) => string
   edgeLength: number
+  displayEdgeLength: number
 }
 export interface ICellProps {
   className?: string
@@ -102,6 +103,7 @@ export interface IGameState {
   yCoord: number
   cells: BoardCells
   currentPieceType: PieceType
+  nextPieceType: PieceType
   pieceIds: Array<number>
   rotation: Rotation
   turnDelay: number

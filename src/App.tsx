@@ -70,7 +70,7 @@ const App: FC = () => {
     }
   }, [setgameState])
 
-  const { cells, isPaused, hasGameBegun, score, isGameOver } = gameState
+  const { cells, isPaused, hasGameBegun, score, isGameOver, nextPieceType } = gameState
   const boardProps: IBoardProps = { cells }
   return (
     <div className="App">
@@ -86,7 +86,9 @@ const App: FC = () => {
         />
         <Board {...boardProps} />
       </div>
-      <div className="flex"></div>
+      <div className="flex">
+        <DisplayPiece nextPieceType={nextPieceType} />
+      </div>
     </div>
   );
 }

@@ -77,7 +77,8 @@ const GameUtil = {
       score: GameSettings.score,
       turnDelay: GameSettings.initialTurnDelay,
       cells: generateDefaultCells(),
-      currentPieceType: generateRandomPieceType()
+      currentPieceType: generateRandomPieceType(),
+      nextPieceType: generateRandomPieceType(),
     }
   }
 }

@@ -73,7 +73,7 @@ const togglePause = () => {
 }
 
 const nextTurn = () => {
-  const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
+  const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun, nextPieceType } = state
   if (!hasGameBegun || isPaused) { return }
   const nextYCoord = yCoord + 1
 
@@ -92,15 +92,16 @@ const nextTurn = () => {
       const { cells: boardCells, scoreThisTurn, linesClearedThisTurn } = GameUtil.scoreRowsForTurn(frozenCells, state.totalLinesCleared)
       const randomPieceType = GameUtil.generateRandomPieceType()
       const { xCoord: defaultXCoord, yCoord: defaultYCoord, rotation: defaultRotation } = BoardSettings
-      const pieceIds = Calculate.getCellIdsForPiece({ xCoord: defaultXCoord, yCoord: defaultYCoord }, defaultRotation, randomPieceType)
-      const ghostPieceIds = Calculate.getCellIdsForGhost(boardCells, defaultRotation, randomPieceType, { xCoord: defaultXCoord, yCoord: defaultYCoord })
-      const cells = updateCells(boardCells, randomPieceType, pieceIds, ghostPieceIds)
+      const pieceIds = Calculate.getCellIdsForPiece({ xCoord: defaultXCoord, yCoord: defaultYCoord }, defaultRotation, nextPieceType)
+      const ghostPieceIds = Calculate.getCellIdsForGhost(boardCells, defaultRotation, nextPieceType, { xCoord: defaultXCoord, yCoord: defaultYCoord })
+      const cells = updateCells(boardCells, nextPieceType, pieceIds, ghostPieceIds)
       const totalLinesCleared = state.totalLinesCleared + linesClearedThisTurn
       state = {
         ...state,
         xCoord: defaultXCoord,
         yCoord: defaultYCoord,
-        currentPieceType: randomPieceType,
+        currentPieceType: nextPieceType,
+        nextPieceType: randomPieceType,
         cells,
         rotation: defaultRotation,
         totalLinesCleared: totalLinesCleared,
