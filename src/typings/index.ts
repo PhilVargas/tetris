@@ -31,6 +31,15 @@ export type PieceMap = {
   [key in PieceType]: PieceRotations
 }
 
+export type LinesCleared = 0 | 1 | 2 | 3 | 4
+export type BaseScorePerTurn = 0 | 40 | 100 | 300 | 1200
+export type Level = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+export interface IScoredBoardCells {
+  cells: BoardCells
+  scoreThisTurn: number
+  linesClearedThisTurn: LinesCleared
+}
+
 export interface IBoardSettings {
   height: number
   width: number
@@ -60,6 +69,8 @@ export interface IGameSettings {
   hasGameBegun: boolean
   isPaused: boolean
   turnDelay: number
+  totalLinesCleared: number
+  score: number
 }
 
 export interface ISettings {
@@ -94,11 +105,14 @@ export interface IGameState {
   turnDelay: number
   isPaused: boolean
   hasGameBegun: boolean
+  totalLinesCleared: number
+  score: number
 }
 
 export interface IOverlayProps {
   isPaused: boolean
   hasGameBegun: boolean
+  score: number
   startGame: () => void
   resumeGame: () => void
 }

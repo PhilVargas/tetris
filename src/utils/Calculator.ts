@@ -1,6 +1,5 @@
-import { PieceType, PieceShape, PieceOffset, Coordinate, Rotation, RotationDirection, BoardCells, CellType, IBoardCell } from '../typings'
-import { BoardSettings } from '../constants/Settings'
-import { PieceShapeMap } from '../constants/Settings'
+import { PieceType, PieceShape, PieceOffset, Coordinate, Rotation, RotationDirection, BoardCells, CellType, IBoardCell, LinesCleared, Level } from '../typings'
+import { BoardSettings, PieceShapeMap, PossibleBaseScorePerTurn } from '../constants/Settings'
 
 const cellIndexFromCoords = (coordinate: Coordinate): number => {
   const { xCoord, yCoord } = coordinate
@@ -42,6 +41,10 @@ const isRowFrozen = (row: BoardCells): boolean => {
   })
 }
 
+const isCollisionFree = (nextPieceCoordinate: Coordinate, rotation: Rotation, currentPieceType: PieceType, cells: BoardCells): boolean => {
+  return !hasCollision(nextPieceCoordinate, rotation, currentPieceType, cells)
+}
+
 const hasCollision = (nextPieceCoordinate: Coordinate, rotation: Rotation, currentPieceType: PieceType, cells: BoardCells): boolean => {
   const shape = PieceShapeMap[currentPieceType][rotation]
   const { xCoord: nextXCoordinate, yCoord: nextYCoordinate } = nextPieceCoordinate
@@ -81,12 +84,23 @@ const getCellIdsForGhost = (cells: BoardCells, rotation: Rotation, currentPieceT
   return getCellIdsForPiece({ xCoord, yCoord }, rotation, currentPieceType)
 }
 
+const level = (totalLinesCleared: number): Level => {
+  return Math.min(10, Math.floor(totalLinesCleared / 10)) as Level
+}
+
+const scoreThisTurn = (linesClearedThisTurn: LinesCleared, scoreMultiplier: Level): number => {
+  return PossibleBaseScorePerTurn[linesClearedThisTurn] * (1 + scoreMultiplier)
+}
+
 const Calculate = {
+  level,
+  scoreThisTurn,
   cellIndexFromCoords,
   dropCoordinate,
   getCellIdsForPiece,
   getCellIdsForGhost,
   hasCollision,
+  isCollisionFree,
   rotation,
   getCellRows,
   isAnyRowFrozen,

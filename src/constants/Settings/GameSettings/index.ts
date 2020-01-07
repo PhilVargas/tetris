@@ -1,4 +1,4 @@
-import { IGameSettings, CellType, PieceTypes, PieceMap } from '../../../typings'
+import { IGameSettings, CellType, PieceTypes, PieceMap, BaseScorePerTurn } from '../../../typings'
 
 export const Pieces: PieceTypes = [
   CellType.I,
@@ -195,10 +195,14 @@ export const PieceShapeMap: PieceMap = {
   ],
 }
 
+export const PossibleBaseScorePerTurn: Array<BaseScorePerTurn> = [0, 40, 100, 300, 1200]
+
 const GameSettings: IGameSettings = {
   hasGameBegun: false,
   isPaused: false,
   turnDelay: 500,
+  totalLinesCleared: 0,
+  score: 0,
 }
 
 export default GameSettings

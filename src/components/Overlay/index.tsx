@@ -4,7 +4,7 @@ import styles from './Overlay.module.scss'
 import { IOverlayProps } from '../../typings'
 
 
-const Overlay: FC<IOverlayProps> = ({ isPaused, hasGameBegun, startGame, resumeGame }) => {
+const Overlay: FC<IOverlayProps> = ({ isPaused, hasGameBegun, startGame, resumeGame, score }) => {
   if (hasGameBegun && !isPaused) { return null }
   const buttonText = hasGameBegun ? 'Resume' : 'Start'
 
@@ -13,7 +13,7 @@ const Overlay: FC<IOverlayProps> = ({ isPaused, hasGameBegun, startGame, resumeG
     hasGameBegun ? resumeGame() : startGame()
   }
 
-  const text = "Current score is a million"
+  const text = `Current score is a ${score}`
 
   return (
     <div className={styles.wrapper}>

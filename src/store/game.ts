@@ -77,27 +77,31 @@ const nextTurn = () => {
   if (!hasGameBegun || isPaused) { return }
   const nextYCoord = yCoord + 1
 
-  if (!Calculate.hasCollision({ xCoord, yCoord: nextYCoord }, rotation, currentPieceType, state.cells)) {
+  if (Calculate.isCollisionFree({ xCoord, yCoord: nextYCoord }, rotation, currentPieceType, state.cells)) {
     const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord: nextYCoord }, rotation, currentPieceType)
     const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, currentPieceType, { xCoord, yCoord: nextYCoord })
     const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
     state = { ...state, xCoord: xCoord, yCoord: nextYCoord, cells }
     subject.next(state)
   } else {
-    let boardCells = freezeCells(state.cells)
+    const frozenCells = freezeCells(state.cells)
     // TODO check if player will lose
-    while (Calculate.isAnyRowFrozen(boardCells)) {
-      let lowestFrozenRowIndex = Calculate.getFrozenRowIndices(boardCells).pop()
-      if (lowestFrozenRowIndex == null) { break }
-      boardCells = GameUtil.generateShiftedCells(lowestFrozenRowIndex, boardCells)
-    }
-
+    const { cells: boardCells, scoreThisTurn, linesClearedThisTurn } = GameUtil.scoreRowsForTurn(frozenCells, state.totalLinesCleared)
     const randomPieceType = GameUtil.generateRandomPieceType()
     const { xCoord: defaultXCoord, yCoord: defaultYCoord, rotation: defaultRotation } = BoardSettings
     const pieceIds = Calculate.getCellIdsForPiece({ xCoord: defaultXCoord, yCoord: defaultYCoord }, defaultRotation, randomPieceType)
     const ghostPieceIds = Calculate.getCellIdsForGhost(boardCells, defaultRotation, randomPieceType, { xCoord: defaultXCoord, yCoord: defaultYCoord })
     const cells = updateCells(boardCells, randomPieceType, pieceIds, ghostPieceIds)
-    state = { ...state, xCoord: defaultXCoord, yCoord: defaultYCoord, currentPieceType: randomPieceType, cells, rotation: defaultRotation }
+    state = {
+      ...state,
+      xCoord: defaultXCoord,
+      yCoord: defaultYCoord,
+      currentPieceType: randomPieceType,
+      cells,
+      rotation: defaultRotation,
+      totalLinesCleared: state.totalLinesCleared + linesClearedThisTurn,
+      score: state.score + scoreThisTurn
+    }
     subject.next(state)
   }
 }

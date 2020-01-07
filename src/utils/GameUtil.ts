@@ -1,4 +1,4 @@
-import { IBoardCell, CellType, IGameState, PieceType, BoardCells, Coordinate, Rotation } from '../typings'
+import { IBoardCell, CellType, IGameState, PieceType, BoardCells, IScoredBoardCells, LinesCleared } from '../typings'
 import { BoardSettings, GameSettings } from '../constants/Settings'
 import Calculator from './Calculator'
 import { Pieces } from '../constants/Settings/GameSettings'
@@ -32,6 +32,18 @@ const generateShiftedCells = (atRowIndex: number, cells: BoardCells): BoardCells
   return emptyCells.concat(shiftedCells)
 }
 
+const scoreRowsForTurn = (boardCells: BoardCells, totalLinesCleared: number): IScoredBoardCells => {
+  let linesClearedThisTurn: LinesCleared = 0
+  let cells = [...boardCells]
+  while (Calculator.isAnyRowFrozen(cells)) {
+    linesClearedThisTurn = linesClearedThisTurn + 1 as LinesCleared
+    let lowestFrozenRowIndex = Calculator.getFrozenRowIndices(cells).pop()
+    if (lowestFrozenRowIndex == null) { break }
+    cells = generateShiftedCells(lowestFrozenRowIndex, cells)
+  }
+  const scoreThisTurn = Calculator.scoreThisTurn(linesClearedThisTurn, Calculator.level(totalLinesCleared))
+  return { cells, scoreThisTurn, linesClearedThisTurn }
+}
 const generateRandomPieceType = (): PieceType => {
   const randomIndex = Math.floor(Math.random() * Pieces.length)
   return Pieces[randomIndex]
@@ -51,6 +63,7 @@ const GameUtil = {
   generateRandomPieceType,
   generateShiftedCells,
   freezeCells,
+  scoreRowsForTurn,
   generateInitialState: (): IGameState => {
     return {
       ...GameSettings,
