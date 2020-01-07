@@ -74,7 +74,7 @@ const App: FC = () => {
   const boardProps: IBoardProps = { cells }
   return (
     <div className="App">
-      <div className="flex"></div>
+      <div className="left-panel"></div>
       <div className="board-anchor">
         <Overlay
           isGameOver={isGameOver}
@@ -86,8 +86,21 @@ const App: FC = () => {
         />
         <Board {...boardProps} />
       </div>
-      <div className="flex">
-        <DisplayPiece nextPieceType={nextPieceType} hasGameBegun={hasGameBegun} />
+      <div className="right-panel">
+        <div className="flex flex-stretch">
+          <div className="panel callout display-piece-container">
+            <DisplayPiece nextPieceType={nextPieceType} hasGameBegun={hasGameBegun} title={"Next Piece"} />
+            <DisplayPiece nextPieceType={nextPieceType} hasGameBegun={hasGameBegun} title={"Hold Piece"} />
+          </div>
+          <div className="attributions panel">
+            <h4>Tetris by Philip A Vargas</h4>
+            <div>Tetris by Philip A Vargas</div>
+            <div>Tetris by Philip A Vargas</div>
+            <div>Tetris by Philip A Vargas</div>
+            <div>Tetris by Philip A Vargas</div>
+            <div>Tetris by Philip A Vargas</div>
+          </div>
+        </div>
       </div>
     </div>
   );
