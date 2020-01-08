@@ -1,9 +1,10 @@
 # Tetris
-Coffeescript tetris using React + Redux
+TypeScript tetris using React + RxJs
+Bootstrapped from create-react-app
 
 http://philvargas.github.io/tetris/
 
-![PAV Tetris](https://raw.githubusercontent.com/PhilVargas/tetris/master/public/assets/images/PAV%20Tetris.png)
+![PAV Tetris](https://raw.githubusercontent.com/PhilVargas/tetris/master/public/assets/images/PAV-Tetris.png)
 
 ## Features
 - Score and Level tracking
@@ -13,7 +14,6 @@ http://philvargas.github.io/tetris/
 - Ghost Piece toggle
 - Hold Piece toggle
 - Next Piece display
-- Variable Board Size
 - Colorblind-friendly Mode
 
 ## Controls
@@ -27,12 +27,12 @@ http://philvargas.github.io/tetris/
 ## Installation
 ```
 yarn install
-gulp build:assets
-open index.html
+yarn start
 ```
 
 ## Versions
-
- - React v0.14.8
- - yarn v0.21.3
- - node v8.9.3
+ - React v16.12.0
+ - TypeScript v3.7.2
+ - yarn v1.21.1
+ - node v10.15.3
+ - create-react-app v3.3.0

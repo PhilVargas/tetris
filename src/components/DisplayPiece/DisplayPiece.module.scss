@@ -1,0 +1,159 @@
+.wrapper {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 0.75rem;
+}
+
+.displayWrapper {
+  border: 1px solid black;
+  display: flex;
+  height: 100px;
+  width: 100px;
+  position: relative;
+}
+
+.disabled {
+  background-color: gray;
+  opacity: 0.25;
+}
+
+.pieceCell {
+  border: 1px solid black;
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.cellTypeI {
+  &:nth-of-type(1) {
+    top: 10px;
+    left: 40px;
+  }
+  &:nth-of-type(2) {
+    top: 30px;
+    left: 40px;
+  }
+  &:nth-of-type(3) {
+    top: 50px;
+    left: 40px;
+  }
+  &:nth-of-type(4) {
+    top: 70px;
+    left: 40px;
+  }
+}
+
+.cellTypeO {
+  &:nth-of-type(1) {
+    top: 30px;
+    left: 30px;
+  }
+  &:nth-of-type(2) {
+    top: 30px;
+    left: 50px;
+  }
+  &:nth-of-type(3) {
+    top: 50px;
+    left: 30px;
+  }
+  &:nth-of-type(4) {
+    top: 50px;
+    left: 50px;
+  }
+}
+
+.cellTypeS {
+  &:nth-of-type(1) {
+    top: 30px;
+    left: 60px;
+  }
+  &:nth-of-type(2) {
+    top: 30px;
+    left: 40px;
+  }
+  &:nth-of-type(3) {
+    top: 50px;
+    left: 40px;
+  }
+  &:nth-of-type(4) {
+    top: 50px;
+    left: 20px;
+  }
+}
+
+.cellTypeT {
+  &:nth-of-type(1) {
+    top: 30px;
+    left: 40px;
+  }
+  &:nth-of-type(2) {
+    top: 50px;
+    left: 40px;
+  }
+  &:nth-of-type(3) {
+    top: 50px;
+    left: 20px;
+  }
+  &:nth-of-type(4) {
+    top: 50px;
+    left: 60px;
+  }
+}
+
+.cellTypeZ {
+  &:nth-of-type(1) {
+    top: 30px;
+    left: 20px;
+  }
+  &:nth-of-type(2) {
+    top: 30px;
+    left: 40px;
+  }
+  &:nth-of-type(3) {
+    top: 50px;
+    left: 40px;
+  }
+  &:nth-of-type(4) {
+    top: 50px;
+    left: 60px;
+  }
+}
+
+.cellTypeJ {
+  &:nth-of-type(1) {
+    top: 20px;
+    left: 50px;
+  }
+  &:nth-of-type(2) {
+    top: 40px;
+    left: 50px;
+  }
+  &:nth-of-type(3) {
+    top: 60px;
+    left: 50px;
+  }
+  &:nth-of-type(4) {
+    top: 60px;
+    left: 30px;
+  }
+}
+
+.cellTypeL {
+  &:nth-of-type(1) {
+    top: 20px;
+    left: 30px;
+  }
+  &:nth-of-type(2) {
+    top: 40px;
+    left: 30px;
+  }
+  &:nth-of-type(3) {
+    top: 60px;
+    left: 30px;
+  }
+  &:nth-of-type(4) {
+    top: 60px;
+    left: 50px;
+  }
+}
