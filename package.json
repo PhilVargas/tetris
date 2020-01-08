@@ -35,47 +35,26 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/PhilVargas/tetris.git"
   },
-  "author": "Phil Vargas",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/PhilVargas/tetris/issues"
-  },
-  "homepage": "https://github.com/PhilVargas/tetris",
-  "jest": {
-    "rootDir": "./src",
-    "scriptPreprocessor": "<rootDir>/__tests__/preprocessor.js",
-    "moduleFileExtensions": [
-      "js",
-      "coffee"
-    ],
-    "modulePathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "unmockedModulePathPatterns": [
-      "helpers",
-      "react",
-      "jquery",
-      "classnames",
-      "object-assign"
-    ],
-    "testFileExtensions": [
-      "coffee",
-      "js"
-    ],
-    "testPathIgnorePatterns": [
-      "preprocessor.js"
-    ],
-    "testPathDirs": [
-      "<rootDir>/stores/__tests__",
-      "<rootDir>/actions/__tests__",
-      "<rootDir>/helpers/__tests__"
-    ]
-  },
   "devDependencies": {
     "gh-pages": "^2.2.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
