@@ -82,7 +82,8 @@ const GameUtil = {
       isColorblindModeEnabled: GameSettings.isColorblindModeEnabled,
       isGhostEnabled: GameSettings.isGhostEnabled,
       isQueuePieceEnabled: GameSettings.isQueuePieceEnabled,
-      canQueuePiece: GameSettings.canQueuePiece
+      canQueuePiece: GameSettings.canQueuePiece,
+      isAudioMuted: GameSettings.isAudioMuted,
     }
   }
 }

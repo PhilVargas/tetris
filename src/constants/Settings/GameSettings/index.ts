@@ -197,6 +197,8 @@ export const PieceShapeMap: PieceMap = {
 
 export const PossibleBaseScorePerTurn: Array<BaseScorePerTurn> = [0, 40, 100, 300, 1200]
 
+export const ThemeSongUrl = "https://raw.githubusercontent.com/PhilVargas/tetris/master/public/assets/music/Tetris%20Theme%20-%20Long.ogg"
+
 const GameSettings: IGameSettings = {
   hasGameBegun: false,
   isPaused: false,
@@ -209,6 +211,7 @@ const GameSettings: IGameSettings = {
   isGhostEnabled: true,
   isQueuePieceEnabled: true,
   canQueuePiece: true,
+  isAudioMuted: false,
 }
 
 export default GameSettings

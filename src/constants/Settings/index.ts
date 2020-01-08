@@ -1,7 +1,7 @@
 import { ISettings } from '../../typings'
 import BoardSettings from './BoardSettings'
 import CellSettings from './CellSettings'
-import GameSettings, { PieceShapeMap, PossibleBaseScorePerTurn } from './GameSettings'
+import GameSettings, { PieceShapeMap, PossibleBaseScorePerTurn, ThemeSongUrl } from './GameSettings'
 
 const Settings: ISettings = {
   BoardSettings,
@@ -9,5 +9,5 @@ const Settings: ISettings = {
   GameSettings
 }
 
-export { BoardSettings, CellSettings, GameSettings, PieceShapeMap, PossibleBaseScorePerTurn }
+export { BoardSettings, CellSettings, GameSettings, PieceShapeMap, PossibleBaseScorePerTurn, ThemeSongUrl }
 export default Settings

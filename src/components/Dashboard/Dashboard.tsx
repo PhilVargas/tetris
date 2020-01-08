@@ -6,7 +6,7 @@ import { IDashboardProps } from '../../typings'
 
 import Switch from '../Switch'
 
-const Dashboard: FC<IDashboardProps> = ({ isColorblindModeEnabled, onColorblindChange, isGhostEnabled, onGhostChange, isQueuePieceEnabled, onQueueChange }) => {
+const Dashboard: FC<IDashboardProps> = ({ isColorblindModeEnabled, onColorblindChange, isGhostEnabled, onGhostChange, isQueuePieceEnabled, onQueueChange, isAudioMuted, onAudioChange }) => {
   return (
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.header)}>settings</div>
@@ -21,6 +21,12 @@ const Dashboard: FC<IDashboardProps> = ({ isColorblindModeEnabled, onColorblindC
         labelText={"queue"}
         isChecked={isQueuePieceEnabled}
         onChange={onQueueChange}
+      />
+      <Switch
+        className={cn(styles.audioContainer)}
+        labelText={"Music"}
+        isChecked={!isAudioMuted}
+        onChange={onAudioChange}
       />
       <Switch
         className={cn(styles.colorblindContainer)}

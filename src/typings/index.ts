@@ -79,6 +79,7 @@ export interface IGameSettings {
   isGhostEnabled: boolean
   isQueuePieceEnabled: boolean
   canQueuePiece: boolean
+  isAudioMuted: boolean
 }
 
 export interface ISettings {
@@ -124,6 +125,7 @@ export interface IGameState {
   isGhostEnabled: boolean
   isQueuePieceEnabled: boolean
   canQueuePiece: boolean
+  isAudioMuted: boolean
 }
 
 export interface IOverlayProps {
@@ -131,6 +133,7 @@ export interface IOverlayProps {
   isPaused: boolean
   hasGameBegun: boolean
   score: number
+  isAudioMuted: boolean
   startGame: () => void
   resumeGame: () => void
 }
@@ -147,13 +150,18 @@ export interface IDisplayPieceProps {
   isColorblindModeEnabled: boolean
 }
 
-export interface IDashboardProps {
+export interface IPersistentSettings {
   isColorblindModeEnabled: boolean
-  onColorblindChange: () => void
   isGhostEnabled: boolean
-  onGhostChange: () => void
   isQueuePieceEnabled: boolean
+  isAudioMuted: boolean
+}
+
+export interface IDashboardProps extends IPersistentSettings {
+  onColorblindChange: () => void
+  onGhostChange: () => void
   onQueueChange: () => void
+  onAudioChange: () => void
 }
 
 export interface ISwitchProps {
@@ -161,4 +169,10 @@ export interface ISwitchProps {
   labelText?: string
   isChecked: boolean
   onChange: () => void
+}
+
+export interface IThemeSongProps {
+  isAudioMuted: boolean
+  isPaused: boolean
+  hasGameBegun: boolean
 }

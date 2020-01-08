@@ -7,7 +7,7 @@ import styles from './Overlay.module.scss'
 import { IOverlayProps } from '../../typings'
 
 
-const Overlay: FC<IOverlayProps> = ({ isPaused, hasGameBegun, startGame, resumeGame, score, isGameOver }) => {
+const Overlay: FC<IOverlayProps> = ({ isPaused, hasGameBegun, startGame, resumeGame, score, isGameOver, isAudioMuted }) => {
   if (hasGameBegun && !isPaused && !isGameOver) { return null }
 
   const buttonText = cn({
@@ -20,19 +20,26 @@ const Overlay: FC<IOverlayProps> = ({ isPaused, hasGameBegun, startGame, resumeG
     startGame()
   }
 
-  const text = cn({
-    [`Game Over!\nScore: ${score}`]: isGameOver,
+
+  const audioText = cn('Audio is', {
+    Enabled: !isAudioMuted,
+    Disabled: isAudioMuted
   })
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <p className={styles.overlayText}>{text}</p>
+        {isGameOver &&
+          [
+            <p className={styles.overlayText}>Game over!</p>,
+            <p className={styles.overlayText}>{`Score: ${score}`}</p>
+          ]
+        }
         {(!hasGameBegun || isGameOver) &&
           <button className="btn" onClick={onClick}>{buttonText}</button>
         }
         {!hasGameBegun &&
-          <p className={styles.overlayText}>(Audio is Enabled)</p>
+          <p className={styles.overlayText}>({audioText})</p>
         }
         {hasGameBegun && !isGameOver &&
           <div className={styles.overlayText}>

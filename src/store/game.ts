@@ -2,7 +2,7 @@ import { Subject } from 'rxjs'
 import { Dispatch, SetStateAction } from 'react'
 
 import GameUtil from '../utils/GameUtil'
-import { IGameState, IBoardCell, PieceOffset, BoardCells, PieceType, Coordinate, RotationDirection } from '../typings'
+import { IGameState, IBoardCell, PieceOffset, BoardCells, PieceType, Coordinate, RotationDirection, IPersistentSettings } from '../typings'
 import Calculate from '../utils/Calculator'
 import { BoardSettings } from '../constants/Settings'
 
@@ -56,13 +56,26 @@ const updatePieceCoordinates = (offset: PieceOffset) => {
 }
 
 const startGame = () => {
-  state = GameUtil.generateInitialState()
-  const { xCoord, yCoord, rotation } = state
+  const { isAudioMuted, isGhostEnabled, isQueuePieceEnabled, isColorblindModeEnabled } = state
+  const staticSettings: IPersistentSettings = { isAudioMuted, isGhostEnabled, isQueuePieceEnabled, isColorblindModeEnabled }
+  const initialState = GameUtil.generateInitialState()
+  const { xCoord, yCoord, rotation } = initialState
   const currentPieceType = GameUtil.generateRandomPieceType()
   const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord }, rotation, currentPieceType)
-  const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, currentPieceType, { xCoord, yCoord })
-  const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
-  state = { ...state, cells, currentPieceType, xCoord: xCoord, yCoord: yCoord, hasGameBegun: true, isPaused: false }
+  const ghostPieceIds = Calculate.getCellIdsForGhost(initialState.cells, rotation, currentPieceType, { xCoord, yCoord })
+  const cells = updateCells(initialState.cells, currentPieceType, pieceIds, ghostPieceIds)
+  state = {
+    ...initialState,
+    ...staticSettings,
+    cells,
+    currentPieceType,
+    xCoord: xCoord,
+    yCoord: yCoord,
+    hasGameBegun: true,
+    isPaused: false,
+  }
+
+
   subject.next(state)
 }
 
@@ -129,6 +142,11 @@ const toggleQueuePiece = () => {
   subject.next(state)
 }
 
+const toggleAudio = () => {
+  state = { ...state, isAudioMuted: !state.isAudioMuted }
+  subject.next(state)
+}
+
 const swapQueuePiece = () => {
   const { isQueuePieceEnabled, canQueuePiece, currentPieceType, nextPieceType, queuePieceType } = state
   if (isQueuePieceEnabled && canQueuePiece) {
@@ -163,6 +181,7 @@ const gameStore = {
   toggleColorblindMode,
   toggleGhost,
   toggleQueuePiece,
+  toggleAudio,
   swapQueuePiece,
   dropPiece: () => {
     const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
