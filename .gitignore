@@ -2,4 +2,5 @@
 **/bundle.js
 **/application.css
 dist
+build
 .publish
