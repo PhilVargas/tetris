@@ -7,7 +7,7 @@ import styles from './Overlay.module.scss'
 import { IOverlayProps } from '../../typings'
 
 
-const Overlay: FC<IOverlayProps> = ({ isPaused, hasGameBegun, startGame, resumeGame, score, isGameOver, isAudioMuted }) => {
+const Overlay: FC<IOverlayProps> = ({ isPaused, hasGameBegun, startGame, score, isGameOver, isAudioMuted }) => {
   if (hasGameBegun && !isPaused && !isGameOver) { return null }
 
   const buttonText = cn({

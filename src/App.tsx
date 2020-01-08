@@ -1,16 +1,17 @@
 import React, { FC, useState, useLayoutEffect, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { faLinkedin, faGithub, faStackOverflow } from '@fortawesome/free-brands-svg-icons';
 import './App.scss';
-import Board from './components/Board'
+
+import { IBoardProps, IDashboardProps, IDisplayPieceProps, IThemeSongProps, IOverlayProps } from './typings';
 import gameStore from './store/game';
-import { IBoardProps, IDashboardProps, IDisplayPieceProps, IThemeSongProps } from './typings';
+import Board from './components/Board'
 import Overlay from './components/Overlay';
 import DisplayPiece from './components/DisplayPiece';
 import Legend from './components/Legend'
 import Calculate from './utils/Calculator';
 import Dashboard from './components/Dashboard';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
-import { faLinkedin, faGithub, faStackOverflow } from '@fortawesome/free-brands-svg-icons';
 import ThemeSong from './components/ThemeSong';
 
 const App: FC = () => {
@@ -80,10 +81,51 @@ const App: FC = () => {
     }
   }, [setgameState])
 
-  const { cells, isPaused, hasGameBegun, score, isGameOver, nextPieceType, totalLinesCleared, isColorblindModeEnabled, isGhostEnabled, queuePieceType, isQueuePieceEnabled, canQueuePiece, isAudioMuted } = gameState
-  const { toggleColorblindMode: onColorblindChange, toggleGhost: onGhostChange, toggleQueuePiece: onQueueChange, toggleAudio: onAudioChange } = gameStore
-  const boardProps: IBoardProps = { cells, isColorblindModeEnabled, isGhostEnabled }
-  const dashBoardProps: IDashboardProps = { isColorblindModeEnabled, isGhostEnabled, onColorblindChange, onGhostChange, isQueuePieceEnabled, onQueueChange, isAudioMuted, onAudioChange }
+  const { cells,
+    isPaused,
+    hasGameBegun,
+    score,
+    isGameOver,
+    nextPieceType,
+    totalLinesCleared,
+    isColorblindModeEnabled,
+    isGhostEnabled,
+    queuePieceType,
+    isQueuePieceEnabled,
+    canQueuePiece,
+    isAudioMuted,
+  } = gameState
+  const {
+    toggleColorblindMode: onColorblindChange,
+    toggleGhost: onGhostChange,
+    toggleQueuePiece: onQueueChange,
+    toggleAudio: onAudioChange,
+    startGame,
+  } = gameStore
+
+  const overlayProps: IOverlayProps = {
+    score,
+    isAudioMuted,
+    isGameOver,
+    isPaused,
+    hasGameBegun,
+    startGame,
+  }
+  const boardProps: IBoardProps = {
+    cells,
+    isColorblindModeEnabled,
+    isGhostEnabled
+  }
+  const dashBoardProps: IDashboardProps = {
+    isColorblindModeEnabled,
+    isGhostEnabled,
+    onColorblindChange,
+    onGhostChange,
+    isQueuePieceEnabled,
+    onQueueChange,
+    isAudioMuted,
+    onAudioChange,
+  }
   const queuePieceProps: IDisplayPieceProps = {
     pieceType: queuePieceType,
     isEnabled: hasGameBegun && isQueuePieceEnabled,
@@ -117,15 +159,7 @@ const App: FC = () => {
         </div>
       </div>
       <div className="board-anchor">
-        <Overlay
-          isGameOver={isGameOver}
-          isPaused={isPaused}
-          hasGameBegun={hasGameBegun}
-          startGame={gameStore.startGame}
-          resumeGame={gameStore.togglePause}
-          score={score}
-          isAudioMuted={isAudioMuted}
-        />
+        <Overlay {...overlayProps} />
         <Board {...boardProps} />
       </div>
       <div className="right-panel">

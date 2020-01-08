@@ -52,7 +52,6 @@ export interface IBoardSettings {
 
 // Depracated
 export interface ICellSettings {
-  color: (cellType: CellType, isColorBlindActive: boolean) => string
   edgeLength: number
 }
 export interface ICellProps {
@@ -135,7 +134,6 @@ export interface IOverlayProps {
   score: number
   isAudioMuted: boolean
   startGame: () => void
-  resumeGame: () => void
 }
 
 export interface ILegendProps {
