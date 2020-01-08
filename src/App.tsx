@@ -2,11 +2,12 @@ import React, { FC, useState, useLayoutEffect, useEffect } from 'react';
 import './App.scss';
 import Board from './components/Board'
 import gameStore from './store/game';
-import { IBoardProps } from './typings';
+import { IBoardProps, IDashboardProps } from './typings';
 import Overlay from './components/Overlay';
 import DisplayPiece from './components/DisplayPiece';
 import Legend from './components/Legend'
 import Calculate from './utils/Calculator';
+import Dashboard from './components/Dashboard';
 
 const App: FC = () => {
   const [gameState, setgameState] = useState(gameStore.generateInitialState())
@@ -72,8 +73,10 @@ const App: FC = () => {
     }
   }, [setgameState])
 
-  const { cells, isPaused, hasGameBegun, score, isGameOver, nextPieceType, totalLinesCleared } = gameState
-  const boardProps: IBoardProps = { cells }
+  const { cells, isPaused, hasGameBegun, score, isGameOver, nextPieceType, totalLinesCleared, isColorblindModeEnabled, isGhostEnabled } = gameState
+  const { toggleColorblindMode: onColorblindChange, toggleGhost: onGhostChange } = gameStore
+  const boardProps: IBoardProps = { cells, isColorblindModeEnabled, isGhostEnabled }
+  const dashBoardProps: IDashboardProps = { isColorblindModeEnabled, isGhostEnabled, onColorblindChange, onGhostChange }
   return (
     <div className="App">
       <div className="left-panel">
@@ -82,6 +85,9 @@ const App: FC = () => {
             <Legend score={score} level={Calculate.level(totalLinesCleared)} />
           </div>
           <div className="panel">
+            <Dashboard
+              {...dashBoardProps}
+            />
           </div>
         </div>
       </div>
@@ -99,8 +105,8 @@ const App: FC = () => {
       <div className="right-panel">
         <div className="flex flex-stretch">
           <div className="panel callout display-piece-container">
-            <DisplayPiece nextPieceType={nextPieceType} hasGameBegun={hasGameBegun} title={"Next Piece"} />
-            <DisplayPiece nextPieceType={nextPieceType} hasGameBegun={hasGameBegun} title={"Hold Piece"} />
+            <DisplayPiece pieceType={nextPieceType} hasGameBegun={hasGameBegun} title={"Next Piece"} isColorblindModeEnabled={isColorblindModeEnabled} />
+            <DisplayPiece pieceType={nextPieceType} hasGameBegun={hasGameBegun} title={"Hold Piece"} isColorblindModeEnabled={isColorblindModeEnabled} />
           </div>
           <div className="attributions panel">
             <h4>Tetris by Philip A Vargas</h4>

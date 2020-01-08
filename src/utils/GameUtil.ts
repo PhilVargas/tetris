@@ -79,6 +79,8 @@ const GameUtil = {
       cells: generateDefaultCells(),
       currentPieceType: generateRandomPieceType(),
       nextPieceType: generateRandomPieceType(),
+      isColorblindModeEnabled: GameSettings.isColorblindModeEnabled,
+      isGhostEnabled: GameSettings.isGhostEnabled,
     }
   }
 }

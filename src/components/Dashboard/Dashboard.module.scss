@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  font-weight: bold;
+  padding-bottom: 0.25rem;
+}
+
+.colorblindContainer, .ghostContainer {
+  display: flex;
+  justify-content: space-between;
+}

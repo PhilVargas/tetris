@@ -205,6 +205,8 @@ const GameSettings: IGameSettings = {
   score: 0,
   minimumTurnDelay: 50,
   isGameOver: false,
+  isColorblindModeEnabled: false,
+  isGhostEnabled: true,
 }
 
 export default GameSettings

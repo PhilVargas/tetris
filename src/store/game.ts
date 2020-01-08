@@ -113,6 +113,16 @@ const nextTurn = () => {
   }
 }
 
+const toggleColorblindMode = () => {
+  state = { ...state, isColorblindModeEnabled: !state.isColorblindModeEnabled }
+  subject.next(state)
+}
+
+const toggleGhost = () => {
+  state = { ...state, isGhostEnabled: !state.isGhostEnabled }
+  subject.next(state)
+}
+
 const gameStore = {
   generateInitialState: GameUtil.generateInitialState,
   init: () => subject.next(state),
@@ -122,6 +132,8 @@ const gameStore = {
   updatePieceCoordinates,
   nextTurn,
   togglePause,
+  toggleColorblindMode,
+  toggleGhost,
   dropPiece: () => {
     const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
     if (!hasGameBegun || isPaused) { return }

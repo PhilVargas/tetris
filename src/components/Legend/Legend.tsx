@@ -2,12 +2,7 @@ import React, { FC } from 'react'
 import cn from 'classnames'
 
 import styles from './Legend.module.scss'
-import { Level } from '../../typings'
-
-interface ILegendProps {
-  score: number
-  level: Level
-}
+import { ILegendProps } from '../../typings'
 
 const Legend: FC<ILegendProps> = ({ level, score }) => {
   return (

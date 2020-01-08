@@ -3,17 +3,14 @@ import cn from 'classnames'
 
 import styles from './DisplayPiece.module.scss'
 import colorStyles from '../Cell/Cell.module.scss'
-import { PieceType } from '../../typings'
+import { IDisplayPieceProps } from '../../typings'
 
-interface IDisplayPieceProps {
-  nextPieceType: PieceType
-  hasGameBegun: boolean
-  title: string
-}
 
-const DisplayPiece: FC<IDisplayPieceProps> = ({ nextPieceType, hasGameBegun, title }) => {
-  const colorName = `cellType${nextPieceType}`
-  const className = cn(styles.pieceCell, styles[colorName], colorStyles[colorName], { [colorStyles.colorBlind]: false })
+const DisplayPiece: FC<IDisplayPieceProps> = ({ pieceType, hasGameBegun, title, isColorblindModeEnabled }) => {
+  const colorName = `cellType${pieceType}`
+  const className = cn(styles.pieceCell, styles[colorName], colorStyles[colorName], {
+    [colorStyles.colorBlind]: isColorblindModeEnabled
+  })
   return (
     <div className={cn(styles.wrapper)}>
       <div>{title}</div>

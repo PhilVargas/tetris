@@ -63,6 +63,8 @@ export interface ICellProps {
   width: number
   height: number
   cellType: CellType
+  isColorblindModeEnabled: boolean
+  isGhostEnabled: boolean
 }
 
 export interface IGameSettings {
@@ -73,6 +75,8 @@ export interface IGameSettings {
   score: number
   minimumTurnDelay: number
   isGameOver: boolean
+  isColorblindModeEnabled: boolean
+  isGhostEnabled: boolean
 }
 
 export interface ISettings {
@@ -95,6 +99,8 @@ export type BoardCells = Array<IBoardCell>
 
 export interface IBoardProps {
   cells: BoardCells
+  isColorblindModeEnabled: boolean
+  isGhostEnabled: boolean
 }
 
 export interface IGameState {
@@ -111,6 +117,8 @@ export interface IGameState {
   totalLinesCleared: number
   score: number
   isGameOver: boolean
+  isColorblindModeEnabled: boolean
+  isGhostEnabled: boolean
 }
 
 export interface IOverlayProps {
@@ -120,4 +128,29 @@ export interface IOverlayProps {
   score: number
   startGame: () => void
   resumeGame: () => void
+}
+
+export interface ILegendProps {
+  score: number
+  level: Level
+}
+export interface IDisplayPieceProps {
+  pieceType: PieceType
+  hasGameBegun: boolean
+  title: string
+  isColorblindModeEnabled: boolean
+}
+
+export interface IDashboardProps {
+  isColorblindModeEnabled: boolean
+  onColorblindChange: () => void
+  isGhostEnabled: boolean
+  onGhostChange: () => void
+}
+
+export interface ISwitchProps {
+  className?: string
+  labelText?: string
+  isChecked: boolean
+  onChange: () => void
 }
