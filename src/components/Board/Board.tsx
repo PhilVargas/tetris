@@ -4,7 +4,7 @@ import cn from 'classnames'
 import styles from './Board.module.scss'
 
 import { CellSettings, BoardSettings } from '../../constants/Settings'
-import Cell from '../../components/Cell'
+import Cell from '../Cell'
 import { BoardCells, IBoardProps, CellType } from '../../typings'
 import Calculate from '../../utils/Calculator'
 
