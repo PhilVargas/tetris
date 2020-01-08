@@ -81,6 +81,8 @@ const GameUtil = {
       nextPieceType: generateRandomPieceType(),
       isColorblindModeEnabled: GameSettings.isColorblindModeEnabled,
       isGhostEnabled: GameSettings.isGhostEnabled,
+      isQueuePieceEnabled: GameSettings.isQueuePieceEnabled,
+      canQueuePiece: GameSettings.canQueuePiece
     }
   }
 }

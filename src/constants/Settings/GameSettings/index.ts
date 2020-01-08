@@ -207,6 +207,8 @@ const GameSettings: IGameSettings = {
   isGameOver: false,
   isColorblindModeEnabled: false,
   isGhostEnabled: true,
+  isQueuePieceEnabled: true,
+  canQueuePiece: true,
 }
 
 export default GameSettings

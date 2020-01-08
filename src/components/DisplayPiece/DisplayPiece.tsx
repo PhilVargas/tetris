@@ -6,7 +6,7 @@ import colorStyles from '../Cell/Cell.module.scss'
 import { IDisplayPieceProps } from '../../typings'
 
 
-const DisplayPiece: FC<IDisplayPieceProps> = ({ pieceType, hasGameBegun, title, isColorblindModeEnabled }) => {
+const DisplayPiece: FC<IDisplayPieceProps> = ({ pieceType, isEnabled, title, isActive, isColorblindModeEnabled }) => {
   const colorName = `cellType${pieceType}`
   const className = cn(styles.pieceCell, styles[colorName], colorStyles[colorName], {
     [colorStyles.colorBlind]: isColorblindModeEnabled
@@ -14,8 +14,8 @@ const DisplayPiece: FC<IDisplayPieceProps> = ({ pieceType, hasGameBegun, title, 
   return (
     <div className={cn(styles.wrapper)}>
       <div>{title}</div>
-      <div className={cn(styles.displayWrapper, { [styles.disabled]: !hasGameBegun })}>
-        {hasGameBegun &&
+      <div className={cn(styles.displayWrapper, { [styles.disabled]: !isEnabled || pieceType == null || !isActive })}>
+        {isEnabled && pieceType != null &&
           [
             <div key={0} className={className}></div>,
             <div key={1} className={className}></div>,

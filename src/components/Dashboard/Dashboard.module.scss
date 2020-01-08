@@ -1,6 +1,7 @@
 .wrapper {
   display: flex;
   flex-direction: column;
+  text-transform: capitalize;
 }
 
 .header {
@@ -8,7 +9,7 @@
   padding-bottom: 0.25rem;
 }
 
-.colorblindContainer, .ghostContainer {
+.colorblindContainer, .ghostContainer, .queueContainer {
   display: flex;
   justify-content: space-between;
 }

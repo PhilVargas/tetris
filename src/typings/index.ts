@@ -77,6 +77,8 @@ export interface IGameSettings {
   isGameOver: boolean
   isColorblindModeEnabled: boolean
   isGhostEnabled: boolean
+  isQueuePieceEnabled: boolean
+  canQueuePiece: boolean
 }
 
 export interface ISettings {
@@ -109,6 +111,7 @@ export interface IGameState {
   cells: BoardCells
   currentPieceType: PieceType
   nextPieceType: PieceType
+  queuePieceType?: PieceType
   pieceIds: Array<number>
   rotation: Rotation
   turnDelay: number
@@ -119,6 +122,8 @@ export interface IGameState {
   isGameOver: boolean
   isColorblindModeEnabled: boolean
   isGhostEnabled: boolean
+  isQueuePieceEnabled: boolean
+  canQueuePiece: boolean
 }
 
 export interface IOverlayProps {
@@ -135,8 +140,9 @@ export interface ILegendProps {
   level: Level
 }
 export interface IDisplayPieceProps {
-  pieceType: PieceType
-  hasGameBegun: boolean
+  pieceType?: PieceType
+  isEnabled: boolean
+  isActive: boolean
   title: string
   isColorblindModeEnabled: boolean
 }
@@ -146,6 +152,8 @@ export interface IDashboardProps {
   onColorblindChange: () => void
   isGhostEnabled: boolean
   onGhostChange: () => void
+  isQueuePieceEnabled: boolean
+  onQueueChange: () => void
 }
 
 export interface ISwitchProps {

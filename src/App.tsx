@@ -2,7 +2,7 @@ import React, { FC, useState, useLayoutEffect, useEffect } from 'react';
 import './App.scss';
 import Board from './components/Board'
 import gameStore from './store/game';
-import { IBoardProps, IDashboardProps } from './typings';
+import { IBoardProps, IDashboardProps, IDisplayPieceProps } from './typings';
 import Overlay from './components/Overlay';
 import DisplayPiece from './components/DisplayPiece';
 import Legend from './components/Legend'
@@ -43,6 +43,9 @@ const App: FC = () => {
 
     window.addEventListener('keydown', (e) => {
       switch (e.key) {
+        case 'Enter':
+          gameStore.swapQueuePiece()
+          break
         case 'ArrowDown':
         case 's':
           gameStore.updatePieceCoordinates({ x: 0, y: 1 })
@@ -73,10 +76,25 @@ const App: FC = () => {
     }
   }, [setgameState])
 
-  const { cells, isPaused, hasGameBegun, score, isGameOver, nextPieceType, totalLinesCleared, isColorblindModeEnabled, isGhostEnabled } = gameState
-  const { toggleColorblindMode: onColorblindChange, toggleGhost: onGhostChange } = gameStore
+  const { cells, isPaused, hasGameBegun, score, isGameOver, nextPieceType, totalLinesCleared, isColorblindModeEnabled, isGhostEnabled, queuePieceType, isQueuePieceEnabled, canQueuePiece } = gameState
+  const { toggleColorblindMode: onColorblindChange, toggleGhost: onGhostChange, toggleQueuePiece: onQueueChange } = gameStore
   const boardProps: IBoardProps = { cells, isColorblindModeEnabled, isGhostEnabled }
-  const dashBoardProps: IDashboardProps = { isColorblindModeEnabled, isGhostEnabled, onColorblindChange, onGhostChange }
+  const dashBoardProps: IDashboardProps = { isColorblindModeEnabled, isGhostEnabled, onColorblindChange, onGhostChange, isQueuePieceEnabled, onQueueChange }
+  const queuePieceProps: IDisplayPieceProps = {
+    pieceType: queuePieceType,
+    isEnabled: hasGameBegun && isQueuePieceEnabled,
+    isActive: canQueuePiece,
+    isColorblindModeEnabled,
+    title: "Queue Piece"
+  }
+  const nextPieceProps: IDisplayPieceProps = {
+    pieceType: nextPieceType,
+    isEnabled: hasGameBegun,
+    isActive: true,
+    isColorblindModeEnabled,
+    title: "Next Piece"
+  }
+
   return (
     <div className="App">
       <div className="left-panel">
@@ -105,8 +123,8 @@ const App: FC = () => {
       <div className="right-panel">
         <div className="flex flex-stretch">
           <div className="panel callout display-piece-container">
-            <DisplayPiece pieceType={nextPieceType} hasGameBegun={hasGameBegun} title={"Next Piece"} isColorblindModeEnabled={isColorblindModeEnabled} />
-            <DisplayPiece pieceType={nextPieceType} hasGameBegun={hasGameBegun} title={"Hold Piece"} isColorblindModeEnabled={isColorblindModeEnabled} />
+            <DisplayPiece {...nextPieceProps} />
+            <DisplayPiece {...queuePieceProps} />
           </div>
           <div className="attributions panel">
             <h4>Tetris by Philip A Vargas</h4>

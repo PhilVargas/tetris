@@ -106,6 +106,7 @@ const nextTurn = () => {
         rotation: defaultRotation,
         totalLinesCleared: totalLinesCleared,
         turnDelay: Calculate.turnDelay(Calculate.level(totalLinesCleared)),
+        canQueuePiece: true,
         score: state.score + scoreThisTurn
       }
       subject.next(state)
@@ -123,6 +124,33 @@ const toggleGhost = () => {
   subject.next(state)
 }
 
+const toggleQueuePiece = () => {
+  state = { ...state, isQueuePieceEnabled: !state.isQueuePieceEnabled }
+  subject.next(state)
+}
+
+const swapQueuePiece = () => {
+  const { isQueuePieceEnabled, canQueuePiece, currentPieceType, nextPieceType, queuePieceType } = state
+  if (isQueuePieceEnabled && canQueuePiece) {
+    let newPieceType: PieceType
+    let newNextPieceType: PieceType
+    const newQueuePieceType = currentPieceType
+    if (queuePieceType != null) {
+      newPieceType = queuePieceType
+      newNextPieceType = nextPieceType
+    } else {
+      newPieceType = nextPieceType
+      newNextPieceType = GameUtil.generateRandomPieceType()
+    }
+    const { xCoord, yCoord, rotation } = BoardSettings
+    const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord }, rotation, newPieceType)
+    const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, newPieceType, { xCoord, yCoord })
+    const cells = updateCells(state.cells, newPieceType, pieceIds, ghostPieceIds)
+    state = { ...state, currentPieceType: newPieceType, nextPieceType: newNextPieceType, queuePieceType: newQueuePieceType, canQueuePiece: false, xCoord, yCoord, rotation, cells }
+    subject.next(state)
+  }
+}
+
 const gameStore = {
   generateInitialState: GameUtil.generateInitialState,
   init: () => subject.next(state),
@@ -134,6 +162,8 @@ const gameStore = {
   togglePause,
   toggleColorblindMode,
   toggleGhost,
+  toggleQueuePiece,
+  swapQueuePiece,
   dropPiece: () => {
     const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
     if (!hasGameBegun || isPaused) { return }
