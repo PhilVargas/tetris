@@ -8,6 +8,9 @@ import DisplayPiece from './components/DisplayPiece';
 import Legend from './components/Legend'
 import Calculate from './utils/Calculator';
 import Dashboard from './components/Dashboard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { faLinkedin, faGithub, faStackOverflow } from '@fortawesome/free-brands-svg-icons';
 
 const App: FC = () => {
   const [gameState, setgameState] = useState(gameStore.generateInitialState())
@@ -128,11 +131,26 @@ const App: FC = () => {
           </div>
           <div className="attributions panel">
             <h4>Tetris by Philip A Vargas</h4>
-            <div>Tetris by Philip A Vargas</div>
-            <div>Tetris by Philip A Vargas</div>
-            <div>Tetris by Philip A Vargas</div>
-            <div>Tetris by Philip A Vargas</div>
-            <div>Tetris by Philip A Vargas</div>
+            <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/philipavargas">
+              <FontAwesomeIcon icon={faLinkedin} />
+              <span>philipavargas</span>
+            </a>
+            <a target="_blank" rel="noopener noreferrer" href="https://github.com/PhilVargas">
+              <FontAwesomeIcon icon={faGithub} />
+              <span>@PhilVargas</span>
+            </a>
+            <div>
+              <FontAwesomeIcon icon={faEnvelope} />
+              <span>philipavargas@gmail.com</span>
+            </div>
+            <a target="_blank" rel="noopener noreferrer" href="http://stackoverflow.com/users/3213605/philvarg?tab=profile">
+              <FontAwesomeIcon icon={faStackOverflow} />
+              <span>@philvarg</span>
+            </a>
+            <a target="_blank" rel="noopener noreferrer" href="https://github.com/PhilVargas/tetris">
+              <FontAwesomeIcon icon={faGithub} />
+              <span>View Source Code</span>
+            </a>
           </div>
         </div>
       </div>

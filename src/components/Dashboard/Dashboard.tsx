@@ -11,12 +11,6 @@ const Dashboard: FC<IDashboardProps> = ({ isColorblindModeEnabled, onColorblindC
     <div className={cn(styles.wrapper)}>
       <div className={cn(styles.header)}>settings</div>
       <Switch
-        className={cn(styles.colorblindContainer)}
-        labelText={"colorblind mode"}
-        isChecked={isColorblindModeEnabled}
-        onChange={onColorblindChange}
-      />
-      <Switch
         className={cn(styles.ghostContainer)}
         labelText={"ghost"}
         isChecked={isGhostEnabled}
@@ -27,6 +21,12 @@ const Dashboard: FC<IDashboardProps> = ({ isColorblindModeEnabled, onColorblindC
         labelText={"queue"}
         isChecked={isQueuePieceEnabled}
         onChange={onQueueChange}
+      />
+      <Switch
+        className={cn(styles.colorblindContainer)}
+        labelText={"colorblind mode"}
+        isChecked={isColorblindModeEnabled}
+        onChange={onColorblindChange}
       />
     </div>
   )

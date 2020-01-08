@@ -4,6 +4,8 @@
   // margin: 0 auto;
   padding-top: 60px;
   justify-content: space-evenly;
+  font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;
+  line-height: 1.5;
 
   .flex {
     display: flex;
@@ -91,6 +93,21 @@
       align-items: center;
       padding: 1.25rem;
       padding-bottom: 0.5rem;
+    }
+    .attributions {
+      h4 {
+        margin-top: 0.2rem;
+        margin-bottom: 0.625rem;
+      }
+      a {
+        color: #008CBA;
+        text-decoration: none;
+      }
+      svg {
+        color: #333;
+        padding-right: 0.25rem;
+      }
+      text-align: left;
     }
   }
 
