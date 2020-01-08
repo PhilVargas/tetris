@@ -1,0 +1,13 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  text-transform: capitalize;
+  font-size: 15px;
+}
+
+.code {
+  display: inline;
+  background-color: lightgray;
+  padding: 0 5px;
+  font-size: inherit;
+}

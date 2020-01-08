@@ -1,9 +1,9 @@
 .App {
   display: flex;
-  width: 1200px;
-  margin: 0 auto;
+  // width: 1200px;
+  // margin: 0 auto;
   padding-top: 60px;
-  justify-content: space-around;
+  justify-content: space-evenly;
 
   .flex {
     display: flex;
@@ -14,7 +14,7 @@
 
   .flex-grow {
     display: flex;
-    flex-grow: 1;
+    // flex-grow: 1;
   }
 
   .flex-stretch {
@@ -23,10 +23,11 @@
   }
 
   .board-anchor {
-    flex-grow: 0;
+    // flex-grow: 0;
     align-self: center;
     position: relative;
     border: 5px solid black;
+    background-color: lightgray;
   }
 
   .btn {
@@ -75,13 +76,13 @@
 
   .right-panel, .left-panel {
     display: flex;
-    flex-grow: 1;
+    // flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
   }
 
   .right-panel {
-    flex-direction: column;
     text-align: center;
-    align-items: center;
 
     .display-piece-container {
       display: flex;
@@ -91,12 +92,12 @@
       padding: 1.25rem;
       padding-bottom: 0.5rem;
     }
+  }
 
-    .attributions {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      line-height: 1.5;
-    }
+  .attributions, .legend-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    line-height: 1.5;
   }
 }

@@ -5,6 +5,8 @@ import gameStore from './store/game';
 import { IBoardProps } from './typings';
 import Overlay from './components/Overlay';
 import DisplayPiece from './components/DisplayPiece';
+import Legend from './components/Legend'
+import Calculate from './utils/Calculator';
 
 const App: FC = () => {
   const [gameState, setgameState] = useState(gameStore.generateInitialState())
@@ -70,11 +72,19 @@ const App: FC = () => {
     }
   }, [setgameState])
 
-  const { cells, isPaused, hasGameBegun, score, isGameOver, nextPieceType } = gameState
+  const { cells, isPaused, hasGameBegun, score, isGameOver, nextPieceType, totalLinesCleared } = gameState
   const boardProps: IBoardProps = { cells }
   return (
     <div className="App">
-      <div className="left-panel"></div>
+      <div className="left-panel">
+        <div className="flex flex-stretch">
+          <div className="panel legend-container">
+            <Legend score={score} level={Calculate.level(totalLinesCleared)} />
+          </div>
+          <div className="panel">
+          </div>
+        </div>
+      </div>
       <div className="board-anchor">
         <Overlay
           isGameOver={isGameOver}
