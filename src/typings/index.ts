@@ -50,7 +50,6 @@ export interface IBoardSettings {
   rotation: Rotation
 }
 
-// Depracated
 export interface ICellSettings {
   edgeLength: number
 }
