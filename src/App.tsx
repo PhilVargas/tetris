@@ -4,7 +4,7 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { faLinkedin, faGithub, faStackOverflow } from '@fortawesome/free-brands-svg-icons';
 import './App.scss';
 
-import { IBoardProps, IDashboardProps, IDisplayPieceProps, IThemeSongProps, IOverlayProps } from './typings';
+import { IBoardProps, IDashboardProps, IDisplayPieceProps, IThemeSongProps, IOverlayProps, ILegendProps } from './typings';
 import gameStore from './store/game';
 import Board from './components/Board'
 import Overlay from './components/Overlay';
@@ -143,13 +143,15 @@ const App: FC = () => {
 
   const themeSongProps: IThemeSongProps = { isAudioMuted, isPaused, hasGameBegun }
 
+  const legendProps: ILegendProps = { score, level: Calculate.level(totalLinesCleared) }
+
   return (
     <div className="App">
       <ThemeSong {...themeSongProps} />
       <div className="left-panel">
         <div className="flex flex-stretch">
           <div className="panel legend-container">
-            <Legend score={score} level={Calculate.level(totalLinesCleared)} />
+            <Legend {...legendProps} />
           </div>
           <div className="panel">
             <Dashboard
