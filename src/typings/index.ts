@@ -13,7 +13,7 @@ export type PieceType = CellType.I | CellType.O | CellType.Z | CellType.S | Cell
 export type PieceTypes = ReadonlyArray<PieceType>
 
 export interface PieceOffset {
-  readonly x: -2 | -1 | 0 | 1
+  readonly x: -1 | 0 | 1 | 2
   readonly y: -1 | 0 | 1 | 2
 }
 

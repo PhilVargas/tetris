@@ -1,13 +1,13 @@
 import { IBoardCell, CellType, IGameState, PieceType, BoardCells, IScoredBoardCells, LinesCleared } from '../typings'
 import { BoardSettings, GameSettings } from '../constants/Settings'
-import Calculator from './Calculator'
+import Calculate from './Calculator'
 import { Pieces } from '../constants/Settings/GameSettings'
 
 const generateDefaultCells = (rows = BoardSettings.height): Array<IBoardCell> => {
   return [...Array(rows)].reduce((cells: Array<IBoardCell>, _, yCoord: number) => {
     return [...Array(BoardSettings.width)].reduce((cells: Array<IBoardCell>, _, xCoord: number) => {
       cells.push({
-        id: Calculator.cellIndexFromCoords({ xCoord, yCoord }),
+        id: Calculate.cellIndexFromCoords({ xCoord, yCoord }),
         yCoord,
         xCoord,
         isFrozen: false,
@@ -35,13 +35,13 @@ const generateShiftedCells = (atRowIndex: number, cells: BoardCells): BoardCells
 const scoreRowsForTurn = (boardCells: BoardCells, totalLinesCleared: number): IScoredBoardCells => {
   let linesClearedThisTurn: LinesCleared = 0
   let cells = [...boardCells]
-  while (Calculator.isAnyRowFrozen(cells)) {
+  while (Calculate.isAnyRowFrozen(cells)) {
     linesClearedThisTurn = linesClearedThisTurn + 1 as LinesCleared
-    let lowestFrozenRowIndex = Calculator.getFrozenRowIndices(cells).pop()
+    let lowestFrozenRowIndex = Calculate.getFrozenRowIndices(cells).pop()
     if (lowestFrozenRowIndex == null) { break }
     cells = generateShiftedCells(lowestFrozenRowIndex, cells)
   }
-  const scoreThisTurn = Calculator.scoreThisTurn(linesClearedThisTurn, Calculator.level(totalLinesCleared))
+  const scoreThisTurn = Calculate.scoreThisTurn(linesClearedThisTurn, Calculate.level(totalLinesCleared))
   return { cells, scoreThisTurn, linesClearedThisTurn }
 }
 const generateRandomPieceType = (): PieceType => {

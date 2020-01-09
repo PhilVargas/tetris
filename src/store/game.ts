@@ -169,6 +169,32 @@ const swapQueuePiece = () => {
   }
 }
 
+const dropPiece = () => {
+  const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
+  if (!hasGameBegun || isPaused) { return }
+  const { yCoord: finalYCoord } = Calculate.dropCoordinate(state.cells, rotation, currentPieceType, { xCoord, yCoord })
+  let pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord: finalYCoord }, rotation, currentPieceType)
+  let cells = updateCells(state.cells, currentPieceType, pieceIds, pieceIds)
+  state = { ...state, yCoord: finalYCoord, cells }
+  subject.next(state)
+}
+
+const rotatePiece = (rotationDirection: RotationDirection) => {
+  const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
+  if (!hasGameBegun || isPaused) { return }
+  const nextRotation = Calculate.rotation(rotation, rotationDirection)
+  const nextCoord = { xCoord, yCoord }
+  const hasCollision = Calculate.hasCollision(nextCoord, nextRotation, currentPieceType, state.cells)
+
+  if (hasCollision) { return }
+
+  const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord }, nextRotation, currentPieceType)
+  const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, nextRotation, currentPieceType, { xCoord, yCoord })
+  const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
+  state = { ...state, rotation: nextRotation, cells }
+  subject.next(state)
+}
+
 const gameStore = {
   generateInitialState: GameUtil.generateInitialState,
   init: () => subject.next(state),
@@ -183,30 +209,8 @@ const gameStore = {
   toggleQueuePiece,
   toggleAudio,
   swapQueuePiece,
-  dropPiece: () => {
-    const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
-    if (!hasGameBegun || isPaused) { return }
-    const { yCoord: finalYCoord } = Calculate.dropCoordinate(state.cells, rotation, currentPieceType, { xCoord, yCoord })
-    let pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord: finalYCoord }, rotation, currentPieceType)
-    let cells = updateCells(state.cells, currentPieceType, pieceIds, pieceIds)
-    state = { ...state, yCoord: finalYCoord, cells }
-    subject.next(state)
-  },
-  rotatePiece: (rotationDirection: RotationDirection) => {
-    const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
-    if (!hasGameBegun || isPaused) { return }
-    const nextRotation = Calculate.rotation(rotation, rotationDirection)
-    const nextCoord = { xCoord, yCoord }
-    const hasCollision = Calculate.hasCollision(nextCoord, nextRotation, currentPieceType, state.cells)
-
-    if (hasCollision) { return }
-
-    const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord }, nextRotation, currentPieceType)
-    const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, nextRotation, currentPieceType, { xCoord, yCoord })
-    const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
-    state = { ...state, rotation: nextRotation, cells }
-    subject.next(state)
-  },
+  dropPiece,
+  rotatePiece,
 }
 
 export default gameStore

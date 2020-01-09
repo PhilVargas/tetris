@@ -1,18 +1,18 @@
-import React, { FC, useState, useLayoutEffect, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { FC, useState, useLayoutEffect, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
-import { faLinkedin, faGithub, faStackOverflow } from '@fortawesome/free-brands-svg-icons';
-import './App.scss';
+import { faLinkedin, faGithub, faStackOverflow } from '@fortawesome/free-brands-svg-icons'
+import './App.scss'
 
-import { IBoardProps, IDashboardProps, IDisplayPieceProps, IThemeSongProps, IOverlayProps } from './typings';
-import gameStore from './store/game';
+import { IBoardProps, IDashboardProps, IDisplayPieceProps, IThemeSongProps, IOverlayProps, ILegendProps } from './typings'
+import gameStore from './store/game'
 import Board from './components/Board'
-import Overlay from './components/Overlay';
-import DisplayPiece from './components/DisplayPiece';
+import Overlay from './components/Overlay'
+import DisplayPiece from './components/DisplayPiece'
 import Legend from './components/Legend'
-import Calculate from './utils/Calculator';
-import Dashboard from './components/Dashboard';
-import ThemeSong from './components/ThemeSong';
+import Calculate from './utils/Calculator'
+import Dashboard from './components/Dashboard'
+import ThemeSong from './components/ThemeSong'
 
 const App: FC = () => {
   const [gameState, setgameState] = useState(gameStore.generateInitialState())
@@ -43,14 +43,18 @@ const App: FC = () => {
         case ' ':
           gameStore.togglePause()
           break
+        case 'Enter':
+          gameStore.swapQueuePiece()
+          break
+        case 'ArrowUp':
+        case 'w':
+          gameStore.dropPiece()
+          break
       }
     })
 
     window.addEventListener('keydown', (e) => {
       switch (e.key) {
-        case 'Enter':
-          gameStore.swapQueuePiece()
-          break
         case 'ArrowDown':
         case 's':
           gameStore.updatePieceCoordinates({ x: 0, y: 1 })
@@ -63,15 +67,11 @@ const App: FC = () => {
         case 'a':
           gameStore.updatePieceCoordinates({ x: -1, y: 0 })
           break
-        case 'ArrowUp':
-        case 'w':
-          gameStore.dropPiece()
-          break
         case 'q':
-          gameStore.rotatePiece(1)
+          gameStore.rotatePiece(-1)
           break
         case 'e':
-          gameStore.rotatePiece(-1)
+          gameStore.rotatePiece(1)
           break
       }
     })
@@ -81,7 +81,8 @@ const App: FC = () => {
     }
   }, [setgameState])
 
-  const { cells,
+  const {
+    cells,
     isPaused,
     hasGameBegun,
     score,
@@ -95,6 +96,7 @@ const App: FC = () => {
     canQueuePiece,
     isAudioMuted,
   } = gameState
+
   const {
     toggleColorblindMode: onColorblindChange,
     toggleGhost: onGhostChange,
@@ -111,11 +113,13 @@ const App: FC = () => {
     hasGameBegun,
     startGame,
   }
+
   const boardProps: IBoardProps = {
     cells,
     isColorblindModeEnabled,
-    isGhostEnabled
+    isGhostEnabled,
   }
+
   const dashBoardProps: IDashboardProps = {
     isColorblindModeEnabled,
     isGhostEnabled,
@@ -126,6 +130,7 @@ const App: FC = () => {
     isAudioMuted,
     onAudioChange,
   }
+
   const queuePieceProps: IDisplayPieceProps = {
     pieceType: queuePieceType,
     isEnabled: hasGameBegun && isQueuePieceEnabled,
@@ -133,6 +138,7 @@ const App: FC = () => {
     isColorblindModeEnabled,
     title: "Queue Piece"
   }
+
   const nextPieceProps: IDisplayPieceProps = {
     pieceType: nextPieceType,
     isEnabled: hasGameBegun,
@@ -143,18 +149,18 @@ const App: FC = () => {
 
   const themeSongProps: IThemeSongProps = { isAudioMuted, isPaused, hasGameBegun }
 
+  const legendProps: ILegendProps = { score, level: Calculate.level(totalLinesCleared) }
+
   return (
     <div className="App">
       <ThemeSong {...themeSongProps} />
       <div className="left-panel">
         <div className="flex flex-stretch">
           <div className="panel legend-container">
-            <Legend score={score} level={Calculate.level(totalLinesCleared)} />
+            <Legend {...legendProps} />
           </div>
           <div className="panel">
-            <Dashboard
-              {...dashBoardProps}
-            />
+            <Dashboard {...dashBoardProps} />
           </div>
         </div>
       </div>
@@ -194,7 +200,7 @@ const App: FC = () => {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
