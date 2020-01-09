@@ -81,7 +81,8 @@ const App: FC = () => {
     }
   }, [setgameState])
 
-  const { cells,
+  const {
+    cells,
     isPaused,
     hasGameBegun,
     score,
@@ -95,6 +96,7 @@ const App: FC = () => {
     canQueuePiece,
     isAudioMuted,
   } = gameState
+
   const {
     toggleColorblindMode: onColorblindChange,
     toggleGhost: onGhostChange,
@@ -111,11 +113,13 @@ const App: FC = () => {
     hasGameBegun,
     startGame,
   }
+
   const boardProps: IBoardProps = {
     cells,
     isColorblindModeEnabled,
-    isGhostEnabled
+    isGhostEnabled,
   }
+
   const dashBoardProps: IDashboardProps = {
     isColorblindModeEnabled,
     isGhostEnabled,
@@ -126,6 +130,7 @@ const App: FC = () => {
     isAudioMuted,
     onAudioChange,
   }
+
   const queuePieceProps: IDisplayPieceProps = {
     pieceType: queuePieceType,
     isEnabled: hasGameBegun && isQueuePieceEnabled,
@@ -133,6 +138,7 @@ const App: FC = () => {
     isColorblindModeEnabled,
     title: "Queue Piece"
   }
+
   const nextPieceProps: IDisplayPieceProps = {
     pieceType: nextPieceType,
     isEnabled: hasGameBegun,
@@ -154,9 +160,7 @@ const App: FC = () => {
             <Legend {...legendProps} />
           </div>
           <div className="panel">
-            <Dashboard
-              {...dashBoardProps}
-            />
+            <Dashboard {...dashBoardProps} />
           </div>
         </div>
       </div>
