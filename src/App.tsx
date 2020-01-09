@@ -43,14 +43,18 @@ const App: FC = () => {
         case ' ':
           gameStore.togglePause()
           break
+        case 'Enter':
+          gameStore.swapQueuePiece()
+          break
+        case 'ArrowUp':
+        case 'w':
+          gameStore.dropPiece()
+          break
       }
     })
 
     window.addEventListener('keydown', (e) => {
       switch (e.key) {
-        case 'Enter':
-          gameStore.swapQueuePiece()
-          break
         case 'ArrowDown':
         case 's':
           gameStore.updatePieceCoordinates({ x: 0, y: 1 })
@@ -63,15 +67,11 @@ const App: FC = () => {
         case 'a':
           gameStore.updatePieceCoordinates({ x: -1, y: 0 })
           break
-        case 'ArrowUp':
-        case 'w':
-          gameStore.dropPiece()
-          break
         case 'q':
-          gameStore.rotatePiece(1)
+          gameStore.rotatePiece(-1)
           break
         case 'e':
-          gameStore.rotatePiece(-1)
+          gameStore.rotatePiece(1)
           break
       }
     })
