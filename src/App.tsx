@@ -1,18 +1,18 @@
-import React, { FC, useState, useLayoutEffect, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { FC, useState, useLayoutEffect, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
-import { faLinkedin, faGithub, faStackOverflow } from '@fortawesome/free-brands-svg-icons';
-import './App.scss';
+import { faLinkedin, faGithub, faStackOverflow } from '@fortawesome/free-brands-svg-icons'
+import './App.scss'
 
-import { IBoardProps, IDashboardProps, IDisplayPieceProps, IThemeSongProps, IOverlayProps, ILegendProps } from './typings';
-import gameStore from './store/game';
+import { IBoardProps, IDashboardProps, IDisplayPieceProps, IThemeSongProps, IOverlayProps, ILegendProps } from './typings'
+import gameStore from './store/game'
 import Board from './components/Board'
-import Overlay from './components/Overlay';
-import DisplayPiece from './components/DisplayPiece';
+import Overlay from './components/Overlay'
+import DisplayPiece from './components/DisplayPiece'
 import Legend from './components/Legend'
-import Calculate from './utils/Calculator';
-import Dashboard from './components/Dashboard';
-import ThemeSong from './components/ThemeSong';
+import Calculate from './utils/Calculator'
+import Dashboard from './components/Dashboard'
+import ThemeSong from './components/ThemeSong'
 
 const App: FC = () => {
   const [gameState, setgameState] = useState(gameStore.generateInitialState())
@@ -200,7 +200,7 @@ const App: FC = () => {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

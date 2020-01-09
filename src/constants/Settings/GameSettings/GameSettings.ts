@@ -7,7 +7,7 @@ export const Pieces: PieceTypes = [
   CellType.S,
   CellType.T,
   CellType.J,
-  CellType.L
+  CellType.L,
 ]
 
 export const PieceShapeMap: PieceMap = {
