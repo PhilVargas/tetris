@@ -37,8 +37,5 @@ module.exports = {
 
     //react
     "react/prop-types": 0,
-
-
   }
-
 };
