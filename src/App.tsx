@@ -21,10 +21,10 @@ const App: FC = () => {
     let id: NodeJS.Timeout
 
     function tick() {
+      id = setTimeout(tick, gameState.turnDelay)
       if (gameState.hasGameBegun && !gameState.isGameOver) {
         gameStore.nextTurn()
       }
-      id = setTimeout(tick, gameState.turnDelay)
     }
     id = setTimeout(tick, gameState.turnDelay)
     return () => {
