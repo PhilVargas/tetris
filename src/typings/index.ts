@@ -71,6 +71,7 @@ export interface IGameSettings {
   initialTurnDelay: number
   totalLinesCleared: number
   score: number
+  scoreThisTurn: number
   minimumTurnDelay: number
   isGameOver: boolean
   isColorblindModeEnabled: boolean
@@ -118,6 +119,7 @@ export interface IGameState {
   hasGameBegun: boolean
   totalLinesCleared: number
   score: number
+  scoreThisTurn: number
   isGameOver: boolean
   isColorblindModeEnabled: boolean
   isGhostEnabled: boolean
@@ -137,6 +139,7 @@ export interface IOverlayProps {
 
 export interface ILegendProps {
   score: number
+  scoreThisTurn: number
   level: Level
 }
 export interface IDisplayPieceProps {

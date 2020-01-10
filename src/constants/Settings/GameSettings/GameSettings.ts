@@ -205,6 +205,7 @@ const GameSettings: IGameSettings = {
   initialTurnDelay: 500,
   totalLinesCleared: 0,
   score: 0,
+  scoreThisTurn: 0,
   minimumTurnDelay: 50,
   isGameOver: false,
   isColorblindModeEnabled: false,

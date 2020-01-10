@@ -75,6 +75,7 @@ const GameUtil = {
       hasGameBegun: GameSettings.hasGameBegun,
       totalLinesCleared: GameSettings.totalLinesCleared,
       score: GameSettings.score,
+      scoreThisTurn: GameSettings.scoreThisTurn,
       turnDelay: GameSettings.initialTurnDelay,
       cells: generateDefaultCells(),
       currentPieceType: generateRandomPieceType(),

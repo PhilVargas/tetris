@@ -86,6 +86,7 @@ const App: FC = () => {
     isPaused,
     hasGameBegun,
     score,
+    scoreThisTurn,
     isGameOver,
     nextPieceType,
     totalLinesCleared,
@@ -149,7 +150,7 @@ const App: FC = () => {
 
   const themeSongProps: IThemeSongProps = { isAudioMuted, isPaused, hasGameBegun }
 
-  const legendProps: ILegendProps = { score, level: Calculate.level(totalLinesCleared) }
+  const legendProps: ILegendProps = { score, scoreThisTurn, level: Calculate.level(totalLinesCleared) }
 
   return (
     <div className="App">

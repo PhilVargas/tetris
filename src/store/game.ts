@@ -94,12 +94,12 @@ const nextTurn = () => {
     const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord: nextYCoord }, rotation, currentPieceType)
     const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, currentPieceType, { xCoord, yCoord: nextYCoord })
     const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
-    state = { ...state, xCoord: xCoord, yCoord: nextYCoord, cells }
+    state = { ...state, xCoord: xCoord, yCoord: nextYCoord, cells, scoreThisTurn: 0 }
     subject.next(state)
   } else {
     const frozenCells = freezeCells(state.cells)
     if (Calculate.didPlayerLose(frozenCells)) {
-      state = { ...state, isGameOver: true, cells: frozenCells }
+      state = { ...state, isGameOver: true, cells: frozenCells, scoreThisTurn: 0 }
       subject.next(state)
     } else {
       const { cells: boardCells, scoreThisTurn, linesClearedThisTurn } = GameUtil.scoreRowsForTurn(frozenCells, state.totalLinesCleared)
@@ -120,7 +120,8 @@ const nextTurn = () => {
         totalLinesCleared: totalLinesCleared,
         turnDelay: Calculate.turnDelay(Calculate.level(totalLinesCleared)),
         canQueuePiece: true,
-        score: state.score + scoreThisTurn
+        score: state.score + scoreThisTurn,
+        scoreThisTurn
       }
       subject.next(state)
     }
