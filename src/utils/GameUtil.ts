@@ -37,7 +37,7 @@ const scoreRowsForTurn = (boardCells: BoardCells, totalLinesCleared: number): IS
   let cells = [...boardCells]
   while (Calculate.isAnyRowFrozen(cells)) {
     linesClearedThisTurn = linesClearedThisTurn + 1 as LinesCleared
-    let lowestFrozenRowIndex = Calculate.getFrozenRowIndices(cells).pop()
+    const lowestFrozenRowIndex = Calculate.getFrozenRowIndices(cells).pop()
     if (lowestFrozenRowIndex == null) { break }
     cells = generateShiftedCells(lowestFrozenRowIndex, cells)
   }
@@ -75,6 +75,7 @@ const GameUtil = {
       hasGameBegun: GameSettings.hasGameBegun,
       totalLinesCleared: GameSettings.totalLinesCleared,
       score: GameSettings.score,
+      scoreThisTurn: GameSettings.scoreThisTurn,
       turnDelay: GameSettings.initialTurnDelay,
       cells: generateDefaultCells(),
       currentPieceType: generateRandomPieceType(),

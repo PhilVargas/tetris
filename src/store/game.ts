@@ -2,7 +2,7 @@ import { Subject } from 'rxjs'
 import { Dispatch, SetStateAction } from 'react'
 
 import GameUtil from '../utils/GameUtil'
-import { IGameState, IBoardCell, PieceOffset, BoardCells, PieceType, Coordinate, RotationDirection, IPersistentSettings } from '../typings'
+import { IGameState, IBoardCell, IPieceOffset, BoardCells, PieceType, ICoordinate, RotationDirection, IPersistentSettings } from '../typings'
 import Calculate from '../utils/Calculator'
 import { BoardSettings } from '../constants/Settings'
 
@@ -36,14 +36,14 @@ const freezeCells = (cells: BoardCells): BoardCells => {
   })
 }
 
-const updatePieceCoordinates = (offset: PieceOffset) => {
+const updatePieceCoordinates = (offset: IPieceOffset) => {
   const { x: xOffset, y: yOffset } = offset
   const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
   if (!hasGameBegun || isPaused) { return }
   const nextXCoord = xOffset + xCoord
   const nextYCoord = yOffset + yCoord
 
-  const nextCoord: Coordinate = { xCoord: nextXCoord, yCoord: nextYCoord }
+  const nextCoord: ICoordinate = { xCoord: nextXCoord, yCoord: nextYCoord }
   const hasCollision = Calculate.hasCollision(nextCoord, rotation, currentPieceType, state.cells)
 
   if (hasCollision) { return }
@@ -94,12 +94,12 @@ const nextTurn = () => {
     const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord: nextYCoord }, rotation, currentPieceType)
     const ghostPieceIds = Calculate.getCellIdsForGhost(state.cells, rotation, currentPieceType, { xCoord, yCoord: nextYCoord })
     const cells = updateCells(state.cells, currentPieceType, pieceIds, ghostPieceIds)
-    state = { ...state, xCoord: xCoord, yCoord: nextYCoord, cells }
+    state = { ...state, xCoord: xCoord, yCoord: nextYCoord, cells, scoreThisTurn: 0 }
     subject.next(state)
   } else {
     const frozenCells = freezeCells(state.cells)
     if (Calculate.didPlayerLose(frozenCells)) {
-      state = { ...state, isGameOver: true, cells: frozenCells }
+      state = { ...state, isGameOver: true, cells: frozenCells, scoreThisTurn: 0 }
       subject.next(state)
     } else {
       const { cells: boardCells, scoreThisTurn, linesClearedThisTurn } = GameUtil.scoreRowsForTurn(frozenCells, state.totalLinesCleared)
@@ -120,7 +120,8 @@ const nextTurn = () => {
         totalLinesCleared: totalLinesCleared,
         turnDelay: Calculate.turnDelay(Calculate.level(totalLinesCleared)),
         canQueuePiece: true,
-        score: state.score + scoreThisTurn
+        score: state.score + scoreThisTurn,
+        scoreThisTurn
       }
       subject.next(state)
     }
@@ -173,8 +174,8 @@ const dropPiece = () => {
   const { xCoord, yCoord, currentPieceType, rotation, isPaused, hasGameBegun } = state
   if (!hasGameBegun || isPaused) { return }
   const { yCoord: finalYCoord } = Calculate.dropCoordinate(state.cells, rotation, currentPieceType, { xCoord, yCoord })
-  let pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord: finalYCoord }, rotation, currentPieceType)
-  let cells = updateCells(state.cells, currentPieceType, pieceIds, pieceIds)
+  const pieceIds = Calculate.getCellIdsForPiece({ xCoord, yCoord: finalYCoord }, rotation, currentPieceType)
+  const cells = updateCells(state.cells, currentPieceType, pieceIds, pieceIds)
   state = { ...state, yCoord: finalYCoord, cells }
   subject.next(state)
 }
