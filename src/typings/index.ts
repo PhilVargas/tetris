@@ -12,7 +12,7 @@ export enum CellType {
 export type PieceType = CellType.I | CellType.O | CellType.Z | CellType.S | CellType.T | CellType.J | CellType.L
 export type PieceTypes = ReadonlyArray<PieceType>
 
-export interface PieceOffset {
+export interface IPieceOffset {
   readonly x: -1 | 0 | 1 | 2
   readonly y: -1 | 0 | 1 | 2
 }
@@ -20,12 +20,12 @@ export interface PieceOffset {
 export type Rotation = 0 | 1 | 2 | 3
 export type RotationDirection = -1 | 1
 
-export interface Coordinate {
+export interface ICoordinate {
   readonly xCoord: number
   readonly yCoord: number
 }
 
-export type PieceShape = ReadonlyArray<PieceOffset>
+export type PieceShape = ReadonlyArray<IPieceOffset>
 export type PieceRotations = ReadonlyArray<PieceShape>
 export type PieceMap = {
   [key in PieceType]: PieceRotations
